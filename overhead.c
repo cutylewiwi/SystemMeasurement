@@ -18,7 +18,7 @@ int main () {
         STOP_COUNT(low1, high1);
 
         start = ((unsigned long long) high << 32) | low;
-        end = ((unsigned long long) high1 >> 32) | low1;
+        end = ((unsigned long long) high1 << 32) | low1;
 
         printf("%llu, %llu, %llu\n", start, end, end - start);
     }
