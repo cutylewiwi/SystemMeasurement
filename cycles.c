@@ -33,7 +33,7 @@ int main (int argc, const char * arg[]){
     }
 
     for (i = 0; i < ITERATIONS; i++) {
-        printf("%llu\n", records[i])
+        printf("%llu\n", records[i]);
     }
 
     return 0;
