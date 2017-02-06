@@ -1,0 +1,55 @@
+
+
+\documentclass{article}
+
+% packages
+\usepackage{listings} % source codes
+\usepackage[backend = biber, style = caspervector, utf8, sorting = none]{biblatex} % references
+
+
+
+
+\begin{document}
+
+% titles
+
+\title{CSE 221 Project Report}
+
+\author{Yudong Wu\\
+        A53216872\\
+		\texttt{yuw466@eng.ucsd.edu}
+}
+
+\maketitle
+
+% lstlisting set
+\lstset{
+    numbers=left,
+    numberstyle=\footnotesize,
+    stepnumber=5,
+    numbersep=5pt,
+    basicstyle=\footnotesize,
+    frame=single,
+    tabsize=2,
+    breaklines=true,
+    xleftmargin=2em,
+    xrightmargin=2em,
+}
+
+Hello World!
+
+% introduction
+\include{Chapters/introduction}
+
+
+% machine description
+\include{Chapters/machine}
+
+% experiments
+
+\include{Chapters/cpu}
+\include{Chapters/memory}
+\include{Chapters/network}
+\include{Chapters/file}
+
+\end{document}
