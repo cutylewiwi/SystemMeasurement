@@ -36,7 +36,7 @@ int main (int argc, const char * argv[]) {
                           "end:\n\t"
                           "test   %eax,%eax\n\t"
                           "jns    begin\n\t"
-                          :: "r"(LOOPS):"%rax");
+                          :: "r"(i):"%rax");
 
             STOP_COUNT(high1, low1);
 
