@@ -18,9 +18,9 @@ int main (int argc, const char * arg[]){
     uint32_t high, high1;
     int i;
     for (i = 0; i < ITERATIONS; i++) {
-        START_COUNT(low, high);
+        START_COUNT(high, low);
         sleep(10);
-        STOP_COUNT(low1, high1);
+        STOP_COUNT(high1, low1);
 
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
@@ -30,6 +30,10 @@ int main (int argc, const char * arg[]){
             printf("alert! %d\n", i);
         }
         records[i] = end - start;
+    }
+
+    for (i = 0; i < ITERATIONS; i++) {
+        printf("%llu\n", records[i])
     }
 
     return 0;

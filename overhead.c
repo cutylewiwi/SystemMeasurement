@@ -14,8 +14,8 @@ int main () {
     uint32_t high, high1;
     int i;
     for (i = 0; i < ITERATIONS; i++) {
-        START_COUNT(low, high);
-        STOP_COUNT(low1, high1);
+        START_COUNT(high, low);
+        STOP_COUNT(high1, low1);
 
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
