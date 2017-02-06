@@ -5,7 +5,11 @@
 
 #include <unistd.h>
 
+#define ITERATIONS 10
+
 #include "proj_timing.h"
+
+unsigned long long records[ITERATIONS];
 
 int main (int argc, const char * arg[]){
     unsigned long long start;
@@ -21,7 +25,11 @@ int main (int argc, const char * arg[]){
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
 
-        printf("%llu\t%llu\t%llu\n", start, end, end - start);
+        // printf("%llu\t%llu\t%llu\n", start, end, end - start);
+        if (end < start) {
+            printf("alert! %d\n", i);
+        }
+        records[i] = end - start;
     }
 
     return 0;
