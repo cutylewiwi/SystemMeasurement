@@ -34,7 +34,7 @@ int main (int argc, const char * arg[]){
         records[i] = end - start;
     }
 
-    sum = ;
+    sum = 0;
     for (i = 0; i < ITERATIONS; i++) {
         printf("cycles sample %d: %llu\n", i, records[i]);
 
