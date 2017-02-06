@@ -49,7 +49,7 @@ int main (int argc, const char * arg[]){
     // cast from unsigned longlong to double will be safe
     // 1e11: 10 seconds * 10 samples * 10^9 HZ / GHZ
     printf ("mean: %lf\n", (double)sum / 10);
-    printf ("frequency: %.6lf\n", (double)sum / 1e11);
+    printf ("frequency: %.6lf GHZ\n", (double)sum / 1e11);
 
     return 0;
 }

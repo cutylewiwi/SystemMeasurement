@@ -2,6 +2,7 @@
 
 CC=gcc
 INCLUDE=./include
+LIB=./lib
 
 all: cpu
 
@@ -18,6 +19,9 @@ cycles: cycles.o
 
 cycles.o: cycles.c
 	$(CC) -O0 -c -I$(INCLUDE) cycles.c
+
+lib: statistics.c
+	$(CC) -c statistics.c
 
 clean:
 	rm *.o cycles overhead
