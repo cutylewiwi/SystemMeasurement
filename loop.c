@@ -29,12 +29,12 @@ int main (int argc, const char * argv[]) {
             START_COUNT(high, low);
 
             // k: loop itself
-            asm volatile ("mov    %0, %eax\n\t"
+            asm volatile ("mov    %0, %%eax\n\t"
                           "jmp    end\n\t"
                           "begin:\n\t"
-                          "sub    $0x1,%eax\n\t"
+                          "sub    $0x1,%%eax\n\t"
                           "end:\n\t"
-                          "test   %eax,%eax\n\t"
+                          "test   %%eax,%%eax\n\t"
                           "jns    begin\n\t"
                           :: "r"(i):"%rax");
 
