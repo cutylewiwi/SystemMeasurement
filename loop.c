@@ -10,7 +10,7 @@
 
 #include "proj_timing.h"
 
-unsigned double records[LOOPSCALE];
+double records[LOOPSCALE];
 unsigned long long cycles[ITERATIONS];
 
 int main (int argc, const char * argv[]) {
