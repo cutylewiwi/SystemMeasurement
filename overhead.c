@@ -8,8 +8,8 @@
 #define ITERATIONS 10
 
 int main () {
-    uint64_t start;
-    uint64_t end;
+    unsigned long long start;
+    unsigned long long end;
     uint32_t low, low1;
     uint32_t high, high1;
     int i;
@@ -17,10 +17,10 @@ int main () {
         START_COUNT(low, high);
         STOP_COUNT(low1, high1);
 
-        start = ((uint64_t) high << 32) | low;
-        end = ((uint64_t) high1 >> 32) | low1;
+        start = ((unsigned long long) high << 32) | low;
+        end = ((unsigned long long) high1 >> 32) | low1;
 
-        printf("%ll, %ll, %ll\n", start, end, end - start);
+        printf("%llu, %llu, %llu\n", start, end, end - start);
     }
 
     return 0;
