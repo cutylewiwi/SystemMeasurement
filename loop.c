@@ -50,7 +50,7 @@ int main (int argc, const char * argv[]) {
 
 
     for (i = 0; i < LOOPSCALE; i++) {
-        printf ("loop at scale %d cost %d cycles\n", i+1, records[i]);
+        printf ("loop at scale %d cost %.2lf cycles\n", i+1, records[i]);
     }
     return 0;
 }
