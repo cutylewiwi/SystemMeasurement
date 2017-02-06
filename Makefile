@@ -5,7 +5,7 @@ INCLUDE=./include
 
 all: cpu
 
-cpu: overhead
+cpu: cycles overhead
 
 overhead: overhead.o
 	$(CC) -o overhead overhead.o
@@ -13,7 +13,11 @@ overhead: overhead.o
 overhead.o: overhead.c
 	$(CC) -O0 -c -I$(INCLUDE) overhead.c
 
+cycles: cycles.o
+	$(CC) -o cycles cycles.o
 
+cycles.o: cycles.c
+	$(CC) -O0 -c -I$(INCLUDE) cycles.c
 
 clean:
-	rm *.o overhead
+	rm *.o cycles overhead
