@@ -30,4 +30,4 @@ lib: statistics.c
 	$(CC) -c statistics.c
 
 clean:
-	rm *.o cycles overhead
+	rm *.o cycles overhead loop

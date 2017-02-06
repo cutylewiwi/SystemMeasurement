@@ -22,16 +22,21 @@ int main (int argc, const char * argv[]) {
     unsigned long long sum;
 
     // i: loop scale increasing
-    for (i = 1; i <= LOOPSCALE; i++) {
+    for (i = 0; i < LOOPSCALE; i++) {
         // j: multile iterations
-        records[i-1] = 0;
+        records[i] = 0;
         for (j = 0; j < ITERATIONS; j++) {
             START_COUNT(high, low);
 
             // k: loop itself
-            for (k = 0; k < i; k++) {
-                // do nothing
-            }
+            asm volatile ("mov    %0, %eax\n\t"
+                          "jmp    end\n\t"
+                          "begin:\n\t"
+                          "sub    $0x1,%eax\n\t"
+                          "end:\n\t"
+                          "test   %eax,%eax\n\t"
+                          "jns    begin\n\t"
+                          :: "r"(LOOPS):"%rax");
 
             STOP_COUNT(high1, low1);
 
@@ -41,11 +46,11 @@ int main (int argc, const char * argv[]) {
             if (end < start) {
                 printf("alert! %d at scale %d\n", j, i);
             }
-            records[i-1] += end - start;
+            records[i] += end - start;
         }
 
-        records[i-1] /= 10; // mean
-        records[i-1] /= i;  // mean for each loop round
+        records[i] /= 10; // mean
+        records[i] /= i+1;  // mean for each loop round
     }
 
 
