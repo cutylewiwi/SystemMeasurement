@@ -54,7 +54,7 @@ int main (int argc, const char * argv[]) {
         }
 
         records[loop-1] /= 10; // mean
-        records[loop-1] /= loop+1;  // mean for each loop round
+        records[loop-1] /= loop;  // mean for each loop round
     //}
 
 
