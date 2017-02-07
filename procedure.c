@@ -56,6 +56,7 @@ int main (int argc, const char * argv[]){
     unsigned long long sum;
 
     procedure_flag = atoi ((const char *) argv[argc-1]);
+    sum = 0;
     for (i = 0; i < ITERATIONS; i++) {
 
         switch (procedure_flag) {
@@ -103,13 +104,14 @@ int main (int argc, const char * argv[]){
             break;
         }
 
-        sum = 0;
-        for (i = 0; i < ITERATIONS; i++) {
-            sum += records[i];
-        }
-
-        printf ("procedure call with %d arguments cost %.5lf cycles\n", procedure_flag, (double)sum / ITERATIONS);
+        start = ((unsigned long long) high << 32) | low;
+        end = ((unsigned long long) high1 << 32) | low1;
+        record[i] = end - start;
+        sum += record[i];
     }
+
+
+    printf ("procedure call with %d arguments cost %.5lf cycles\n", procedure_flag, (double)sum / ITERATIONS);
 
     return 0;
 }
