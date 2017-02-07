@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <string.h>
 
-#include <unistd.h>
+
 
 #define ITERATIONS 10
 
@@ -14,6 +14,10 @@ static int flag = 0;
 static unsigned long long records[ITERATIONS];
 static uint32_t low, low1;
 static uint32_t high, high1;
+
+struct timespec ts_start,ts_end,test_of_time;
+struct timespec diff(struct timespec start, struct timespec end);
+unsigned long  *times;
 
 
 void procedure_0 () {
@@ -108,6 +112,7 @@ int main (int argc, const char * argv[]){
         end = ((unsigned long long) high1 << 32) | low1;
         records[i] = end - start;
         sum += records[i];
+        printf ("%llu\n", records[i]);
     }
 
 
