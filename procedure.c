@@ -15,10 +15,7 @@ static unsigned long long records[ITERATIONS];
 static uint32_t low, low1;
 static uint32_t high, high1;
 
-struct timespec ts_start,ts_end,test_of_time;
-struct timespec diff(struct timespec start, struct timespec end);
-unsigned long  *times;
-
+int arguments[ITERATIONS][7];
 
 void procedure_0 () {
     STOP_COUNT(high1, low1);
@@ -71,37 +68,37 @@ int main (int argc, const char * argv[]){
 
             case 1:
             START_COUNT(high, low);
-            procedure_1(i);
+            procedure_1(arguments[i][0]);
             break;
 
             case 2:
             START_COUNT(high, low);
-            procedure_2(i, i);
+            procedure_2(arguments[i][0], arguments[i][1]);
             break;
 
             case 3:
             START_COUNT(high, low);
-            procedure_3(i, i, i);
+            procedure_3(arguments[i][0], arguments[i][1], arguments[i][2]);
             break;
 
             case 4:
             START_COUNT(high, low);
-            procedure_4(i, i, i, i);
+            procedure_4(arguments[i][0], arguments[i][1], arguments[i][2], arguments[i][3]);
             break;
 
             case 5:
             START_COUNT(high, low);
-            procedure_5(i, i, i, i, i);
+            procedure_5(arguments[i][0], arguments[i][1], arguments[i][2], arguments[i][3], arguments[i][4]);
             break;
 
             case 6:
             START_COUNT(high, low);
-            procedure_6(i, i, i, i, i, i);
+            procedure_6(arguments[i][0], arguments[i][1], arguments[i][2], arguments[i][3], arguments[i][4], arguments[i][5]);
             break;
 
             case 7:
             START_COUNT(high, low);
-            procedure_7(i, i, i, i, i, i, i);
+            procedure_7(arguments[i][0], arguments[i][1], arguments[i][2], arguments[i][3], arguments[i][4], arguments[i][5], arguments[i][6]);
             break;
 
             default:
