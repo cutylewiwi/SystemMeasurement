@@ -22,7 +22,7 @@ int main (int argc, const char * argv[]) {
     uint32_t high, high1;
     unsigned long long sum;
 
-    int loop = atoi(*argv[argc-1]);
+    int loop = atoi((const char *) argv[argc-1]);
 
 
     // i: loop scale increasing
