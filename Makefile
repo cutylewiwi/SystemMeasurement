@@ -6,7 +6,7 @@ LIB=./lib
 
 all: cpu
 
-cpu: cycles overhead loop
+cpu: cycles overhead loop procedure
 
 overhead: overhead.o
 	$(CC) -o overhead overhead.o
@@ -26,8 +26,14 @@ loop: loop.o
 loop.o: loop.c
 	$(CC) -O0 -c -I$(INCLUDE) loop.c
 
+procedure: procedure.o
+	$(CC) -o procedure procedure.o
+
+procedure.o: procedure.c
+	$(CC) -O0 -c -I$(INCLUDE) procedure.c
+
 lib: statistics.c
 	$(CC) -c statistics.c
 
 clean:
-	rm *.o cycles overhead loop
+	rm *.o cycles overhead loop procedure
