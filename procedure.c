@@ -16,35 +16,35 @@ static uint32_t low, low1;
 static uint32_t high, high1;
 
 
-void procedure_0 () {
+volatile void procedure_0 () {
     STOP_COUNT(high1, low1);
 }
 
-void procedure_1 (int arg1) {
+volatile void procedure_1 (int arg1) {
     STOP_COUNT(high1, low1);
 }
 
-void procedure_2 (int arg1, int arg2) {
+volatile void procedure_2 (int arg1, int arg2) {
     STOP_COUNT(high1, low1);
 }
 
-void procedure_3 (int arg1, int arg2, int arg3) {
+volatile void procedure_3 (int arg1, int arg2, int arg3) {
     STOP_COUNT(high1, low1);
 }
 
-void procedure_4 (int arg1, int arg2, int arg3, int arg4) {
+volatile void procedure_4 (int arg1, int arg2, int arg3, int arg4) {
     STOP_COUNT(high1, low1);
 }
 
-void procedure_5 (int arg1, int arg2, int arg3, int arg4, int arg5) {
+volatile void procedure_5 (int arg1, int arg2, int arg3, int arg4, int arg5) {
     STOP_COUNT(high1, low1);
 }
 
-void procedure_6 (int arg1, int arg2, int arg3, int arg4, int arg5, int arg6) {
+volatile void procedure_6 (int arg1, int arg2, int arg3, int arg4, int arg5, int arg6) {
     STOP_COUNT(high1, low1);
 }
 
-void procedure_7 (int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7) {
+volatile void procedure_7 (int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7) {
     STOP_COUNT(high1, low1);
 }
 
