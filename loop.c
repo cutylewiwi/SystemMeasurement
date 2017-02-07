@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <string.h>
 
 #include <unistd.h>
 
@@ -21,10 +22,13 @@ int main (int argc, const char * argv[]) {
     uint32_t high, high1;
     unsigned long long sum;
 
+    int loop = atoi(*argv[argc-1]);
+
+
     // i: loop scale increasing
-    for (i = 0; i < LOOPSCALE; i++) {
+    //for (i = 0; i < LOOPSCALE; i++) {
         // j: multile iterations
-        records[i] = 0;
+        records[loop-1] = 0;
         for (j = 0; j < ITERATIONS; j++) {
             START_COUNT(high, low);
 
@@ -36,7 +40,7 @@ int main (int argc, const char * argv[]) {
                           "end:\n\t"
                           "test   %%eax,%%eax\n\t"
                           "jns    begin\n\t"
-                          :: "r"(i):"%rax");
+                          :: "r"(loop):"%rax");
 
             STOP_COUNT(high1, low1);
 
@@ -46,16 +50,16 @@ int main (int argc, const char * argv[]) {
             if (end < start) {
                 printf("alert! %d at scale %d\n", j, i);
             }
-            records[i] += end - start;
+            records[loop-1] += end - start;
         }
 
-        records[i] /= 10; // mean
-        records[i] /= i+1;  // mean for each loop round
-    }
+        records[loop-1] /= 10; // mean
+        records[loop-1] /= i+1;  // mean for each loop round
+    //}
 
 
-    for (i = 0; i < LOOPSCALE; i++) {
-        printf ("loop at scale %d cost %.2lf cycles\n", i+1, records[i]);
-    }
+    //for (i = 0; i < loop; i++) {
+        printf ("loop at scale %d cost %.2lf cycles\n", loop, records[loop-1]);
+    //}
     return 0;
 }
