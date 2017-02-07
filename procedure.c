@@ -68,37 +68,37 @@ int main (int argc, const char * argv[]){
 
             case 1:
             START_COUNT(high, low);
-            procedure_1(arguments[i][0]);
+            procedure_1(1);
             break;
 
             case 2:
             START_COUNT(high, low);
-            procedure_2(arguments[i][0], arguments[i][1]);
+            procedure_2(1, 2);
             break;
 
             case 3:
             START_COUNT(high, low);
-            procedure_3(arguments[i][0], arguments[i][1], arguments[i][2]);
+            procedure_3(1, 2, 3);
             break;
 
             case 4:
             START_COUNT(high, low);
-            procedure_4(arguments[i][0], arguments[i][1], arguments[i][2], arguments[i][3]);
+            procedure_4(1, 2, 3, 4);
             break;
 
             case 5:
             START_COUNT(high, low);
-            procedure_5(arguments[i][0], arguments[i][1], arguments[i][2], arguments[i][3], arguments[i][4]);
+            procedure_5(1, 2, 3, 4, 5);
             break;
 
             case 6:
             START_COUNT(high, low);
-            procedure_6(arguments[i][0], arguments[i][1], arguments[i][2], arguments[i][3], arguments[i][4], arguments[i][5]);
+            procedure_6(1, 2, 3, 4, 5, 6);
             break;
 
             case 7:
             START_COUNT(high, low);
-            procedure_7(arguments[i][0], arguments[i][1], arguments[i][2], arguments[i][3], arguments[i][4], arguments[i][5], arguments[i][6]);
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
             break;
 
             default:
