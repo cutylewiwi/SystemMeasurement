@@ -106,8 +106,8 @@ int main (int argc, const char * argv[]){
 
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
-        record[i] = end - start;
-        sum += record[i];
+        records[i] = end - start;
+        sum += records[i];
     }
 
 
