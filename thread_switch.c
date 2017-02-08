@@ -19,6 +19,7 @@ void *thread_fn(void *arg){
     // blocking the thread by read
     read(pipefd[0], buf, 1);
     STOP_COUNT(hight, lowt);
+    thread_exit(NULL);
 }
 
 int main () {
@@ -42,6 +43,8 @@ int main () {
         START_COUNT(high, low);
 
         pthread_join(td, NULL);
+        close(pipefd[0]);
+        close(pipefd[1]);
         start = ((unsigned long long) high << 32) | low;
         endthread = ((unsigned long long) hight << 32) | lowt;
 
