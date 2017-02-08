@@ -15,23 +15,39 @@ int main () {
     unsigned long long end;
     uint32_t low, low1;
     uint32_t high, high1;
+    uint32_t pipebuf;
+    int pipefd[2];
     pid_t pid;
+    int pipefd[2];
     int i;
 
     WARMUP(high, low, high1, low1);
 
+
     for (i = 0; i < ITERATIONS; i++) {
+        if (pipe(pipefd) == -1) {
+            perror("pipe");
+            exit(EXIT_FAILURE);
+        }
+
         START_COUNT(high, low);
         pid = fork();
 
-        if (pid==0) {
+        if (pid==0){
             //child
+            STOP_COUNT(high1, low1);
+            end = ((unsigned long long) high1 << 32) | low1;
+            write(pipefd[1], &end, sizeof(end));
+            close(pipefd[0]);
+            close(pipefd[1]);
             exit(0);
         }else {
             STOP_COUNT(high1, low1);
             start = ((unsigned long long) high << 32) | low;
             end = ((unsigned long long) high1 << 32) | low1;
-            wait(NULL);
+            read(pipefd[0], &pipebuf, sizeof(pipebuf));
+            end = pipebuf < end ? pipebuf : end;
+            // wait(NULL);
             printf("%llu\n", end - start);
         }
 
