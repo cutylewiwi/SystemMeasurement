@@ -7,7 +7,7 @@
 
 #include "proj_timing.h"
 
-#define ITERATIONS 10
+#define ITERATIONS 100
 
 
 uint32_t lowt, hight;
