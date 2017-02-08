@@ -40,4 +40,4 @@ thread_switch: thread_switch.o
 	$(CC) -pthread -o thread_switch thread_switch.o
 
 clean:
-	rm *.o cycles time_ovh loop_ovh procedure syscall thread process proc_switch
+	rm *.o cycles time_ovh loop_ovh procedure syscall thread process proc_switch thread_switch
