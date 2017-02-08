@@ -18,7 +18,6 @@ int main () {
     uint32_t pipebuf;
     int pipefd[2];
     pid_t pid;
-    int pipefd[2];
     int i;
 
     WARMUP(high, low, high1, low1);
