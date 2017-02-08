@@ -15,7 +15,7 @@ unsigned long long endthread;
 
 void *doSth(void *arg){
     STOP_COUNT(hight, lowt);
-    endthread = end = ((unsigned long long) hight << 32) | lowt;
+    endthread = ((unsigned long long) hight << 32) | lowt;
 }
 
 int main () {
