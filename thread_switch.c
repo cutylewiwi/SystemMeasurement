@@ -40,7 +40,6 @@ int main () {
         sleep(1);
         write(pipefd[1], buf, 1);
         START_COUNT(high, low);
-        pthread_yield();
 
         pthread_join(td, NULL);
         start = ((unsigned long long) high << 32) | low;
