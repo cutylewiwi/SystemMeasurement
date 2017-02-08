@@ -11,4 +11,14 @@
                                                                 "CPUID\n\t": "=r" (cycles_high1), "=r" (cycles_low1):: \
                                                                 "%rax", "%rbx", "%rcx", "%rdx")
 
+//warm up to fill instruction cache
+#define WARMUP(high, low, high1, low1)\
+do {\
+    START_COUNT(high, low); \
+    STOP_COUNT(high1, low1);\
+    START_COUNT(high, low); \
+    STOP_COUNT(high1, low1);\
+    START_COUNT(high, low); \
+    STOP_COUNT(high1, low1);\
+} while(0)
 #endif

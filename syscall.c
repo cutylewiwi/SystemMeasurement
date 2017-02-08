@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <unistd.h>
 
 #include "proj_timing.h"
 
@@ -13,14 +14,17 @@ int main () {
     uint32_t low, low1;
     uint32_t high, high1;
     int i;
+
+    WARMUP(high, low, high1, low1);
     for (i = 0; i < ITERATIONS; i++) {
         START_COUNT(high, low);
+        getpid();
         STOP_COUNT(high1, low1);
 
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
 
-        printf("%llu, %llu, %llu\n", start, end, end - start);
+        printf("%llu\n", end - start);
     }
 
     return 0;

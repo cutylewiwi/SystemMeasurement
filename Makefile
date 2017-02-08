@@ -6,13 +6,19 @@ LIB=./lib
 
 all: cpu
 
-cpu: cycles overhead loop procedure
+cpu: cycles time_ovh loop_ovh procedure syscall
 
-overhead: overhead.o
-	$(CC) -o overhead overhead.o
+time_ovh: time_ovh.o
+	$(CC) -o time_ovh time_ovh.o
 
-overhead.o: overhead.c
-	$(CC) -O0 -c -I$(INCLUDE) overhead.c
+time_ovh.o: time_ovh.c
+	$(CC) -O0 -c -I$(INCLUDE) time_ovh.c
+
+loop_ovh: loop_ovh.o
+	$(CC) -o loop_ovh loop_ovh.o
+	
+loop_ovh.o: loop_ovh.c
+	$(CC) -O0 -c -I$(INCLUDE) loop_ovh.c
 
 cycles: cycles.o
 	$(CC) -o cycles cycles.o
@@ -31,6 +37,12 @@ procedure: procedure.o
 
 procedure.o: procedure.c
 	$(CC) -O0 -c -I$(INCLUDE) procedure.c
+
+syscall: syscall.o
+	$(CC) -o syscall syscall.o
+
+syscall.o: syscall.c
+	$(CC) -O0 -c -I$(INCLUDE) syscall.c
 
 lib: statistics.c
 	$(CC) -c statistics.c

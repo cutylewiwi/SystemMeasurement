@@ -55,6 +55,8 @@ int main (int argc, const char * argv[]){
     unsigned long long start;
     unsigned long long end;
     unsigned long long sum;
+    
+    WARMUP(high, low, high1, low1);
 
     procedure_flag = atoi ((const char *) argv[argc-1]);
     sum = 0;
