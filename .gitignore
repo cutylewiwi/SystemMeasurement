@@ -2,3 +2,4 @@
 *.dvi
 *.aux
 *.o
+.DS_Store
