@@ -46,9 +46,9 @@ int main () {
         endthread = ((unsigned long long) hight << 32) | lowt;
 
 
-        end = endthread < end ? endthread : end;
+        // end = endthread < end ? endthread : end;
 
-        printf("%llu\n", end - start);
+        printf("%llu\n", endthread - start);
     }
 
     return 0;
