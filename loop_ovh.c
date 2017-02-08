@@ -11,12 +11,12 @@
 
 #include <unistd.h>
 
-#define ITERATIONS 100
-#define LOOPSCALE 10
+#define ITERATIONS 10000
+#define LOOPSCALE 100
 
 #include "proj_timing.h"
 
-uint64_t times[LOOPSCALE][ITERATIONS];
+//uint64_t times[LOOPSCALE][ITERATIONS];
 
 static void inline measured_loop(unsigned int n)
 {
@@ -28,7 +28,7 @@ int main (int argc, const char * argv[]) {
     int i, j, k;
     uint32_t low, low1;
     uint32_t high, high1;
-    uint32_t start, end;
+    uint64_t start, end;
 
     WARMUP(high, low, high1, low1);
 
@@ -45,19 +45,10 @@ int main (int argc, const char * argv[]) {
 
             if (end < start) {
                 printf("alert! %d at scale %d\n", j, i);
-                times[j][i] = 0;
             } else {
-                times[j][i] = end - start;
+                printf("%d, %ld\n",  j, end-start);
             }
         }
-    }
-
-    for (j=0; j<LOOPSCALE; j++){
-        printf("loopscale: %d\n", j);
-        for (i=0; i<ITERATIONS; i++){
-            printf("%ld\n", times[j][i]); 
-        }
-
     }
 
     return 0;
