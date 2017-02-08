@@ -6,7 +6,7 @@ all: cpu
 
 cpu: cycles time_ovh loop_ovh procedure syscall thread process
 
-%.o : %.c $(DEPS)
+%.o : %.c
 	$(CC) -O0 -c -I$(INCLUDE) $< 
 
 time_ovh: time_ovh.o
@@ -33,17 +33,8 @@ syscall.o: syscall.c
 thread: thread.o
 	$(CC) -pthread -o thread thread.o
 
-thread.o: thread.c
-	$(CC) -O0 -c -I$(INCLUDE) thread.c
-
 process: process.o
 	$(CC) -o process process.o
 
-process.o: process.c
-	$(CC) -O0 -c -I$(INCLUDE) process.c
-
-lib: statistics.c
-	$(CC) -c statistics.c
-
 clean:
-	rm *.o cycles time_ovh loop_ovh procedure syscall
+	rm *.o cycles time_ovh loop_ovh procedure syscall thread process
