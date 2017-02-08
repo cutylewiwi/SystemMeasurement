@@ -15,7 +15,7 @@ int main () {
     unsigned long long end;
     uint32_t low, low1;
     uint32_t high, high1;
-    uint32_t pipebuf;
+    uint64_t pipebuf;
     int pipefd[2];
     pid_t pid;
     int i;
