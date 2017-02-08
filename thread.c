@@ -13,7 +13,7 @@
 uint32_t lowt, hight;
 unsigned long long endthread;
 
-void *doSth(void *arg){
+void *thread_fn(void *arg){
     STOP_COUNT(hight, lowt);
     endthread = ((unsigned long long) hight << 32) | lowt;
 }
@@ -29,7 +29,7 @@ int main () {
     WARMUP(high, low, high1, low1);
     for (i = 0; i < ITERATIONS; i++) {
         START_COUNT(high, low);
-        pthread_create(&td, NULL, doSth, NULL);
+        pthread_create(&td, NULL, thread_fn, NULL);
         STOP_COUNT(high1, low1);
 
         pthread_join(td, NULL);

@@ -47,6 +47,10 @@ int main () {
             read(pipefd[0], &pipebuf, sizeof(pipebuf));
             end = pipebuf < end ? pipebuf : end;
             // wait(NULL);
+
+            if (end < start) {
+
+            }
             printf("%llu\n", end - start);
         }
 
