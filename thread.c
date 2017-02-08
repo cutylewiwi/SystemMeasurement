@@ -11,13 +11,15 @@
 
 
 void *doSth(void *arg){
+    STOP_COUNT(hight, lowt);
+    endthread = end = ((unsigned long long) hight << 32) | lowt;
 }
 
 int main () {
     unsigned long long start;
-    unsigned long long end;
-    uint32_t low, low1;
-    uint32_t high, high1;
+    unsigned long long end, endthread;
+    uint32_t low, low1, lowt;
+    uint32_t high, high1, hight;
     pthread_t td;
     int i;
 
@@ -26,10 +28,13 @@ int main () {
         START_COUNT(high, low);
         pthread_create(&td, NULL, doSth, NULL);
         STOP_COUNT(high1, low1);
-
+        
+        pthread_join(td, NULL);
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
-        pthread_join(td, NULL);
+
+
+        end = endthread < end ? endthread : end;
 
         printf("%llu\n", end - start);
     }
