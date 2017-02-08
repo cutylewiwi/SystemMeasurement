@@ -18,25 +18,27 @@
 
 //uint64_t times[LOOPSCALE][ITERATIONS];
 
-static void inline measured_loop(unsigned int n)
-{
-    int k;
-    for (k=0; k<n; k++);
-}
-
 int main (int argc, const char * argv[]) {
     int i, j, k;
     uint32_t low, low1;
     uint32_t high, high1;
     uint64_t start, end;
 
+    if (argc != 3){
+        printf("usage: loop_ovh loopscale iterations\n");
+        return 1;
+    }
+    int loopscale = atoi((const char *) argv[argc-2]);
+    int iterations = atoi((const char *) argv[argc-1]);
+
     WARMUP(high, low, high1, low1);
 
-    for (j = 0; j < LOOPSCALE; j++) {
-        for (i = 0; i < ITERATIONS; i++) {
+    for (j = 0; j < loopscale; j++) {
+        for (i = 0; i < iterations; i++) {
             START_COUNT(high, low);
 
-            measured_loop(j);
+            //measured_loop
+            for (k=0; k<j; k++);
 
             STOP_COUNT(high1, low1);
 
@@ -46,7 +48,7 @@ int main (int argc, const char * argv[]) {
             if (end < start) {
                 printf("alert! %d at scale %d\n", j, i);
             } else {
-                printf("%d, %ld\n",  j, end-start);
+                printf("%d, %lu\n",  j, end-start);
             }
         }
     }
