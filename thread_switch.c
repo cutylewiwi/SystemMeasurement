@@ -19,7 +19,6 @@ void *thread_fn(void *arg){
     // blocking the thread by read
     read(pipefd[0], buf, 1);
     STOP_COUNT(hight, lowt);
-    pthread_exit();
 }
 
 int main () {
@@ -29,7 +28,7 @@ int main () {
     pthread_t td;
     int i;
 
-    WARMUP(high, low, high1, low1);
+    WARMUP(high, low, hight, lowt);
     for (i = 0; i < ITERATIONS; i++) {
         if (pipe(pipefd) == -1) {
             perror("pipe");
