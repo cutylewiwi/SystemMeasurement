@@ -19,7 +19,7 @@ void *thread_fn(void *arg){
     // blocking the thread by read
     read(pipefd[0], buf, 1);
     STOP_COUNT(hight, lowt);
-    thread_exit(NULL);
+    pthread_exit(NULL);
 }
 
 int main () {
