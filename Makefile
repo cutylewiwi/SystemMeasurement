@@ -4,7 +4,7 @@ LIB=./lib
 
 all: cpu
 
-cpu: cycles time_ovh loop_ovh procedure syscall thread process
+cpu: cycles time_ovh loop_ovh procedure syscall thread process proc_switch
 
 %.o : %.c
 	$(CC) -O0 -c -I$(INCLUDE) $< 
@@ -36,5 +36,8 @@ thread: thread.o
 process: process.o
 	$(CC) -o process process.o
 
+proc_switch: proc_switch.o
+	$(CC) -o proc_switch proc_switch.o
+
 clean:
-	rm *.o cycles time_ovh loop_ovh procedure syscall thread process
+	rm *.o cycles time_ovh loop_ovh procedure syscall thread process proc_switch
