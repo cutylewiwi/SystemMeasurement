@@ -22,14 +22,16 @@ void *thread_fn(void *arg){
     pthread_exit(NULL);
 }
 
-int main () {
+int main (int argc, const char *argv[]) {
     unsigned long long start;
     uint32_t high, low;
     pthread_t td;
     int i;
 
     WARMUP(high, low, hight, lowt);
-    for (i = 0; i < ITERATIONS; i++) {
+    
+    int iterations = atoi((const char *) argv[argc-1]);
+    for (i = 0; i < iterations; i++) {
         if (pipe(pipefd) == -1) {
             perror("pipe");
             exit(EXIT_FAILURE);
