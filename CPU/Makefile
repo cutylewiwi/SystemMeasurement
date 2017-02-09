@@ -1,7 +1,7 @@
 CC=gcc
-INCLUDE=./include
+INCLUDE=../include
 CFLAGS = -Wall
-LIB=./lib
+LIB=../lib
 
 all: cpu
 

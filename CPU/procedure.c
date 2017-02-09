@@ -17,7 +17,7 @@ static uint64_t start, end;
 int arguments[ITERATIONS][7];
 
 void procedure_0 () {
-    return; 
+    return;
 }
 
 void procedure_1 (int arg1) {
@@ -46,12 +46,12 @@ do{\
     STOP_COUNT(high1, low1);\
     start = ((unsigned long long) high << 32) | low;\
     end = ((unsigned long long) high1 << 32) | low1;\
-    printf ("%d, %lu\n", para_count, end-start);\
+    printf ("%d, %" PRIu64 "\n", para_count, end-start);\
 }while(0)
 
 int main (int argc, const char * argv[]){
     int i, j;
-    
+
     if (argc != 3) {
         printf("usage: procedure outerloop innerloop\n");
         return 1;
@@ -59,7 +59,7 @@ int main (int argc, const char * argv[]){
 
     int outer = atoi((const char *) argv[argc-2]);
     int inner = atoi((const char *) argv[argc-1]);
-    
+
     WARMUP(high, low, high1, low1);
     for (i = 0; i < outer; i++) {
         START_COUNT(high, low);
@@ -123,7 +123,7 @@ int main (int argc, const char * argv[]){
         }
         output(6);
     }
-    
+
     for (i = 0; i < outer; i++) {
         START_COUNT(high, low);
         for (j=0; j < inner; j++){
