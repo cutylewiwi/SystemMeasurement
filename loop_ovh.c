@@ -11,12 +11,14 @@
 
 #include <unistd.h>
 
-#define ITERATIONS 10000
-#define LOOPSCALE 100
+//#define ITERATIONS 10000
+//#define LOOPSCALE 100
 
 #include "proj_timing.h"
 
 //uint64_t times[LOOPSCALE][ITERATIONS];
+void procedure_0 () {
+}
 
 int main (int argc, const char * argv[]) {
     int i, j, k;
@@ -45,11 +47,11 @@ int main (int argc, const char * argv[]) {
             start = ((unsigned long long) high << 32) | low;
             end = ((unsigned long long) high1 << 32) | low1;
 
-            if (end < start) {
-                printf("alert! %d at scale %d\n", j, i);
-            } else {
+            //if (end < start) {
+            //    printf("alert! %d at scale %d\n", j, i);
+            //} else {
                 printf("%d, %lu\n",  j, end-start);
-            }
+            //}
         }
     }
 
