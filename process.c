@@ -18,7 +18,7 @@ int main (int argc, const char *argv[]) {
     uint64_t pipebuf;
     int pipefd[2];
     pid_t pid;
-    int i,j;
+    int i;
 
     WARMUP(high, low, high1, low1);
 
@@ -52,7 +52,7 @@ int main (int argc, const char *argv[]) {
             end = pipebuf < end ? pipebuf : end;
             close(pipefd[1]);
             close(pipefd[0]);
-            
+
             //printf("%d, %llu\n", j, end - start);
             printf("%llu\n", end - start);
             fflush(stdout);

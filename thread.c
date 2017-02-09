@@ -24,14 +24,14 @@ int main (int argc, const char *argv[]) {
     uint32_t low, low1;
     uint32_t high, high1;
     pthread_t td;
-    int i,j;
+    int i;
 
     WARMUP(high, low, high1, low1);
 
-    
+
     int iterations = atoi((const char *) argv[argc-1]);
     //int outer = atoi((const char *) argv[argc-2]);
-    
+
     //for (j = 0; j < outer; j++){
     for (i = 0; i < iterations; i++) {
         START_COUNT(high, low);
