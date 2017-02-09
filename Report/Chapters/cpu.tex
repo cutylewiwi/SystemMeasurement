@@ -139,7 +139,7 @@ We estimate the procedure call with no parameters will take 4 cycles and expect 
 \textbf{Figure \ref{procedure_overhead_result}} shows our Estimation and the measurement results. The comparison indicates that procedure call is far more quicker than we expected and the overhead increases linearly when the parameter number increases. The variance line justifies that we have successfully eliminated most variance.
 
 
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \frame{\includegraphics[width = .9\textwidth]{pictures/procedure.png}}
     \caption{Procedure Overhead: Estimation and Experiment Results }
@@ -163,7 +163,7 @@ The estimation and the measurement results are shown in \textbf{Table \ref{measu
 
 \begin{table}[ht]
   \centering
-  \caption{\textbf{Measurement Overhead: Estimation and Experiment Results}}
+  \caption{\textbf{System Call Overhead: Estimation and Experiment Results}}
   \begin{threeparttable}
   \begin{tabular}{ccccc}
   \hline
@@ -225,13 +225,13 @@ The estimation and the measurement result will be list in the \textbf{Table \ref
   \centering
   \caption{\textbf{Process/Thread Creation Time: Estimation and Experiment Results}}
   \begin{threeparttable}
-  \begin{tabular}{ccccc}
+  \begin{tabular}{cccccc}
   \hline
-      \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} \\
-      \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  & (AVG)   \\
+      \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard}\\
+      \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
   \hline
-      \textbf{Process} & NA & NA & 20000 ($7.16 \mu s$) & 134507 \\
-      \textbf{Kernel Thread} & NA & NA & 10000 ($3.58 \mu s$) & 20635\\
+      \textbf{Process} & NA & NA & 20000 ($7.16 \mu s$) & 134507 & 3062 \\
+      \textbf{Kernel Thread} & NA & NA & 10000 ($3.58 \mu s$) & 20635 & 1546 \\
   \hline
   \end{tabular}
   \end{threeparttable}
@@ -269,15 +269,15 @@ The method for thread is similar, the differences are:
 \subsubsection{Estimation and results}
 \begin{table}[ht]
     \centering
-    \caption{\textbf{Process/Thread Creation Time: Estimation and Experiment Results}}
+    \caption{\textbf{Process/Thread Context Switch Time: Estimation and Experiment Results}}
     \begin{threeparttable}
-        \begin{tabular}{ccccc}
+        \begin{tabular}{cccccc}
         \hline
-        \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr.        Results} \\
-        \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  & (AVG)   \\
+        \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr.        Results} & \textbf{Standard} \\
+        \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  & (AVG)   & \textbf{Deviation}\\
         \hline
-        \textbf{Process} & NA & NA & 20000 & 79097 \\
-        \textbf{Kernel Thread} & NA & NA & 10000 & 2562\\
+        \textbf{Process} & NA & NA & 20000 & 79097  &  650\\
+        \textbf{Kernel Thread} & NA & NA & 10000 & 2562 & 538\\
         \hline
         \end{tabular}
     \end{threeparttable}
