@@ -115,7 +115,7 @@ The result shows that, we still underestimated the increament ratio of the overh
 \subsubsection{Methodology}
 
 When measuring the overhead of a procedure call, we just put our cycles counting code before and after the procedure call; also, we reduced the variance by using the arithmatic mean of the response overhead
-came from 100 times measurements.
+came from 10000 times measurements.
 
 \subsubsection{Estimation and results}
 
@@ -125,6 +125,12 @@ came from 100 times measurements.
 
 \subsubsection{Methodology}
 
+When measuring the system calls, basically we want to measure the cycle ticks between the begin and the return points of the system call. This means that we required the kernel return the control to the process after the system call
+service routine finished, so that what we can measure is some 'light weight' system call, like \textbf{getpid()} or \textbf{kill()}. However, getpid() will be cached by the kernel, so that only the first call of the getpid() can trap into
+the kernel space, so that in the end, we choose \textbf{kill()} system call to be the system call we measured.
+
+For specific implementation, the measurement process will first start counting cycles, then send itself a sigusr1 signal by invoke \textbf{kill()} call. In the signal handler, the process will stop counting cycles, and this period of cycle ticks
+will be the overhead of the \textbf{kill()} system call. We repeated the measurement routine for 10000 times, then take the arithmatic mean of the cycles cost as the final result of overhead.
 
 
 \subsubsection{Estimation and results}
@@ -198,10 +204,19 @@ For the overhead measurement of the context switch, the basic idea to measure th
 \textbf{section \ref{creation_methodology}}, that the measuring processes (threads) are the only two processes (threads) that to be scheduled. In the real system, this is impossible, but we can estimate this situation by increasing the priority of the process (threads).
 
 For specific how to count the cycles of a context switch, we need to force a context switch happen in one process (thread) the another (thread) process can stop the counting afterwards. To achieve this goal, we implement the following measure sequence by using blocking
-reading pipe:
+reading pipe. To be more precisely, at parent process, we first start a pipe for communication, then fork new process; after that, parent process will first start counting cycles, then write to the communiting pipe, then call wait() to wait the child process; at the same time, child process will read from the pipe, then stop counting the cycles, and finally send the stop cycles back to the parent process via the pipe then exit; after that, parent will wake up and get the value and count the tick.
 
-\lstinputlisting[language=C, firstline=32, lastline=47]{../proc_switch.c}
+This method uses read and wait to synchronize. Either child or parent process executing first, the final result will be the period start from parent writing to the pipe, then context switch to the child, and finally the the child read from pipe.
 
-We first make parent process sleep for 1 second, in order to make sure the child process has chance to execution and arrive at the point
+The method for thread is similar, the differences are:
+
+\begin{enumerate}
+    \item We use pthread\_join() instread of wait()
+    \item We use global variable, instead of pipe, to pass the final tick to the main thread;
+\end{enumerate}
+
 
 \subsubsection{Estimation and results}
+
+For the question about difference between process context switch and kernel context switch, as the results show that, the overhead of thread context switch around 4 times less then process context switch. The main difference between thread and process context switch
+is that, when thread context switching, kernel need neither to construct the virtual memory space to the thread switch to, nor to flush the tlb, which means that thread context switch is much less expensive then process context switch.
