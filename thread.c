@@ -7,7 +7,7 @@
 
 #include "proj_timing.h"
 
-#define ITERATIONS 10
+//#define ITERATIONS 10
 
 
 uint32_t lowt, hight;
@@ -18,16 +18,22 @@ void *thread_fn(void *arg){
     endthread = ((unsigned long long) hight << 32) | lowt;
 }
 
-int main () {
+int main (int argc, const char *argv[]) {
     unsigned long long start;
     unsigned long long end;
     uint32_t low, low1;
     uint32_t high, high1;
     pthread_t td;
-    int i;
+    int i,j;
 
     WARMUP(high, low, high1, low1);
-    for (i = 0; i < ITERATIONS; i++) {
+
+    
+    int iterations = atoi((const char *) argv[argc-1]);
+    //int outer = atoi((const char *) argv[argc-2]);
+    
+    //for (j = 0; j < outer; j++){
+    for (i = 0; i < iterations; i++) {
         START_COUNT(high, low);
         pthread_create(&td, NULL, thread_fn, NULL);
         STOP_COUNT(high1, low1);
@@ -39,8 +45,10 @@ int main () {
 
         end = endthread < end ? endthread : end;
 
+        //printf("%d, %llu\n", j, end - start);
         printf("%llu\n", end - start);
     }
+    //}
 
     return 0;
 }
