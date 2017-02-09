@@ -10,7 +10,7 @@
 #define ITERATIONS 10
 
 
-int main () {
+int main (int argc, const char *argv[]) {
     int pipefd[2];
     unsigned long long start;
     unsigned long long end;
@@ -19,11 +19,11 @@ int main () {
     pid_t pid;
     int i;
     char buf[1];
-    int status;
 
     WARMUP(high, low, high1, low1);
 
-    for (i = 0; i < ITERATIONS; i++) {
+    int iterations = atoi((const char *) argv[argc-1]);
+    for (i = 0; i < iterations; i++) {
         if (pipe(pipefd) == -1) {
             perror("pipe");
             exit(EXIT_FAILURE);

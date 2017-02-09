@@ -10,8 +10,6 @@
 
 #include "proj_timing.h"
 
-static int flag = 0;
-static unsigned long long records[ITERATIONS];
 static uint32_t low, low1;
 static uint32_t high, high1;
 static uint64_t start, end;

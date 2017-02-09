@@ -1,5 +1,6 @@
 CC=gcc
 INCLUDE=./include
+CFLAGS = -Wall
 LIB=./lib
 
 all: cpu
@@ -7,7 +8,7 @@ all: cpu
 cpu: cycles time_ovh loop_ovh procedure syscall thread process proc_switch thread_switch
 
 %.o : %.c
-	$(CC) -O0 -c -I$(INCLUDE) $<
+	$(CC) -O0 -c $(CFLAGS) -I$(INCLUDE) $<
 
 time_ovh: time_ovh.o
 	$(CC) -o time_ovh time_ovh.o
@@ -40,4 +41,4 @@ thread_switch: thread_switch.o
 	$(CC) -pthread -o thread_switch thread_switch.o
 
 clean:
-	rm *.o cycles time_ovh loop_ovh procedure syscall thread process proc_switch thread_switch
+	rm -f *.o cycles time_ovh loop_ovh procedure syscall thread process proc_switch thread_switch
