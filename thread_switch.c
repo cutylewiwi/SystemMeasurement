@@ -24,7 +24,6 @@ void *thread_fn(void *arg){
 
 int main () {
     unsigned long long start;
-    unsigned long long end;
     uint32_t high, low;
     pthread_t td;
     int i;

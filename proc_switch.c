@@ -19,7 +19,6 @@ int main () {
     pid_t pid;
     int i;
     char buf[1];
-    int status;
 
     WARMUP(high, low, high1, low1);
 
