@@ -3,13 +3,29 @@
 \documentclass{article}
 
 % packages
+\usepackage{graphicx} % pictures
 \usepackage{listings} % source codes
+\usepackage{xcolor} % source codes highlight
+\usepackage{threeparttable} % result table
 \usepackage[backend = biber, style = caspervector, utf8, sorting = none]{biblatex} % references
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=25mm,
+ top=25mm,
+ right=25mm,
+ bottom=25mm
+ }
 
 
 
 
 \begin{document}
+
+% format
+
+\setlength{\parskip}{1em}
 
 % titles
 
@@ -26,7 +42,7 @@
 \lstset{
     numbers=left,
     numberstyle=\footnotesize,
-    stepnumber=5,
+    stepnumber=1,
     numbersep=5pt,
     basicstyle=\footnotesize,
     frame=single,
@@ -36,20 +52,28 @@
     xrightmargin=2em,
 }
 
-Hello World!
-
 % introduction
-\include{Chapters/introduction}
+\section{Introduction}
+
+\input{Chapters/introduction}
 
 
 % machine description
-\include{Chapters/machine}
+\section{Machine Description}
+
+\input{Chapters/machine}
 
 % experiments
+\section{CPU Operations}
+\input{Chapters/cpu}
 
-\include{Chapters/cpu}
-\include{Chapters/memory}
-\include{Chapters/network}
-\include{Chapters/file}
+\section{Memory}
+\input{Chapters/memory}
+
+\section{Networking}
+\input{Chapters/network}
+
+\section{File System}
+\input{Chapters/file}
 
 \end{document}

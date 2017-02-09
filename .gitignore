@@ -3,3 +3,4 @@
 *.aux
 *.o
 .DS_Store
+*.xml

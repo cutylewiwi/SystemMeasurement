@@ -1,0 +1,207 @@
+
+This section mainly reports our estimation and measurement result about the cpu operations and os service like system calls and context creation and switch.
+
+
+\subsection{Overhead Measurement}
+When performing measurement, we are using the following code to measure the overhead of a piece of code:
+
+\lstinputlisting[language=C, firstline=4, lastline=15]{../include/proj_timing.h}
+
+In the source code, we use RDTSC and RDTSCP to read out the timestamp counter register on the cpu. CPUID instruction serves as a barrier to ensure only cycles
+runs between RDTSC and RDTSCP instructions will be counted. So when we want to measure the overhead of some functions (code pieces), we can just put START\_COUNT
+before the target code pieces and STOP\_COUNT after, then we can easily get the cycles ticks during executing the code pieces we want to measure.
+
+
+\subsubsection{Methodology}
+When measuring the overhead of the measurement code we mentioned above, we use the following code snipes to perform the overhead measurement:
+
+\lstinputlisting[language=C, firstline=21, lastline=22]{../time_ovh.c}
+
+We just measure nothing between two count marcos, so that this measurement will response the overhead of the execution of thos two marcos.
+
+When performing the measurement, we will run the measurement code in a 10 round loop, then we take the arithmatic mean of the cycles responsed as the final result.
+
+% because this minimal
+% cycles results can be an evidence that our cpu can finish running the target code within this minimal cycles ticks, and also, all other greater cycles ticks might imply that
+% they are impacted by other infererence like hardware interruption. As a result, this minimal value is the value that most likely producing without any other infererence, so we take
+% this minimal value as the measurement result.
+
+\subsubsection{Estimation and results}
+\label{overhead_estimation}
+
+The estimation and the measurement result will be list in the following table:
+
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Measurement Overhead: Estimation and Experiment Results}}
+  \begin{threeparttable}
+  \begin{tabular}{cccc}
+  \hline
+      \textbf{Hardware Overhead} & \textbf{Software Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} \\
+      \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &     \\
+  \hline
+  6 (inst) or 44 (cycles) & 0 & 6 (instructions) & 92 \\
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{measurement_overhead_table}
+\end{table}
+
+When estimation, the first evidence for us to perform the estimation is the code we write and generate, following is the acutall assembly code after compilation:
+
+\begin{lstlisting}
+    4005f8:	0f a2                	cpuid
+    4005fa:	0f 31                	rdtsc
+    4005fc:	89 d7                	mov    %edx,%edi
+    4005fe:	89 c6                	mov    %eax,%esi
+    400600:	89 7d d0             	mov    %edi,-0x30(%rbp)
+    400603:	89 75 d4             	mov    %esi,-0x2c(%rbp)
+    400606:	0f 01 f9             	rdtscp
+    400609:	89 d7                	mov    %edx,%edi
+    40060b:	89 c6                	mov    %eax,%esi
+    40060d:	0f a2                	cpuid
+    40060f:	89 7d d8             	mov    %edi,-0x28(%rbp)
+    400612:	89 75 dc             	mov    %esi,-0x24(%rbp)
+\end{lstlisting}
+
+We can found out: there are 4 instructions between RDTSC and RDTSCP instruction: two of them are inline aseembly we write in code, and the rest two are compile-time generated code caused by
+register saving, so the totally overhead for the measurement should be 4 instructions + 2 instructions (RDTSC and RDTSCP themselves).
+
+The second issue for estimating the hardware overhead is that, how many cycles each instruction will take, or in other words, what is the cpu's CPI (cycles per instruction). We haven't found out
+the most related information, so we performed the following estimation: for those 6 instructions, we assume that each cycle the cpu can commit one instruction, and the pipeline stages is around 20;
+as those 6 instructions don't have any data dependencies that can not be solved by data forwarding, the pipeline will not stall,and for those 6 instructions, from first instruction enter the pipeline
+to the last instruction commit, the cycles consumed should be:
+    $$ 20 + 4 + 20 = 44 cycles $$
+
+After the experiments, the result shows that we underestimated the overhead by around 50\%, but as we don't know much about the internal of the Intel CPU, so that this kind of mistakes is somewhat reasonable.
+
+\subsection{Loop Overhead}
+When performing estimation, it is reasonable that using repeated experiments to reduce the impact of variance, so before all other overhead measurement, we need to determin the overhead of the loop first.
+
+\subsubsection{Methodology}
+
+When measuring the loop overhead, we simply measures the cycles diff before and after a simple do nothing loop; in order to reduce the impact of variance, we also run this test 10 times, then take the arithmatic
+means of 10 samples as the final measurement result. We also perform our measurement upon loops rounds from 0 to 50, in order to see the overhead of different loop scale.
+
+\subsubsection{Estimation and results}
+
+Our Estimation and the measurement results are showed in the \textbf{Figure \ref{loop_overhead_result}}:
+
+\begin{figure}[ht]
+    \centering
+    \frame{\includegraphics[width = .9\textwidth]{pictures/loop_ovh.png}}
+    \caption{Loop Overhead: Estimation and Experiment Results }
+    \label{loop_overhead_result}
+\end{figure}
+
+As shown in the graph, when estimating, we estimate the overhead increasing by 8 cycles when loop scale increase by 1. We made this estimate based on the instructions of the loop after compile:
+
+\begin{lstlisting}
+    4006a1:	c7 45 c4 00 00 00 00 	movl   $0x0,-0x3c(%rbp)
+    4006a8:	eb 04                	jmp    4006ae <main+0xf8>
+    4006aa:	83 45 c4 01          	addl   $0x1,-0x3c(%rbp)
+    4006ae:	8b 45 c4             	mov    -0x3c(%rbp),%eax
+    4006b1:	3b 45 c0             	cmp    -0x40(%rbp),%eax
+    4006b4:	7c f4                	jl     4006aa <main+0xf4>
+\end{lstlisting}
+
+As shown in above, there will be 4 instructions for each round of the loop, as the \textbf{Section \ref{overhead_estimation}} shows that, each instruction will taken more than one cycle tick in average.
+We finally made a assumption that each instructions will take up 2 cycles on average.
+
+The result shows that, we still underestimated the increament ratio of the overhead, and in fact, each each loop round increase will increase the overhead by 18.
+
+\subsection{Procedure Call}
+
+\subsubsection{Methodology}
+
+When measuring the overhead of a procedure call, we just put our cycles counting code before and after the procedure call; also, we reduced the variance by using the arithmatic mean of the response overhead
+came from 100 times measurements.
+
+\subsubsection{Estimation and results}
+
+
+
+\subsection{System Call}
+
+\subsubsection{Methodology}
+
+
+
+\subsubsection{Estimation and results}
+
+
+
+\subsection{Process and Kernel Thread Creation}
+
+\subsubsection{Methodology}
+\label {creation_methodology}
+
+When measuring Task, or process creation time, basically we need make some assumptions. The first one is that we assume that when the measurement process fork a child process, after fork syscall, the os will schedule either
+the measurement process or the child of the measurement process to be executed, however, we are not sure which process (parent, or child) will be executed first. Under this assumption, we can find out that basically what
+we want to get is the cycles between the point just before fork call and the point fork return.
+
+In order to get the results we want, we implement the following measurement sequence:
+
+\begin{enumerate}
+    \item We initialize a pipe for child and parent process to comunicate \label{task_creation_pipe}
+    \item We start counting cycles before we call fork
+    \item Both at the parent and the child process start point after fork return, we stop counting cycles
+    \item Child process passing the end counting to the parent via the pipe we initialized at \textbf{\ref{task_creation_pipe}}
+    \item We calculate both cycles spend for parent fork return and child fork return, then choose the smaller one (as the smaller one indicates that this process executes before the other one)
+\end{enumerate}
+
+For the kernel thread creation, we use a similar method. The measurement sequence is listed at following:
+\begin{enumerate}
+    \item We initialize a global variable for child process to store the end clock cycle count \label{thread_creation_gv}
+    \item We start counting cycles before we call pthread\_create
+    \item Both at the main and the peer thread start point after pthread\_create finished, we stop counting cycles
+    \item peer thread passing the end counting to the main thread via the global variable we initialized at \textbf{\ref{thread_creation_gv}}
+    \item We calculate both cycles spend for main thread pthread\_create return and pthread\_create start execution, then choose the smaller one (as the smaller one indicates that this thread executes before the other one)
+\end{enumerate}
+
+\subsubsection{Estimation and results}
+
+The estimation and the measurement result will be list in the \textbf{Table \ref{process_creation_time}}:
+
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Process/Thread Creation Time: Estimation and Experiment Results}}
+  \begin{threeparttable}
+  \begin{tabular}{ccccc}
+  \hline
+      \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} \\
+      \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &     \\
+  \hline
+    \textbf{Process} & NA & NA & $7.16 \mu s$ & ... \\
+    \textbf{Kernel Thread} & NA & NA & $3.58 \mu s$ & \\
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{process_creation_time}
+\end{table}
+
+When estimation, it is hard for us to do the hard ware and software estimation, as there are a lot of issues hard to estimate. For example, for fork(), the kernel will create a new process control block for the new process, and then set
+up a bunch of member's value inside the pcb; after that, it will at least initialize the child process's address space, by creating a bunch of page tables; all these operations might cost more then 20000 cycles. Compared with process creation,
+thread creation is much more light weight, as thread doesn't need to construt a new address space. Finnally we made a pridiction that, process creation will cost 20000 cycles and thread will cost half of the process cost, 10000 cycles; or in other
+word, $7.16 \mu s$ for process and $3.58 \mu s$ for thread.
+
+The results shows that
+
+For the question how do they compare,
+
+
+\subsection{Process and Kernel Thread Context Switch}
+
+\subsubsection{Methodology}
+
+For the overhead measurement of the context switch, the basic idea to measure the overhead is to count the cycles spend on switch from one process (thread) to another process (thread). In order to continue our measurement, we need the same assumption we made in
+\textbf{section \ref{creation_methodology}}, that the measuring processes (threads) are the only two processes (threads) that to be scheduled. In the real system, this is impossible, but we can estimate this situation by increasing the priority of the process (threads).
+
+For specific how to count the cycles of a context switch, we need to force a context switch happen in one process (thread) the another (thread) process can stop the counting afterwards. To achieve this goal, we implement the following measure sequence by using blocking
+reading pipe:
+
+\lstinputlisting[language=C, firstline=32, lastline=47]{../proc_switch.c}
+
+We first make parent process sleep for 1 second, in order to make sure the child process has chance to execution and arrive at the point
+
+\subsubsection{Estimation and results}

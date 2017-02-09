@@ -38,9 +38,8 @@ int main () {
 
         pthread_create(&td, NULL, thread_fn, NULL);
 
-        sleep(1);
-        write(pipefd[1], buf, 1);
         START_COUNT(high, low);
+        write(pipefd[1], buf, 1);
 
         pthread_join(td, NULL);
         close(pipefd[0]);
@@ -52,6 +51,7 @@ int main () {
         // end = endthread < end ? endthread : end;
 
         printf("%llu\n", endthread - start);
+        fflush(stdout);
     }
 
     return 0;
