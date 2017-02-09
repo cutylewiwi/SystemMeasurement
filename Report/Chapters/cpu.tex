@@ -19,7 +19,7 @@ When measuring the overhead of the measurement code we mentioned above, we use t
 
 We just measure nothing between two count marcos, so that this measurement will response the overhead of the execution of thos two marcos.
 
-When performing the measurement, we will run the measurement code in a 10 round loop, then we take the arithmatic mean of the cycles responsed as the final result.
+When performing the measurement, we will run the measurement code in a 10000 round loop, then we take the arithmatic mean of the cycles responsed as the final result.
 
 % because this minimal
 % cycles results can be an evidence that our cpu can finish running the target code within this minimal cycles ticks, and also, all other greater cycles ticks might imply that
@@ -40,7 +40,7 @@ The estimation and the measurement result will be list in the following table:
       \textbf{Hardware Overhead} & \textbf{Software Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} \\
       \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &     \\
   \hline
-  6 (inst) or 44 (cycles) & 0 & 6 (instructions) & 92 \\
+  6 (inst) or 44 (cycles) & 0 & 6 (instructions) & 102 \\
   \hline
   \end{tabular}
   \end{threeparttable}
@@ -80,12 +80,15 @@ When performing estimation, it is reasonable that using repeated experiments to 
 
 \subsubsection{Methodology}
 
-When measuring the loop overhead, we simply measures the cycles diff before and after a simple do nothing loop; in order to reduce the impact of variance, we also run this test 10 times, then take the arithmatic
-means of 10 samples as the final measurement result. We also perform our measurement upon loops rounds from 0 to 50, in order to see the overhead of different loop scale.
+When measuring the loop overhead, we simply measures the cycles diff before and after a simple do nothing loop. In order to reduce the impact of variance, we also run this test 10000 times, and then take the arithmatic
+means of 10000 samples. We also subtract the time measurement overhead (102 cycles as \textbf{Section \ref{overhead_estimation}}) from the loop overhead, so the final loop overhead should be:
+    $$ average(cycles) - 102 $$
+
+We also perform our measurement upon loops rounds from 0 to 50, in order to see the overhead of different loop scale.
 
 \subsubsection{Estimation and results}
 
-Our Estimation and the measurement results are showed in the \textbf{Figure \ref{loop_overhead_result}}:
+Our Estimation and the measurement results are shown in the \textbf{Figure \ref{loop_overhead_result}}:
 
 \begin{figure}[ht]
     \centering
@@ -108,16 +111,40 @@ As shown in the graph, when estimating, we estimate the overhead increasing by 8
 As shown in above, there will be 4 instructions for each round of the loop, as the \textbf{Section \ref{overhead_estimation}} shows that, each instruction will taken more than one cycle tick in average.
 We finally made a assumption that each instructions will take up 2 cycles on average.
 
-The result shows that, we still underestimated the increament ratio of the overhead, and in fact, each each loop round increase will increase the overhead by 18.
+The result shows that we still underestimated the increament ratio of the overhead, and in fact, each each loop round increase will increase the overhead by 18. The red line is the variance of our data, which shows our result is quite stable.
 
 \subsection{Procedure Call}
 
 \subsubsection{Methodology}
 
-When measuring the overhead of a procedure call, we just put our cycles counting code before and after the procedure call; also, we reduced the variance by using the arithmatic mean of the response overhead
-came from 10000 times measurements.
+Since procedure call is very quick (our rough measurement shows it takes less than 10 cycles), we measure procedure calls in loops rather than individually to reduce the variance of the measurement's own overhead. The code is as following:
+
+\begin{lstlisting}
+for (i = 0; i < outerloop; i++) {
+    START_COUNT();
+    for (j=0; j < innerloop; j++){
+        procedure_0();
+    }
+    STOP_COUNT();    
+}
+\end{lstlisting}
+
+When calculating the time consumed by procedure_0, we first calculate the arithmatic mean of the duration cycles collected by START_COUNT and STOP_COUNT, then subtract the overhead of the time measurement and the innerloop from it, and finally divide the result by the innerloop times. We set outerloop and innerloop to be 10000 and 50 separately.
+
+%When measuring the overhead of a procedure call, we just put our cycles counting code before and after the procedure call; also, we reduced the variance by using the arithmatic mean of the response overhead came from 10000 times measurements.
 
 \subsubsection{Estimation and results}
+We estimate the procedure call with no parameters will take 4 cycles and expect for two additional cycles for every one more parameter. 
+
+\textbf{Figure \ref{procedure_overhead_result}} shows our Estimation and the measurement results. The comparison indicates that procedure call is far more quicker than we expected and the overhead increases linearly when the parameter number increases. The variance line justifies that we have successfully eliminated most variance. 
+
+\ref{procedure_overhead_result}}
+\begin{figure}[ht]
+    \centering
+    \frame{\includegraphics[width = .9\textwidth]{pictures/procedure.png}}
+    \caption{Procedure Overhead: Estimation and Experiment Results }
+    \label{procedure_overhead_result}
+\end{figure}
 
 
 
@@ -125,8 +152,7 @@ came from 10000 times measurements.
 
 \subsubsection{Methodology}
 
-When measuring the system calls, basically we want to measure the cycle ticks between the begin and the return points of the system call. This means that we required the kernel return the control to the process after the system call
-service routine finished, so that what we can measure is some 'light weight' system call, like \textbf{getpid()} or \textbf{kill()}. However, getpid() will be cached by the kernel, so that only the first call of the getpid() can trap into
+When measuring the system calls, basically we want to measure the cycle ticks between the begin and the return points of the system call. This means that we require the kernel return the control to the process immediately after the system call service routine finishes, so that what we can measure is some 'light weight' system call, like \textbf{getpid()} or \textbf{kill()}. However, getpid() will be cached by the kernel, so that only the first call of the getpid() can trap into
 the kernel space, so that in the end, we choose \textbf{kill()} system call to be the system call we measured.
 
 For specific implementation, the measurement process will first start counting cycles, then send itself a sigusr1 signal by invoke \textbf{kill()} call. In the signal handler, the process will stop counting cycles, and this period of cycle ticks
@@ -142,9 +168,10 @@ will be the overhead of the \textbf{kill()} system call. We repeated the measure
 \subsubsection{Methodology}
 \label {creation_methodology}
 
-When measuring Task, or process creation time, basically we need make some assumptions. The first one is that we assume that when the measurement process fork a child process, after fork syscall, the os will schedule either
-the measurement process or the child of the measurement process to be executed, however, we are not sure which process (parent, or child) will be executed first. Under this assumption, we can find out that basically what
-we want to get is the cycles between the point just before fork call and the point fork return.
+When measuring Task, or process creation time, we need to ensure serveral things. The first one when the measurement process fork a child process after fork syscall, the os will schedule either the measurement process or the child of the measurement process to be executed. To ensure that, we run our measurement process with the round robin real time schedualer and set the process the highest priority. The cmd is as follows:
+    $$ sudo chrt -rr 99 ./measurement $$
+
+However, even we make our process the highest priority,  we are still not sure which process (parent, or child) will be executed first. So we need to ensure to handle both cases so that we can get the cycles between the point just before fork call and the point fork return.
 
 In order to get the results we want, we implement the following measurement sequence:
 
@@ -165,6 +192,8 @@ For the kernel thread creation, we use a similar method. The measurement sequenc
     \item We calculate both cycles spend for main thread pthread\_create return and pthread\_create start execution, then choose the smaller one (as the smaller one indicates that this thread executes before the other one)
 \end{enumerate}
 
+We repeate each measurement for 10000 times to get the accurate cycles.
+
 \subsubsection{Estimation and results}
 
 The estimation and the measurement result will be list in the \textbf{Table \ref{process_creation_time}}:
@@ -176,34 +205,32 @@ The estimation and the measurement result will be list in the \textbf{Table \ref
   \begin{tabular}{ccccc}
   \hline
       \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} \\
-      \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &     \\
+      \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  & (AVG)   \\
   \hline
-    \textbf{Process} & NA & NA & $7.16 \mu s$ & ... \\
-    \textbf{Kernel Thread} & NA & NA & $3.58 \mu s$ & \\
+      \textbf{Process} & NA & NA & 20000 ($7.16 \mu s$) & 134507 \\
+      \textbf{Kernel Thread} & NA & NA & 10000 ($3.58 \mu s$) & 20635\\
   \hline
   \end{tabular}
   \end{threeparttable}
   \label{process_creation_time}
 \end{table}
 
-When estimation, it is hard for us to do the hard ware and software estimation, as there are a lot of issues hard to estimate. For example, for fork(), the kernel will create a new process control block for the new process, and then set
+When we make estimation, it is hard for us to do the hard ware and software estimation, as there are a lot of issues hard to estimate. For example, for fork(), the kernel will create a new process control block for the new process, and then set
 up a bunch of member's value inside the pcb; after that, it will at least initialize the child process's address space, by creating a bunch of page tables; all these operations might cost more then 20000 cycles. Compared with process creation,
 thread creation is much more light weight, as thread doesn't need to construt a new address space. Finnally we made a pridiction that, process creation will cost 20000 cycles and thread will cost half of the process cost, 10000 cycles; or in other
 word, $7.16 \mu s$ for process and $3.58 \mu s$ for thread.
 
-The results shows that
-
-For the question how do they compare,
+Our experimental results show that the process creation and thread creation takes 134507 and 20635 cycles correspondingly, which means creating a process takes much longer time than we have estimated and creating a thread is much more lightweight. The standard deviations for our experiments are 3062 and 1546, which are relatively small to the average results.
 
 
 \subsection{Process and Kernel Thread Context Switch}
 
 \subsubsection{Methodology}
 
-For the overhead measurement of the context switch, the basic idea to measure the overhead is to count the cycles spend on switch from one process (thread) to another process (thread). In order to continue our measurement, we need the same assumption we made in
+For the overhead measurement of the context switch, the basic idea to measure the overhead is to count the cycles spend on switch from one process (thread) to another process (thread). To make our measurement accurate, we need to ensure the same thing we indicates in
 \textbf{section \ref{creation_methodology}}, that the measuring processes (threads) are the only two processes (threads) that to be scheduled. In the real system, this is impossible, but we can estimate this situation by increasing the priority of the process (threads).
 
-For specific how to count the cycles of a context switch, we need to force a context switch happen in one process (thread) the another (thread) process can stop the counting afterwards. To achieve this goal, we implement the following measure sequence by using blocking
+For specific how to count the cycles of a context switch, we need to force a context switch to happen in one process (thread) the another (thread) process can stop the counting afterwards. To achieve this goal, we implement the following measure sequence by using blocking
 reading pipe. To be more precisely, at parent process, we first start a pipe for communication, then fork new process; after that, parent process will first start counting cycles, then write to the communiting pipe, then call wait() to wait the child process; at the same time, child process will read from the pipe, then stop counting the cycles, and finally send the stop cycles back to the parent process via the pipe then exit; after that, parent will wake up and get the value and count the tick.
 
 This method uses read and wait to synchronize. Either child or parent process executing first, the final result will be the period start from parent writing to the pipe, then context switch to the child, and finally the the child read from pipe.
@@ -217,6 +244,22 @@ The method for thread is similar, the differences are:
 
 
 \subsubsection{Estimation and results}
+\begin{table}[ht]
+    \centering
+    \caption{\textbf{Process/Thread Creation Time: Estimation and Experiment Results}}
+    \begin{threeparttable}
+        \begin{tabular}{ccccc}
+        \hline
+        \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr.        Results} \\
+        \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  & (AVG)   \\
+        \hline
+        \textbf{Process} & NA & NA & 20000 & 79097 \\
+        \textbf{Kernel Thread} & NA & NA & 10000 & 2562\\
+        \hline
+        \end{tabular}
+    \end{threeparttable}
+    \label{context_switch_time}
+\end{table}
 
-For the question about difference between process context switch and kernel context switch, as the results show that, the overhead of thread context switch around 4 times less then process context switch. The main difference between thread and process context switch
-is that, when thread context switching, kernel need neither to construct the virtual memory space to the thread switch to, nor to flush the tlb, which means that thread context switch is much less expensive then process context switch.
+For the question about difference between process context switch and kernel context switch, as the results show that, the overhead of thread context switch around 30 times less then process context switch. The main difference between thread and process context switch
+is that, when thread context switching, kernel need neither to construct the virtual memory space to the thread switch to, nor to flush the tlb, which means that thread context switch is much less expensive than process context switch.
