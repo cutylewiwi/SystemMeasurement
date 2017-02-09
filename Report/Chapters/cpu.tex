@@ -125,20 +125,20 @@ for (i = 0; i < outerloop; i++) {
     for (j=0; j < innerloop; j++){
         procedure_0();
     }
-    STOP_COUNT();    
+    STOP_COUNT();
 }
 \end{lstlisting}
 
-When calculating the time consumed by procedure_0, we first calculate the arithmatic mean of the duration cycles collected by START_COUNT and STOP_COUNT, then subtract the overhead of the time measurement and the innerloop from it, and finally divide the result by the innerloop times. We set outerloop and innerloop to be 10000 and 50 separately.
+When calculating the time consumed by procedure\_0, we first calculate the arithmatic mean of the duration cycles collected by START\_COUNT and STOP\_COUNT, then subtract the overhead of the time measurement and the innerloop from it, and finally divide the result by the innerloop times. We set outerloop and innerloop to be 10000 and 50 separately.
 
 %When measuring the overhead of a procedure call, we just put our cycles counting code before and after the procedure call; also, we reduced the variance by using the arithmatic mean of the response overhead came from 10000 times measurements.
 
 \subsubsection{Estimation and results}
-We estimate the procedure call with no parameters will take 4 cycles and expect for two additional cycles for every one more parameter. 
+We estimate the procedure call with no parameters will take 4 cycles and expect for two additional cycles for every one more parameter.
 
-\textbf{Figure \ref{procedure_overhead_result}} shows our Estimation and the measurement results. The comparison indicates that procedure call is far more quicker than we expected and the overhead increases linearly when the parameter number increases. The variance line justifies that we have successfully eliminated most variance. 
+\textbf{Figure \ref{procedure_overhead_result}} shows our Estimation and the measurement results. The comparison indicates that procedure call is far more quicker than we expected and the overhead increases linearly when the parameter number increases. The variance line justifies that we have successfully eliminated most variance.
 
-\ref{procedure_overhead_result}}
+
 \begin{figure}[ht]
     \centering
     \frame{\includegraphics[width = .9\textwidth]{pictures/procedure.png}}
@@ -169,7 +169,10 @@ will be the overhead of the \textbf{kill()} system call. We repeated the measure
 \label {creation_methodology}
 
 When measuring Task, or process creation time, we need to ensure serveral things. The first one when the measurement process fork a child process after fork syscall, the os will schedule either the measurement process or the child of the measurement process to be executed. To ensure that, we run our measurement process with the round robin real time schedualer and set the process the highest priority. The cmd is as follows:
-    $$ sudo chrt -rr 99 ./measurement $$
+
+\begin{lstlisting}
+    sudo chrt -rr 99 ./measurement
+\end{lstlisting}
 
 However, even we make our process the highest priority,  we are still not sure which process (parent, or child) will be executed first. So we need to ensure to handle both cases so that we can get the cycles between the point just before fork call and the point fork return.
 
