@@ -7,19 +7,24 @@
 
 #include "proj_timing.h"
 
-#define ITERATIONS 100
+#define ITERATIONS 10
 
 
+int enter;
+uint32_t high, low;
 uint32_t lowt, hight;
-unsigned long long endthread;
-int pipefd[2];
-char buf[1];
+unsigned long long start;
+unsigned long long end;
+pthread_mutex_t mutex;
+pthread_cond_t cond_start;
+pthread_cond_t cond_wait;
 
 void *thread_fn(void *arg){
-    // blocking the thread by read
-    read(pipefd[0], buf, 1);
+    pthread_mutex_lock(&mutex);
+    enter = 1;
+    pthread_cond_wait(&cond_wait, &mutex); 
     STOP_COUNT(hight, lowt);
-    pthread_exit(NULL);
+    pthread_mutex_unlock(&mutex);
 }
 
 int main (int argc, const char *argv[]) {
@@ -28,31 +33,27 @@ int main (int argc, const char *argv[]) {
     pthread_t td;
     int i;
 
+    pthread_mutex_init(&mutex, NULL);
+    pthread_cond_init(&cond_wait, NULL);
+
     WARMUP(high, low, hight, lowt);
     
     int iterations = atoi((const char *) argv[argc-1]);
     for (i = 0; i < iterations; i++) {
-        if (pipe(pipefd) == -1) {
-            perror("pipe");
-            exit(EXIT_FAILURE);
+        enter = 0;
+        pthread_create(&td, NULL, thread_fn, NULL); 
+        pthread_mutex_lock(&mutex);
+        while (!enter) {
+            pthread_mutex_unlock(&mutex);
+            pthread_mutex_lock(&mutex);
         }
-
-        pthread_create(&td, NULL, thread_fn, NULL);
-
+        pthread_cond_signal(&cond_wait);
         START_COUNT(high, low);
-        write(pipefd[1], buf, 1);
-
+        pthread_mutex_unlock(&mutex);
         pthread_join(td, NULL);
-        close(pipefd[0]);
-        close(pipefd[1]);
         start = ((unsigned long long) high << 32) | low;
-        endthread = ((unsigned long long) hight << 32) | lowt;
-
-
-        // end = endthread < end ? endthread : end;
-
-        printf("%llu\n", endthread - start);
-        fflush(stdout);
+        end = ((unsigned long long) hight << 32) | lowt;
+        printf("%llu\n", end - start);
     }
 
     return 0;
