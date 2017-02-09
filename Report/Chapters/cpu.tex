@@ -147,21 +147,41 @@ We estimate the procedure call with no parameters will take 4 cycles and expect 
 \end{figure}
 
 
-
 \subsection{System Call}
 
 \subsubsection{Methodology}
 
-When measuring the system calls, basically we want to measure the cycle ticks between the begin and the return points of the system call. This means that we require the kernel return the control to the process immediately after the system call service routine finishes, so that what we can measure is some 'light weight' system call, like \textbf{getpid()} or \textbf{kill()}. However, getpid() will be cached by the kernel, so that only the first call of the getpid() can trap into
-the kernel space, so that in the end, we choose \textbf{kill()} system call to be the system call we measured.
+When measuring the system calls, basically we want to measure the cycle ticks between the begin and the return points of the system call. This means that we require the kernel return the control to the process immediately after the system call service routine finishes, so that what we can measure is some 'light weight' system call, like \textbf{getpid()} or \textbf{getcwd()}. However, \textbf{getpid()} will be cached by the kernel, so that only the first call of the getpid() can trap into
+the kernel space, so that in the end, we choose \textbf{getcwd()} system call to be the system call we measured.
 
-For specific implementation, the measurement process will first start counting cycles, then send itself a sigusr1 signal by invoke \textbf{kill()} call. In the signal handler, the process will stop counting cycles, and this period of cycle ticks
-will be the overhead of the \textbf{kill()} system call. We repeated the measurement routine for 10000 times, then take the arithmatic mean of the cycles cost as the final result of overhead.
+For specific implementation, the measurement process will first start counting cycles, then invoke \textbf{getcwd()} system call, finally stop counting. The cycles counted should be the overhead of the \textbf{getcwd()} system call.
 
 
 \subsubsection{Estimation and results}
 
+The estimation and the measurement results are shown in \textbf{Table \ref{measurement_syscall_table}}
 
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Measurement Overhead: Estimation and Experiment Results}}
+  \begin{threeparttable}
+  \begin{tabular}{ccccc}
+  \hline
+      \textbf{Hardware Overhead} & \textbf{Software Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard}\\
+      \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &     & \textbf{Deviation}\\
+  \hline
+  1000 inst & 0 & 1000 inst & 1250 & 31 \\
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{measurement_syscall_table}
+\end{table}
+
+For estimation, system calls in a 64-bit system will first save a bunch of system call parameters into registers, then trap into the kernel by invoke \textbf{int} instruction or \textbf{syscall} instruction, then the kernel will serve the system call, and finally turn back to user mode with similar cost with trap into the memory. As there is a lot of assistance routine when traping into the system, then we believe 1000 cycle shoule be a reasonable estimation.
+
+The results shows that our estimation is quite accurate.
+
+For the questions about comparison between system call and procedure call, system call is definitely much heavy weight than procedure call, as a procedure call with 7 parameters only cost 11 cycles, but the system call will cost more than 1000 cycles. This is caused by a lot of checking and setting operations when traping into kernel mode and return to user mode.
 
 \subsection{Process and Kernel Thread Creation}
 
@@ -263,6 +283,10 @@ The method for thread is similar, the differences are:
     \end{threeparttable}
     \label{context_switch_time}
 \end{table}
+
+For the estimation of the overhead of a context switch, we are not pretty sure the precise overhead of the context switch, so we just make a guess that the overhead should be more then 10000 cycles for thread, and the overhead for the process should be at least twice as the thread's.
+
+The final results shows that we under estimate the overhead of the process context switch, and it should be around 80000 cycles; but amazingly for the thread one, it only cost around 2500 cycles for context switch. We might perform some more measurement about that in the future.
 
 For the question about difference between process context switch and kernel context switch, as the results show that, the overhead of thread context switch around 30 times less then process context switch. The main difference between thread and process context switch
 is that, when thread context switching, kernel need neither to construct the virtual memory space to the thread switch to, nor to flush the tlb, which means that thread context switch is much less expensive than process context switch.
