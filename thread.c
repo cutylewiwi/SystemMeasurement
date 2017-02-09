@@ -16,6 +16,7 @@ unsigned long long endthread;
 void *thread_fn(void *arg){
     STOP_COUNT(hight, lowt);
     endthread = ((unsigned long long) hight << 32) | lowt;
+    return NULL;
 }
 
 int main (int argc, const char *argv[]) {
