@@ -71,6 +71,18 @@ int main (int argc, const char * argv[]){
     for (i = 0; i < outer; i++) {
         START_COUNT(high, low);
         for (j=0; j < inner; j++){
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
+        }
+        output(7);
+    }
+
+    for (i = 0; i < outer; i++) {
+        START_COUNT(high, low);
+        for (j=0; j < inner; j++){
             procedure_0();
             procedure_0();
             procedure_0();
@@ -150,18 +162,6 @@ int main (int argc, const char * argv[]){
             procedure_6(1, 2, 3, 4, 5, 6);
         }
         output(6);
-    }
-
-    for (i = 0; i < outer; i++) {
-        START_COUNT(high, low);
-        for (j=0; j < inner; j++){
-            procedure_7(1, 2, 3, 4, 5, 6, 7);
-            procedure_7(1, 2, 3, 4, 5, 6, 7);
-            procedure_7(1, 2, 3, 4, 5, 6, 7);
-            procedure_7(1, 2, 3, 4, 5, 6, 7);
-            procedure_7(1, 2, 3, 4, 5, 6, 7);
-        }
-        output(7);
     }
 
     return 0;
