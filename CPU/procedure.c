@@ -76,6 +76,11 @@ int main (int argc, const char * argv[]){
             procedure_7(1, 2, 3, 4, 5, 6, 7);
             procedure_7(1, 2, 3, 4, 5, 6, 7);
             procedure_7(1, 2, 3, 4, 5, 6, 7);
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
+            procedure_7(1, 2, 3, 4, 5, 6, 7);
         }
         output(7);
     }
@@ -83,6 +88,11 @@ int main (int argc, const char * argv[]){
     for (i = 0; i < outer; i++) {
         START_COUNT(high, low);
         for (j=0; j < inner; j++){
+            procedure_0();
+            procedure_0();
+            procedure_0();
+            procedure_0();
+            procedure_0();
             procedure_0();
             procedure_0();
             procedure_0();
@@ -100,6 +110,11 @@ int main (int argc, const char * argv[]){
             procedure_1(1);
             procedure_1(1);
             procedure_1(1);
+            procedure_1(1);
+            procedure_1(1);
+            procedure_1(1);
+            procedure_1(1);
+            procedure_1(1);
         }
         output(1);
     }
@@ -107,6 +122,11 @@ int main (int argc, const char * argv[]){
     for (i = 0; i < outer; i++) {
         START_COUNT(high, low);
         for (j=0; j < inner; j++){
+            procedure_2(1, 2);
+            procedure_2(1, 2);
+            procedure_2(1, 2);
+            procedure_2(1, 2);
+            procedure_2(1, 2);
             procedure_2(1, 2);
             procedure_2(1, 2);
             procedure_2(1, 2);
@@ -124,6 +144,11 @@ int main (int argc, const char * argv[]){
             procedure_3(1, 2, 3);
             procedure_3(1, 2, 3);
             procedure_3(1, 2, 3);
+            procedure_3(1, 2, 3);
+            procedure_3(1, 2, 3);
+            procedure_3(1, 2, 3);
+            procedure_3(1, 2, 3);
+            procedure_3(1, 2, 3);
         }
         output(3);
     }
@@ -131,6 +156,11 @@ int main (int argc, const char * argv[]){
     for (i = 0; i < outer; i++) {
         START_COUNT(high, low);
         for (j=0; j < inner; j++){
+            procedure_4(1, 2, 3, 4);
+            procedure_4(1, 2, 3, 4);
+            procedure_4(1, 2, 3, 4);
+            procedure_4(1, 2, 3, 4);
+            procedure_4(1, 2, 3, 4);
             procedure_4(1, 2, 3, 4);
             procedure_4(1, 2, 3, 4);
             procedure_4(1, 2, 3, 4);
@@ -148,6 +178,11 @@ int main (int argc, const char * argv[]){
             procedure_5(1, 2, 3, 4, 5);
             procedure_5(1, 2, 3, 4, 5);
             procedure_5(1, 2, 3, 4, 5);
+            procedure_5(1, 2, 3, 4, 5);
+            procedure_5(1, 2, 3, 4, 5);
+            procedure_5(1, 2, 3, 4, 5);
+            procedure_5(1, 2, 3, 4, 5);
+            procedure_5(1, 2, 3, 4, 5);
         }
         output(5);
     }
@@ -155,6 +190,11 @@ int main (int argc, const char * argv[]){
     for (i = 0; i < outer; i++) {
         START_COUNT(high, low);
         for (j=0; j < inner; j++){
+            procedure_6(1, 2, 3, 4, 5, 6);
+            procedure_6(1, 2, 3, 4, 5, 6);
+            procedure_6(1, 2, 3, 4, 5, 6);
+            procedure_6(1, 2, 3, 4, 5, 6);
+            procedure_6(1, 2, 3, 4, 5, 6);
             procedure_6(1, 2, 3, 4, 5, 6);
             procedure_6(1, 2, 3, 4, 5, 6);
             procedure_6(1, 2, 3, 4, 5, 6);
