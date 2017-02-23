@@ -23,7 +23,7 @@ int main (int argc, const char * argv []){
  *
  */
 void memory_access(unsigned long long work_size, int step) {
-    int * workload;
+    volatile int * workload;
     int i, tmp;
     int * iter;
     uint32_t low, low1;
@@ -40,13 +40,12 @@ void memory_access(unsigned long long work_size, int step) {
         workload[i * step] = 123456;
     }
 
-
     WARMUP(high, low, high1, low1);
 
     // measurement workload
     START_COUNT(high, low);
     for (i = 0, iter = & tmp; i < work_size / step; i++) {
-        *iter = workload[i * step];
+        *iter = workload[i * step]+i;
     }
     STOP_COUNT(high1, low1);
 
