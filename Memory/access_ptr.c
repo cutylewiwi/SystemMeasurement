@@ -16,7 +16,7 @@ typedef struct Linklist Linklist;
 void memory_access(unsigned long long work_size, int step);
 
 int main (int argc, const char * argv []){
-    memory_access(10000ul, 1);
+    memory_access(100ul, 1);
     memory_access(32768ul, 1);
     memory_access(65536ul, 1);
     memory_access(131072ul, 1);
