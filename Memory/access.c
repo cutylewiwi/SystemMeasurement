@@ -56,5 +56,7 @@ void memory_access(unsigned long long work_size, int step) {
     start = ((unsigned long long) high << 32) | low;
     end = ((unsigned long long) high1 << 32) | low1;
 
+    free(workload);
+
     printf ("size: %llu\tstep:%d\tlatency:%llu\n", work_size / step * step, step, (end-start) / i);
 }
