@@ -7,6 +7,8 @@
 
 #include "proj_timing.h"
 
+#define ITERATIONS 1000
+
 struct Linklist {
     struct Linklist * next;
 };
@@ -68,26 +70,26 @@ void memory_access(unsigned long long work_size, int stride) {
     }
 
     // initialize & cache warmup
-    step = work_size / stride;
+    step = ITERATIONS;
     iter = linklist;
     for (i = 0; i < work_size; i++) {
         linklist[i].next = NULL;
     }
 
-    for (i = 0; i < step - 1; i++) {
-        iter->next = &linklist[(i + 1) * stride + rand() % stride];
-        iter = iter -> next;
+    for (i = 0; i < work_size; i++) {
+        linklist[i].next = &linklist[((i / stride + 1) * stride + rand() % stride) % stride];
     }
-
-    iter->next = NULL;
-    iter = linklist;
 
     WARMUP(high, low, high1, low1);
 
     // measurement linklist
     START_COUNT(high, low);
-    while (iter -> next != NULL) {
+    while (step --> 0) {
+#define ONE \
         iter = iter -> next;
+#define TEN     ONE ONE ONE ONE ONE ONE ONE ONE ONE ONE
+#define HANDRED TEN TEN TEN TEN TEN TEN TEN TEN TEN TEN
+        HANDRED
     }
     STOP_COUNT(high1, low1);
 
@@ -96,5 +98,5 @@ void memory_access(unsigned long long work_size, int stride) {
 
     free(linklist);
 
-    printf ("workload size: KB%llu\tstride:%d\tlatency:%llu\n", work_size / 1024, stride, (end-start) / i);
+    printf ("workload size: KB%llu\tstride:%d\tlatency:%llu\n", work_size / 1024, stride, (end-start) / ITERATIONS * 100);
 }
