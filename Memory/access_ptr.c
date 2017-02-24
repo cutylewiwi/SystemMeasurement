@@ -14,21 +14,34 @@ struct Linklist {
 typedef struct Linklist Linklist;
 
 
-void memory_access(unsigned long long work_size, int step);
+void memory_access(unsigned long long work_size, int stride);
+void cache_measure(int stride);
 
 int main (int argc, const char * argv []){
-    int len = 7;
-    memory_access(1000ul, len);
-    memory_access(2000ul, len);
-    memory_access(4095ul, len);
-    memory_access(4096ul, len);
-    memory_access(4097ul, len);
-    memory_access(10000ul, len);
-    memory_access(32768ul, len);
-    memory_access(65536ul, len);
-    memory_access(131072ul, len);
-    // memory_access((1ul) << 30, 1);
+    cache_measure(16);
+    cache_measure(32);
+    cache_measure(64);
+    cache_measure(128);
+    cache_measure(256);
     return 0;
+}
+
+void cache_measure(int stride) {
+    memory_access(1ul << 10, stride);  // 1K
+    memory_access(1ul << 11, stride);  // 2K
+    memory_access(1ul << 12, stride);  // 4K
+    memory_access(1ul << 13, stride);  // 8K
+    memory_access(1ul << 14, stride);  // 16K
+    memory_access(1ul << 15, stride);  // 32K
+    memory_access(1ul << 16, stride);  // 64K
+    memory_access(1ul << 17, stride);  // 128K
+    memory_access(1ul << 18, stride);  // 256K
+    memory_access(1ul << 19, stride);  // 512K
+    memory_access(1ul << 20, stride);  // 1M
+    memory_access(1ul << 21, stride);  // 2M
+    memory_access(1ul << 22, stride);  // 4M
+    memory_access(1ul << 23, stride);  // 8M
+    memory_access(1ul << 24, stride);  // 16M
 }
 
 
@@ -37,9 +50,9 @@ int main (int argc, const char * argv []){
  *
  *
  */
-void memory_access(unsigned long long work_size, int step) {
+void memory_access(unsigned long long work_size, int stride) {
     Linklist * linklist;
-    int i, tmp;
+    int i, step;
     Linklist * iter;
     uint32_t low, low1;
     uint32_t high, high1;
@@ -54,15 +67,18 @@ void memory_access(unsigned long long work_size, int step) {
     }
 
     // initialize & cache warmup
+    step = work_size / stride;
+    iter = linklist;
     for (i = 0; i < work_size; i++) {
-        linklist[i].next = (void *) rand();
-    }
-    for (i = 0; i < work_size / step - 1; i++) {
-        linklist[i * step].next = & linklist[(i + 1) * step];
+        linklist[i].next = NULL;
     }
 
-    linklist[i * step].next = NULL;
+    for (i = 0; i < step - 1; i++) {
+        iter->next = &linklist[(i + 1) * stride + rand() % stride];
+        iter = iter -> next;
+    }
 
+    iter->next = NULL;
     iter = linklist;
 
     WARMUP(high, low, high1, low1);
@@ -79,5 +95,5 @@ void memory_access(unsigned long long work_size, int step) {
 
     free(linklist);
 
-    printf ("size: %llu\tstep:%d\tlatency:%llu\n", work_size / step * step, step, (end-start) / i);
+    printf ("size: %llu\tstride:%d\tlatency:%llu\n", work_size / stride * stride, stride, (end-start) / i);
 }
