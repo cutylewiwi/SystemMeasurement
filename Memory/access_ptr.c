@@ -96,5 +96,5 @@ void memory_access(unsigned long long work_size, int stride) {
 
     free(linklist);
 
-    printf ("workload size: %llu\tstride:%d\tlatency:%llu\n", work_size, stride, (end-start) / i);
+    printf ("workload size: KB%llu\tstride:%d\tlatency:%llu\n", work_size / 1024, stride, (end-start) / i);
 }
