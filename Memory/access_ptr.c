@@ -16,11 +16,12 @@ typedef struct Linklist Linklist;
 void memory_access(unsigned long long work_size, int step);
 
 int main (int argc, const char * argv []){
-    memory_access(100ul, 1);
-    memory_access(32768ul, 1);
-    memory_access(65536ul, 1);
-    memory_access(131072ul, 1);
-    memory_access((1ul) << 30, 1);
+    memory_access(1000ul, 3);
+    memory_access(10000ul, 3);
+    memory_access(32768ul, 3);
+    memory_access(65536ul, 3);
+    memory_access(131072ul, 3);
+    // memory_access((1ul) << 30, 1);
     return 0;
 }
 
@@ -44,11 +45,13 @@ void memory_access(unsigned long long work_size, int step) {
     }
 
     // initialize & cache warmup
+    for (i = 0; i < work_size; i++) {
+        linklist[i].next = NULL;
+    }
     for (i = 0; i < work_size / step - 1; i++) {
         linklist[i * step].next = & linklist[(i + 1) * step];
     }
 
-    linklist[i * step].next = NULL;
     iter = linklist;
 
     WARMUP(high, low, high1, low1);
