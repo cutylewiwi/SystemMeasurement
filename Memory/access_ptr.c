@@ -11,6 +11,8 @@
 #define	TEN(m)		FIVE(m) FIVE(m)
 #define	FIFTY(m)	TEN(m) TEN(m) TEN(m) TEN(m) TEN(m)
 #define	HUNDRED(m)	FIFTY(m) FIFTY(m)
+#define FIVEHUN(m)  HUNDRED(m) HUNDRED(m) HUNDRED(m) HUNDRED(m) HUNDRED(m)
+#define THOUSAND(m) FIVEHUN(m) FIVEHUN(m)
 #define ITERATIONS 1000
 
 struct Linklist {
@@ -91,7 +93,7 @@ void memory_access(unsigned long long work_size, int stride) {
     // while (step --> 0) {
 #define INST "movq	(%%rax), %%rax\n\t"
         asm volatile ("mov %0, %%rax\n\t" \
-                       HUNDRED(INST)
+                       THOUSAND(INST)
                        :
                        : "r" (iter)
                        : "%rax");
