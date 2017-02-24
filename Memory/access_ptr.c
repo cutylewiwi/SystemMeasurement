@@ -85,8 +85,7 @@ void memory_access(unsigned long long work_size, int stride) {
     // measurement linklist
     START_COUNT(high, low);
     // while (step --> 0) {
-#define ONE \
-        iter = iter -> next;
+#define ONE iter = iter -> next;
 #define TEN     ONE ONE ONE ONE ONE ONE ONE ONE ONE ONE
 #define HANDRED TEN TEN TEN TEN TEN TEN TEN TEN TEN TEN
         HANDRED
