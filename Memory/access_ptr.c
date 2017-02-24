@@ -61,7 +61,7 @@ void cache_measure(int stride) {
  */
 void memory_access(unsigned long long work_size, int stride) {
     Linklist * linklist;
-    int i, step;
+    int i, step, index;
     Linklist * iter;
     uint32_t low, low1;
     uint32_t high, high1;
@@ -83,7 +83,9 @@ void memory_access(unsigned long long work_size, int stride) {
     }
 
     for (i = 0; i < work_size; i++) {
-        linklist[i].next = &linklist[((i / stride + 1) * stride + rand() % stride) % stride];
+        // index = (i / stride + 1) * stride;
+
+        linklist[i].next = &linklist[((i / stride + 1) * stride) % work_size];
     }
 
     WARMUP(high, low, high1, low1);
