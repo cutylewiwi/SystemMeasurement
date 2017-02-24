@@ -42,6 +42,7 @@ void cache_measure(int stride) {
     memory_access(1ul << 22, stride);  // 4M
     memory_access(1ul << 23, stride);  // 8M
     memory_access(1ul << 24, stride);  // 16M
+    printf ("\n");
 }
 
 
@@ -95,5 +96,5 @@ void memory_access(unsigned long long work_size, int stride) {
 
     free(linklist);
 
-    printf ("size: %llu\tstride:%d\tlatency:%llu\n", work_size / stride * stride, stride, (end-start) / i);
+    printf ("workload size: %llu\tstride:%d\tlatency:%llu\n", work_size, stride, (end-start) / i);
 }
