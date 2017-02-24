@@ -7,6 +7,10 @@
 
 #include "proj_timing.h"
 
+#define	FIVE(m)		m m m m m
+#define	TEN(m)		FIVE(m) FIVE(m)
+#define	FIFTY(m)	TEN(m) TEN(m) TEN(m) TEN(m) TEN(m)
+#define	HUNDRED(m)	FIFTY(m) FIFTY(m)
 #define ITERATIONS 1000
 
 struct Linklist {
@@ -80,15 +84,17 @@ void memory_access(unsigned long long work_size, int stride) {
         linklist[i].next = &linklist[((i / stride + 1) * stride + rand() % stride) % stride];
     }
 
-    WARMUP(high, low, high1, low1);
+    // WARMUP(high, low, high1, low1);
 
     // measurement linklist
     START_COUNT(high, low);
     // while (step --> 0) {
-#define ONE iter = iter -> next;
-#define TEN     ONE ONE ONE ONE ONE ONE ONE ONE ONE ONE
-#define HANDRED TEN TEN TEN TEN TEN TEN TEN TEN TEN TEN
-        HANDRED
+#define INST "movq	(%%rax), %%rax\n\t"
+        asm volatile ("mov %0, %%rax\n\t" \
+                       HUNDRED(INST)
+                       :
+                       : "r" (iter)
+                       : "%rax");
     // }
     STOP_COUNT(high1, low1);
 
