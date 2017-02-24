@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <unistd.h>
+#include <time.h>
 
 #include "proj_timing.h"
 
@@ -39,6 +40,9 @@ void memory_access(unsigned long long work_size, int step) {
     uint32_t high, high1;
     unsigned long long start;
     unsigned long long end;
+    time_t t;
+
+    srand((unsigned) time(&t));
 
     if ((linklist = (Linklist *)malloc(work_size * sizeof(Linklist *))) == NULL) {
         exit(EXIT_FAILURE);
@@ -46,11 +50,13 @@ void memory_access(unsigned long long work_size, int step) {
 
     // initialize & cache warmup
     for (i = 0; i < work_size; i++) {
-        linklist[i].next = NULL;
+        linklist[i].next = (void *) rand();
     }
     for (i = 0; i < work_size / step - 1; i++) {
         linklist[i * step].next = & linklist[(i + 1) * step];
     }
+
+    linklist[i * step].next = NULL;
 
     iter = linklist;
 
