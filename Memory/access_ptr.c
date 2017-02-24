@@ -17,11 +17,16 @@ typedef struct Linklist Linklist;
 void memory_access(unsigned long long work_size, int step);
 
 int main (int argc, const char * argv []){
-    memory_access(1000ul, 3);
-    memory_access(10000ul, 3);
-    memory_access(32768ul, 3);
-    memory_access(65536ul, 3);
-    memory_access(131072ul, 3);
+    int len = 7;
+    memory_access(1000ul, len);
+    memory_access(2000ul, len);
+    memory_access(4095ul, len);
+    memory_access(4096ul, len);
+    memory_access(4097ul, len);
+    memory_access(10000ul, len);
+    memory_access(32768ul, len);
+    memory_access(65536ul, len);
+    memory_access(131072ul, len);
     // memory_access((1ul) << 30, 1);
     return 0;
 }
@@ -64,7 +69,7 @@ void memory_access(unsigned long long work_size, int step) {
 
     // measurement linklist
     START_COUNT(high, low);
-    while (iter != NULL) {
+    while (iter -> next != NULL) {
         iter = iter -> next;
     }
     STOP_COUNT(high1, low1);
