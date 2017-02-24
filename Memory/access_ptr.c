@@ -90,15 +90,16 @@ void memory_access(unsigned long long work_size, int stride) {
 
     // measurement linklist
     START_COUNT(high, low);
-    // while (step --> 0) {
+    while (step --> 0) {
 #define INST "movq	(%%rax), %%rax\n\t"
         asm volatile ("mov %0, %%rax\n\t" \
-                       FIVEHUN(INST)
-                       :
+                       HUNDRED(INST) \
+                       "mov %%rax, %1"
+                       : "=r" (iter)
                        : "r" (iter)
                        : "%rax");
         // iter = iter -> next;
-    // }
+    }
     STOP_COUNT(high1, low1);
 
     start = ((unsigned long long) high << 32) | low;
@@ -106,5 +107,5 @@ void memory_access(unsigned long long work_size, int stride) {
 
     free(linklist);
 
-    printf ("workload size: %lluKB\tstride:%d\tlatency:%llu\n", work_size / 1024, stride, (end-start) / (500));
+    printf ("workload size: %lluKB\tstride:%d\tlatency:%llu\n", work_size / 1024, stride, (end-start) / (100 * ITERATIONS));
 }
