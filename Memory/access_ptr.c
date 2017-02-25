@@ -32,23 +32,27 @@ int main (int argc, const char * argv []){
     cache_measure(128);
     cache_measure(256);
     cache_measure(512);
+    cache_measure(8388608);
     return 0;
 }
 
 void cache_measure(int stride) {
-    memory_access(1ul << 10, stride);  // 1K
-    memory_access(1ul << 11, stride);  // 2K
-    memory_access(1ul << 12, stride);  // 4K
-    memory_access(1ul << 13, stride);  // 8K
-    memory_access(1ul << 14, stride);  // 16K
-    memory_access(1ul << 15, stride);  // 32K
-    memory_access(1ul << 16, stride);  // 64K
-    memory_access(1ul << 17, stride);  // 128K
-    memory_access(1ul << 18, stride);  // 256K
-    memory_access(1ul << 19, stride);  // 512K
-    memory_access(1ul << 20, stride);  // 1M
-    memory_access(1ul << 21, stride);  // 2M
-    memory_access(1ul << 22, stride);  // 4M
+    if (stride < 8388608) {
+        memory_access(1ul << 10, stride);  // 1K
+        memory_access(1ul << 11, stride);  // 2K
+        memory_access(1ul << 12, stride);  // 4K
+        memory_access(1ul << 13, stride);  // 8K
+        memory_access(1ul << 14, stride);  // 16K
+        memory_access(1ul << 15, stride);  // 32K
+        memory_access(1ul << 16, stride);  // 64K
+        memory_access(1ul << 17, stride);  // 128K
+        memory_access(1ul << 18, stride);  // 256K
+        memory_access(1ul << 19, stride);  // 512K
+        memory_access(1ul << 20, stride);  // 1M
+        memory_access(1ul << 21, stride);  // 2M
+        memory_access(1ul << 22, stride);  // 4M
+    }
+
     memory_access(1ul << 23, stride);  // 8M
     memory_access(1ul << 24, stride);  // 16M
     memory_access(1ul << 25, stride);  // 32M
