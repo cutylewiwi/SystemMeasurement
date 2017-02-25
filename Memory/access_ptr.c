@@ -31,6 +31,7 @@ int main (int argc, const char * argv []){
     cache_measure(64);
     cache_measure(128);
     cache_measure(256);
+    cache_measure(512);
     return 0;
 }
 
@@ -50,6 +51,7 @@ void cache_measure(int stride) {
     memory_access(1ul << 22, stride);  // 4M
     memory_access(1ul << 23, stride);  // 8M
     memory_access(1ul << 24, stride);  // 16M
+    memory_access(1ul << 25, stride);  // 32M
     printf ("\n");
 }
 
