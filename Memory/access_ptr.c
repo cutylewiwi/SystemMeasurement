@@ -68,6 +68,7 @@ void memory_access(unsigned long long work_size, int stride) {
     Linklist * linklist;
     int i, step, index;
     Linklist * iter;
+    volatile Linklist * tmp;
     uint32_t low, low1;
     uint32_t high, high1;
     unsigned long long start;
@@ -83,21 +84,21 @@ void memory_access(unsigned long long work_size, int stride) {
     // initialize & cache warmup
     step = ITERATIONS;
     iter = linklist;
-    for (i = 0; i < work_size; i++) {
-        linklist[i].next = NULL;
-    }
 
     for (i = 0; i < work_size; i++) {
         // make sure no cyclic link list happened
-        index = (i / stride + 1) * stride + i % stride;
-        if (index >= work_size) {
-            index = (index + 1) % work_size % stride;
-        }
+        // index = (i / stride + 1) * stride + i % stride;
+        // if (index >= work_size) {
+        //     index = (index + 1) % work_size % stride;
+        // }
 
-        // linklist[i].next = &linklist[((i / stride + 1) * stride + rand() % stride) % work_size];
-        linklist[i].next = &linklist[index];
+        linklist[i].next = &linklist[((i / stride + 1) * stride + rand() % stride) % work_size];
+        // linklist[i].next = &linklist[index];
     }
 
+    for (i = 0; i < work_size; i++) {
+        tmp = linklist[i].next;
+    }
     WARMUP(high, low, high1, low1);
 
     // measurement linklist
