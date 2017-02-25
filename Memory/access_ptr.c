@@ -47,12 +47,13 @@ void cache_measure(int stride) {
     memory_access(1ul << 18, stride);  // 256K
     memory_access(1ul << 19, stride);  // 512K
     memory_access(1ul << 20, stride);  // 1M
-    memory_access(3ul << 19, stride);  // 1.5M
     memory_access(1ul << 21, stride);  // 2M
     memory_access(1ul << 22, stride);  // 4M
     memory_access(1ul << 23, stride);  // 8M
     memory_access(1ul << 24, stride);  // 16M
     memory_access(1ul << 25, stride);  // 32M
+    memory_access(1ul << 26, stride);  // 64M
+    memory_access(1ul << 27, stride);  // 128M
     printf ("\n");
 }
 
