@@ -32,6 +32,7 @@ int main (int argc, const char * argv []){
     cache_measure(128);
     cache_measure(256);
     cache_measure(512);
+    cache_measure(1024);
     return 0;
 }
 
