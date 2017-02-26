@@ -19,9 +19,9 @@
 #define FIVEHUN(m)  HUNDRED(m) HUNDRED(m) HUNDRED(m) HUNDRED(m) HUNDRED(m)
 #define THOUSAND(m) FIVEHUN(m) FIVEHUN(m)
 #define ITERATIONS  3
-#define CHUNKS      1000
+#define CHUNKS      3000
 #define PAGE        (1 << 12)       // page size
-#define STRIDE      50
+#define STRIDE      60
 
 #define FILEPATH    "/tmp/pagefaultmmap.tmp"
 #define FILESIZE    (CHUNKS * PAGE)
@@ -69,7 +69,7 @@ int main (int argc, const char * argv[]){
     }
 
     for (j = 0; j < CHUNKS/STRIDE; j++) {
-        index[j] = rand() % PAGE + j * (rand() % 10) * PAGE;
+        index[j] = rand() % PAGE + (j * STRIDE + rand() % STRIDE) * PAGE;
     }
 
     WARMUP(high, low, high1, low1);
@@ -85,6 +85,7 @@ int main (int argc, const char * argv[]){
 
         records[flag++] = end - start;
     }
+
 
     for (j = 0; j < CHUNKS / STRIDE; j++) {
         printf("map%d:\t%llu\n", j, records[j]);
