@@ -21,7 +21,13 @@ bandwidth: bandwidth.o
 	$(CC) -o bandwidth bandwidth.o
 
 bandwidth.o: bandwidth.c
-	$(CC) -I$(INCLUDE) -c bandwidth.c -O1
+	$(CC) -I$(INCLUDE) -c bandwidth.c -O0
+
+pagefault: pagefault.o
+	$(CC) -o pagefault pagefault.o
+
+pagefault.o: pagefault.c
+	$(CC) -I$(INCLUDE) -c pagefault.c -O0
 
 clean:
 	rm *.o access access_ptr bandwidth
