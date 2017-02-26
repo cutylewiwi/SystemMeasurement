@@ -123,7 +123,7 @@ void memory_access(unsigned long long work_size, int stride) {
     end = ((unsigned long long) high1 << 32) | low1;
 
     free(linklist);
-    if (work_size > (3ul << 19)) {
+    if (work_size > (3ul << 18)) {
         printf ("workload size: %lluMB\tstride:%d\tlatency:%llu\n", work_size / 1024 / 1024, stride, (end-start) / (100 * ITERATIONS));
     }
     else {
