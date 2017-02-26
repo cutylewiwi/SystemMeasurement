@@ -22,7 +22,7 @@
 #define CACHE       (8 * MEGA)
 
 int main (int argc, const char * argv[]) {
-    int i;
+    int i, j, flag;
     unsigned int random_index[6];
     unsigned char * large_read;
     unsigned char * large_write;
@@ -43,7 +43,17 @@ int main (int argc, const char * argv[]) {
     }
 
     for (i = 0; i < 6; i++) {
+        flag = 1;
         random_index[i] = rand() % CHUNKS;
+        while (flag) {
+            flag = 0;
+            for (j = i-1; j >= 0; j--) {
+                if (random_index[i] == random_index[j]) {
+                    flag = 1;
+                    break;
+                }
+            }
+        }
     }
 
     WARMUP(high, low, high1, low1);
