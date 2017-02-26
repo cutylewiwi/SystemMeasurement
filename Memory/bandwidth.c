@@ -79,7 +79,7 @@ do {    \
         sum = 0;
         for (j = 0; j < flag; j++) {
             printf("%d\tread%d:\t %llu\n", i, j, records[j]);
-            sum += records[i];
+            sum += records[j];
         }
         printf("%llu\n", sum);
     }
