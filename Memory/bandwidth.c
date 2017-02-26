@@ -88,7 +88,7 @@ do{ \
     start = ((unsigned long long) high << 32) | low;    \
     end = ((unsigned long long) high1 << 32) | low1;    \
     records[flag++] = end - start;  \
-}while (0)
+}while (0);
 
         flag = 0;
         HUNDRED(WRITEINST);
