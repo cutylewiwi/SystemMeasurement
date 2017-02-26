@@ -29,5 +29,8 @@ pagefault: pagefault.o
 pagefault.o: pagefault.c
 	$(CC) -I$(INCLUDE) -c pagefault.c -O0
 
+largefile: largefile.c
+	$(CC) -o largefile largefile.c -O1
+
 clean:
-	rm *.o access access_ptr bandwidth pagefault
+	rm *.o access access_ptr bandwidth pagefault largefile
