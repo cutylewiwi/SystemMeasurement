@@ -24,4 +24,4 @@ bandwidth.o: bandwidth.c
 	$(CC) -I$(INCLUDE) -c bandwidth.c -O1
 
 clean:
-	rm *.o access access_ptr
+	rm *.o access access_ptr bandwidth
