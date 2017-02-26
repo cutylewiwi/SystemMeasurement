@@ -51,7 +51,7 @@ int main (int argc, const char * argv[]) {
     for (i = 0; i <  ITERATIONS; i++) {
         START_COUNT(high, low);
 #define INST memcpy(l3cache, &large_read[random_index[i] * CACHE], CACHE);
-        HUNDRED(INST);
+        THOUSAND(INST);
         STOP_COUNT(high1, low1);
 
         start = ((unsigned long long) high << 32) | low;
