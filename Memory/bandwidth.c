@@ -50,6 +50,7 @@ int main (int argc, const char * argv[]) {
             for (j = i-1; j >= 0; j--) {
                 if (random_index[i] == random_index[j]) {
                     flag = 1;
+                    random_index[i] = rand() % CHUNKS;
                     break;
                 }
             }
