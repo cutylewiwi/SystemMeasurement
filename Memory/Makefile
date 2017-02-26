@@ -30,4 +30,4 @@ pagefault.o: pagefault.c
 	$(CC) -I$(INCLUDE) -c pagefault.c -O0
 
 clean:
-	rm *.o access access_ptr bandwidth
+	rm *.o access access_ptr bandwidth pagefault
