@@ -57,7 +57,7 @@ int main (int argc, const char * argv[]) {
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
 
-        printf("read%d:\t %llu\n", (end - start) / 1000);
+        printf("read%d:\t %llu\n", i, (end - start) / 1000);
     }
 
     return 0;
