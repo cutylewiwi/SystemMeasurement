@@ -34,6 +34,7 @@ int main (int argc, const char * argv[]){
     int result;
     unsigned char * map;
     unsigned index[CHUNKS/STRIDE];
+    volatile char buf;
     uint32_t low, low1;
     uint32_t high, high1;
     unsigned long long start;
@@ -77,7 +78,7 @@ int main (int argc, const char * argv[]){
     flag = 0;
     for (j = 0; j < CHUNKS / STRIDE; j++) {
         START_COUNT(high, low);
-        map[index[j]] = (unsigned char) rand() % 255;
+        buf = map[index[j]];
         STOP_COUNT(high1, low1);
 
         start = ((unsigned long long) high << 32) | low;
