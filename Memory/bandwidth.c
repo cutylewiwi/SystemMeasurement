@@ -62,13 +62,13 @@ int main (int argc, const char * argv[]) {
     for (i = 0; i <  ITERATIONS; i++) {
         START_COUNT(high, low);
 #define INST memcpy(l3cache, &large_read[random_index[i] * CACHE], CACHE);
-        THOUSAND(INST);
+        HUNDRED(INST);
         STOP_COUNT(high1, low1);
 
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
 
-        printf("read%d:\t %llu\n", i, (end - start) / 1000);
+        printf("read%d:\t %llu\n", i, (end - start) / 100);
     }
 
     return 0;
