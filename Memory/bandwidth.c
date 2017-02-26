@@ -34,7 +34,6 @@ int main (int argc, const char * argv[]) {
     uint32_t high, high1;
     unsigned long long start;
     unsigned long long end;
-    unsigned long long sum;
 
     srand((unsigned)time(NULL));
 
@@ -44,6 +43,7 @@ int main (int argc, const char * argv[]) {
 
     for (i = 0; i < CHUNKS * CACHE / sizeof(unsigned char); i++) {
         large_read[i] = (unsigned char) rand() % 255;
+        large_write[i] = (unsigned char) rand() % 255;
     }
 
     for (i = 0; i < 6; i++) {
@@ -64,7 +64,7 @@ int main (int argc, const char * argv[]) {
     WARMUP(high, low, high1, low1);
 
     for (i = 0; i <  ITERATIONS; i++) {
-#define INST \
+#define READINST \
 do {    \
     START_COUNT(high, low); \
     memcpy(l3cache, &large_read[random_index[i] * CACHE], CACHE);   \
@@ -74,14 +74,29 @@ do {    \
     records[flag++] = end - start;  \
 }while(0);
         flag = 0;
-        HUNDRED(INST);
+        HUNDRED(READINST);
 
-        sum = 0;
         for (j = 0; j < flag; j++) {
-            printf("%d\tread%d:\t %llu\n", i, j, records[j]);
-            sum += records[j];
+            printf("read%d%02d:\t %llu\n", i, j, records[j]);
         }
-        printf("%llu\n", sum);
+
+#define WRITEINST   \
+do{ \
+    START_COUNT(high, low); \
+    memcpy(&large_write[random_index[i + 3] * CACHE], l3cache, CACHE);   \
+    STOP_COUNT(high1, low1);    \
+    start = ((unsigned long long) high << 32) | low;    \
+    end = ((unsigned long long) high1 << 32) | low1;    \
+    records[flag++] = end - start;  \
+}while (0)
+
+        flag = 0;
+        HUNDRED(WRITEINST);
+
+        for (j = 0; j < flag; j++) {
+            printf("write%d%02d:\t %llu\n", i, j, records[j]);
+        }
+
     }
 
     free(large_read);
