@@ -34,6 +34,7 @@ int main (int argc, const char * argv[]) {
     uint32_t high, high1;
     unsigned long long start;
     unsigned long long end;
+    unsigned long long sum;
 
     srand((unsigned)time(NULL));
 
@@ -75,11 +76,17 @@ do {    \
         flag = 0;
         HUNDRED(INST);
 
-
+        sum = 0;
         for (j = 0; j < flag; j++) {
             printf("%d\tread%d:\t %llu\n", i, j, records[j]);
+            sum += records[i];
         }
+        printf("%llu\n", sum);
     }
+
+    free(large_read);
+    free(large_write);
+    free(l3cache);
 
     return 0;
 }
