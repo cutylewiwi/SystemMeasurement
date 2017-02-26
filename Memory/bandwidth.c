@@ -72,8 +72,9 @@ do {    \
     end = ((unsigned long long) high1 << 32) | low1;    \
     records[flag++] = end - start;  \
 }while(0);
-
+        flag = 0;
         HUNDRED(INST);
+
 
         for (j = 0; j < flag; j++) {
             printf("%d\tread%d:\t %llu\n", i, j, records[j]);
