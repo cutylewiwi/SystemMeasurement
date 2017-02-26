@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define CHUNKS      3000
+#define CHUNKS      10240
 #define PAGE        (1 << 12)       // page size
 #define STRIDE      60
 
