@@ -21,6 +21,9 @@
 #define MEGA        (1 << 20)
 #define CACHE       (8 * MEGA)
 
+unsigned long long records[1000];
+
+
 int main (int argc, const char * argv[]) {
     int i, j, flag;
     unsigned int random_index[6];
@@ -60,15 +63,21 @@ int main (int argc, const char * argv[]) {
     WARMUP(high, low, high1, low1);
 
     for (i = 0; i <  ITERATIONS; i++) {
-        START_COUNT(high, low);
-#define INST memcpy(l3cache, &large_read[random_index[i] * CACHE], CACHE);
+#define INST \
+do {    \
+    START_COUNT(high, low); \
+    memcpy(l3cache, &large_read[random_index[i] * CACHE], CACHE);   \
+    STOP_COUNT(high1, low1);    \
+    start = ((unsigned long long) high << 32) | low;    \
+    end = ((unsigned long long) high1 << 32) | low1;    \
+    records[flag++] = end - start;  \
+}while(0);
+
         HUNDRED(INST);
-        STOP_COUNT(high1, low1);
 
-        start = ((unsigned long long) high << 32) | low;
-        end = ((unsigned long long) high1 << 32) | low1;
-
-        printf("read%d:\t %llu\n", i, (end - start) / 100);
+        for (j = 0; j < flag; j++) {
+            printf("%d\tread%d:\t %llu\n", i, j, records[j]);
+        }
     }
 
     return 0;
