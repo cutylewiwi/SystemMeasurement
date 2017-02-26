@@ -8,8 +8,6 @@
 
 #include "proj_timing.h"
 
-// TODO: random permutation stride
-
 #define	FIVE(m)		m m m m m
 #define	TEN(m)		FIVE(m) FIVE(m)
 #define	FIFTY(m)	TEN(m) TEN(m) TEN(m) TEN(m) TEN(m)

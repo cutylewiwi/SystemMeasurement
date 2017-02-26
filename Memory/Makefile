@@ -3,7 +3,7 @@ INCLUDE=../include
 CFLAGS = -Wall
 LIB=../lib
 
-all: access access_ptr bandwidth
+all: access access_ptr bandwidth pagefault
 
 access: access.o
 	$(CC) -o access access.o
