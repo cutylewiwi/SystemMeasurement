@@ -7,6 +7,8 @@
 
 #include "proj_timing.h"
 
+// TODO: random permutation stride
+
 #define	FIVE(m)		m m m m m
 #define	TEN(m)		FIVE(m) FIVE(m)
 #define	FIFTY(m)	TEN(m) TEN(m) TEN(m) TEN(m) TEN(m)
@@ -76,7 +78,8 @@ void memory_access(unsigned long long work_size, int stride) {
     unsigned long long end;
     time_t t;
 
-    srand((unsigned) time(&t));
+    // srand((unsigned) time(&t));
+    srand((unsigned) time(NULL));
 
     if ((linklist = (Linklist *)malloc(work_size * sizeof(Linklist *))) == NULL) {
         exit(EXIT_FAILURE);
