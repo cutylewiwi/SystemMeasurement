@@ -41,8 +41,35 @@ where iter is the head of the linklist. We will measure 100 times of accesing me
 
 \subsection{Estimation and Results}
 
+\begin{figure}[ht]
+    \centering
+    \frame{\includegraphics[width = .9\textwidth]{pictures/memLatency.png}}
+    \caption{Memory Hirachy Latency: Estimation and Experiment Results }
+    \label{mem_latency_result}
+\end{figure}
+
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Memory Hirachy Latency: Estimation and Experiment Results}}
+  \begin{threeparttable}
+  \begin{tabular}{ccc}
+  \hline
+      \textbf{Memory}    & \textbf{Latency}   & \textbf{Expr. Results} \\
+      \textbf{Hiracht}   & \textbf{Estimation}  & (AVG)   \\
+  \hline
+      \textbf{L1}  & 5 cycles & 9 cycles   \\
+      \textbf{L2}  & 20 cycles & 20 cycles   \\
+      \textbf{L3}  & 60 cycles & 70 cycles   \\
+      \textbf{L4}  & 150 cycles & 190 cycles   \\
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{memory_latency_table}
+\end{table}
+
 For estimation, we believe the latency for l1 cache references should be pretty low, let's say, within 5 cycles; the latency for l2 cache should be higher, let's say, 20 cycles; the latency for l3 cache should be much higher than l2, let's say, 60 cycles; and the latency for main memory should be the highest and much higher than l3 cache, let's say, 150 cycles.
 
+The result is shown in \textbf{Figure \ref{mem_latency_result} Table \ref{mem_latency_table}}. In \textbf{Figure \ref{memory_latency_table}}, the real lines separate the latency turning point for different level of memory hirachy, and the dotted lines separate the real size of different level of memory hirachy in the target machine. As we can see in the figure, the dotted line and the real line for l1 cache is on the same position, but for l2 cache and l3 cache, the latency turning point is always a little bit smaller than the actual size point. For reason why that happened,
 
 \subsection{Memory Bandwidth}
 
@@ -61,14 +88,22 @@ When measuring memory bandwidth, we used \textbf{memcpy()} function, to copy a l
       \textbf{Read or} & \textbf{Bandwidth}   & \textbf{Expr. Results} & \textbf{Standard}\\
       \textbf{Write}   & \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
   \hline
-      \textbf{Read}  & 10 GB/s & 20000 ($7.16 \mu s$) & 134507 & 3062 \\
-      \textbf{Write} & 10 GB/s & 10000 ($3.58 \mu s$) & 20635 & 1546 \\
+      \textbf{Read}  & 10600 MB/s & 9356.70657557 MB/s & 336.209601362  \\
+      \textbf{Write} & 10600 MB/s & 8364.93322737 MB/s & 500.236423781  \\
   \hline
   \end{tabular}
   \end{threeparttable}
   \label{memory_bandwidth_table}
 \end{table}
 
+For estimation, Frank Denneman stated on his web blog \cite{} that, the bandwidth for both reading and writing of a DDR3-1333 memory is 10600 MB/s, we take this as our estimation.
+
+The measurement result is shown in \textbf{Table \ref{memory_bandwidth_table}}.
+
 
 
 \subsection{Page Fault Handling}
+
+\subsubsection{Methodology}
+
+When measuring page fault handling overhead, we will first create a large file (40 MB) on disk, then using \textbf{mmap()} system call, to map the file into the
