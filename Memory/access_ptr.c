@@ -39,9 +39,9 @@ int main (int argc, const char * argv []){
 }
 
 void cache_measure(int stride) {
-    memory_access(1ul << 10, stride);  // 1K
-    memory_access(1ul << 11, stride);  // 2K
-    memory_access(1ul << 12, stride);  // 4K
+    // memory_access(1ul << 10, stride);  // 1K
+    // memory_access(1ul << 11, stride);  // 2K
+    // memory_access(1ul << 12, stride);  // 4K
     memory_access(1ul << 13, stride);  // 8K
     memory_access(1ul << 14, stride);  // 16K
     memory_access(1ul << 15, stride);  // 32K
@@ -102,7 +102,7 @@ void memory_access(unsigned long long work_size, int stride) {
         index = i + stride;
         if (index >= work_size / sizeof(Linklist)) {
             index %= (work_size / sizeof(Linklist));
-            index = (index + 1) % stride;
+            // index = (index + 1) % stride;
         }
 
         linklist[i].next = &linklist[index];
