@@ -1,4 +1,9 @@
 
 all:
-	pdflatex Report.tex
-	pdflatex Report.tex
+	xelatex Report
+	biber Report
+	xelatex Report
+	xelatex Report
+
+clean:
+	rm Chapters/*.aux *.aux *.bcf *.dvi *.log *.pdf *.xml
