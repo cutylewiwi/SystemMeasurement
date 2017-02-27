@@ -39,7 +39,7 @@ When performing measurement, in order to get rid of all other unnecessary memory
 
 where iter is the head of the linklist. We will measure 100 times of accesing memory on each measurement, and totally perform 1000 (stored in \textbf{step}) measurements.
 
-\subsection{Estimation and Results}
+\subsubsection{Estimation and Results}
 
 \begin{figure}[ht]
     \centering
@@ -80,6 +80,7 @@ The result is shown in \textbf{Figure \ref{mem_latency_result}} and \textbf{Tabl
 When measuring memory bandwidth, we used \textbf{memcpy()} function, to copy a large chunks of data (same size as l3 cache) from main memory to l3 cache when measuring read bandwith, or to copy a large chunks of data (same size as l3 cahce) from l3 cache to main memory when measuring write bandwidth. When calculating the results, we made an assumption that, only around a half of the overhead of \textbf{memcpy()} is caused by main memory reading or writing, as \textbf{memcpy()} itself will perform a lot of protection and validation operations. We believe that it is reasonable to assume that around a half of the overhead is caused by desired memory accesing.
 
 \subsubsection{Estimation and Results}
+\label{Memory_bandwidth_result_section}
 
 \begin{table}[ht]
   \centering
@@ -148,7 +149,7 @@ For the question about speed compare between memory bandwidth and page fault pag
 
 $$\frac{1 Byte}{9356.70657557 MB/s} = 0.101924 ns $$
 
-and the page fault mechanism can transfer a byte in
+and according to \textbf{Section \ref{Memory_bandwidth_result_section}}, the page fault mechanism can transfer a byte in
 
 $$\frac{1 Byte}{\frac{4 KB}{136875 cycles} * \frac{1}{0.358001 ns/cycle}} = 11.963229 ns $$.
 
