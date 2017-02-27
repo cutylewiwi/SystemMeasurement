@@ -106,7 +106,7 @@ void memory_access(unsigned long long work_size, int stride) {
         }
     }
 
-    for (i = 0; i < work_size; i++) {
+    for (i = 0; i < work_size / sizeof(Linklist); i++) {
         tmp = linklist[i].next;
     }
     WARMUP(high, low, high1, low1);
