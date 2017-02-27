@@ -81,7 +81,7 @@ void memory_access(unsigned long long work_size, int stride) {
     // srand((unsigned) time(&t));
     srand((unsigned) time(NULL));
 
-    if ((linklist = (Linklist *)malloc(work_size * sizeof(Linklist *))) == NULL) {
+    if ((linklist = (Linklist *)malloc(work_size)) == NULL) {
         exit(EXIT_FAILURE);
     }
 
@@ -89,15 +89,21 @@ void memory_access(unsigned long long work_size, int stride) {
     step = ITERATIONS;
     iter = linklist;
 
-    for (i = 0; i < work_size; i++) {
+    for (i = 0; i < work_size / sizeof(Linklist); i++) {
         // make sure no cyclic link list happened
         // index = (i / stride + 1) * stride + i % stride;
         // if (index >= work_size) {
         //     index = (index + 1) % work_size % stride;
         // }
 
-        linklist[i].next = &linklist[((i / stride + 1) * stride + rand() % stride) % work_size];
+        // linklist[i].next = &linklist[((i / stride + 1) * stride + rand() % stride) % work_size];
         // linklist[i].next = &linklist[index];
+
+        index = i + stride;
+        if (index >= work_size / sizeof(Linklist)) {
+            index %= (work_size / sizeof(Linklist));
+            index = (index + 1) % stride;
+        }
     }
 
     for (i = 0; i < work_size; i++) {
@@ -115,7 +121,6 @@ void memory_access(unsigned long long work_size, int stride) {
                        : "=r" (iter)
                        : "r" (iter)
                        : "%rax");
-        // iter = iter -> next;
     }
     STOP_COUNT(high1, low1);
 

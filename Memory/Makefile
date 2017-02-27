@@ -27,4 +27,4 @@ largefile: largefile.c
 	$(CC) -o largefile largefile.c -O1
 
 clean:
-	rm *.o access access_ptr bandwidth pagefault largefile
+	rm *.o access_ptr bandwidth pagefault largefile

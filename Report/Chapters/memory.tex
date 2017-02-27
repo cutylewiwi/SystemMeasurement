@@ -1,0 +1,74 @@
+
+% \addbibresource{./references.bib}
+
+This section we will mainly discuss our measurement about memory performance on the target machine. More specificly, we will report measurements about access latency on each level of memory hirachy, the memory bandwidth, and the overhead of page fault handling.
+
+\subsection{Memory Latency}
+
+\subsubsection{Methodology}
+
+When measure access latency on each level of memory hirachy, basically we followed the method suggest by lmbench\cite{mcvoy1996lmbench}.
+
+We create a linklist which only contains a pointer to the next element:
+
+\begin{lstlisting}
+    struct Linklist {
+        struct Linklist * next;
+    };
+
+    typedef struct Linklist Linklist;
+\end{lstlisting}
+
+The total size of the linklist will increase from 1 KB to 256 MB, by the factor of 2. When initializing, a stride will be provided by the tester. The number of the elements in the linklist is always divisible by the stride, and when initializing, the linklist will be devided as many chunks contains stride elements, and each elements in one chunk will point to a random element in the next chunk, and the last chunk in the linklist element array will point to the first chunk, which make this linklist an infinite cyclical linklist. This structure will eliminate the impact of cache prefetch, as the stride and random elements can easily make the next element in the linklist out of the prefetch range of each level of cache.
+
+When performing measurement, in order to get rid of all other unnecessary memory access, we have to use at least \textbf{O1} optimization; however, \textbf{O1} optimization will also optimized the code accesing the linklist. In our final measurement code, the travel of the linklist if write in inline assembly which can avoid compiler optimizations:
+
+\begin{lstlisting}[language=C]
+    START_COUNT(high, low);
+    while (step --> 0) {
+#define INST "movq	(%%rax), %%rax\n\t"
+        asm volatile ("mov %0, %%rax\n\t" \
+                       HUNDRED(INST) \
+                       "mov %%rax, %1"
+                       : "=r" (iter)
+                       : "r" (iter)
+                       : "%rax");
+    }
+    STOP_COUNT(high1, low1);
+\end{lstlisting}
+
+where iter is the head of the linklist. We will measure 100 times of accesing memory on each measurement, and totally perform 1000 (stored in \textbf{step}) measurements.
+
+\subsection{Estimation and Results}
+
+For estimation, we believe the latency for l1 cache references should be pretty low, let's say, within 5 cycles; the latency for l2 cache should be higher, let's say, 20 cycles; the latency for l3 cache should be much higher than l2, let's say, 60 cycles; and the latency for main memory should be the highest and much higher than l3 cache, let's say, 150 cycles.
+
+
+\subsection{Memory Bandwidth}
+
+\subsubsection{Methodology}
+
+When measuring memory bandwidth, we used \textbf{memcpy()} function, to copy a large chunks of data from main memory to l3 cache when measuring read bandwith, or to copy a large chunks of data from l3 cache to main memory when measuring write bandwidth. When calculating the results, we made an assumption that, only around a half of the overhead of \textbf{memcpy()} is caused by main memory reading or writing, as \textbf{memcpy()} itself will perform a lot of protection and validation operations. We believe that it is reasonable to assume that around a half of the overhead is caused by desired memory accesing.
+
+\subsubsection{Estimation and Results}
+
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Memory Bandwidth: Estimation and Experiment Results}}
+  \begin{threeparttable}
+  \begin{tabular}{ccccc}
+  \hline
+      \textbf{Read or} & \textbf{Bandwidth}   & \textbf{Expr. Results} & \textbf{Standard}\\
+      \textbf{Write}   & \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
+  \hline
+      \textbf{Read}  & 10 GB/s & 20000 ($7.16 \mu s$) & 134507 & 3062 \\
+      \textbf{Write} & 10 GB/s & 10000 ($3.58 \mu s$) & 20635 & 1546 \\
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{memory_bandwidth_table}
+\end{table}
+
+
+
+\subsection{Page Fault Handling}
