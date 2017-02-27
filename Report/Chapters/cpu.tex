@@ -35,12 +35,12 @@ The estimation and the measurement result will be list in the following table:
   \centering
   \caption{\textbf{Measurement Overhead: Estimation and Experiment Results}}
   \begin{threeparttable}
-  \begin{tabular}{cccc}
+  \begin{tabular}{ccccc}
   \hline
-      \textbf{Hardware Overhead} & \textbf{Software Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} \\
-      \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &     \\
+      \textbf{Hardware Overhead} & \textbf{Software Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard} \\
+      \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &   & \textbf{Deviation}  \\
   \hline
-  6 (inst) or 44 (cycles) & 0 & 6 (instructions) & 102 \\
+      6 (inst) or 44 (cycles) & 0 & 6 (instructions) & 102 & 3.8\\
   \hline
   \end{tabular}
   \end{threeparttable}
@@ -136,7 +136,8 @@ When calculating the time consumed by procedure\_0, we first calculate the arith
 \subsubsection{Estimation and results}
 We estimate the procedure call with no parameters will take 4 cycles and expect for two additional cycles for every one more parameter.
 
-\textbf{Figure \ref{procedure_overhead_result}} shows our Estimation and the measurement results. The comparison indicates that procedure call is far more quicker than we expected and the overhead increases linearly when the parameter number increases. The variance line justifies that we have successfully eliminated most variance.
+\textbf{Figure \ref{procedure_overhead_result}} shows our Estimation and the measurement results. The comparison indicates that procedure call is far more quicker than we expected and the overhead increases linearly when the parameter number increases. The variance line justifies that we have successfully eliminated most variance. There is a sudden jump on overhead between 2 and 3 parameters calls, and we speculate it is caused by the different alignments when the callees push 2 and 3
+parameters to stack to save registers. 
 
 
 \begin{figure}[h]
