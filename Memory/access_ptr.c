@@ -104,6 +104,8 @@ void memory_access(unsigned long long work_size, int stride) {
             index %= (work_size / sizeof(Linklist));
             index = (index + 1) % stride;
         }
+
+        Linklist[i].next = &Linklist[index];
     }
 
     for (i = 0; i < work_size / sizeof(Linklist); i++) {
