@@ -10,7 +10,7 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <time.h>
+#include <sys/time.h>
 
 #ifndef ICMP_FILTER
 #define ICMP_FILTER	1
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     }
     int sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if(sock < 0) {
-        fprintf(stderr, "Failed to create socket!\n");
+        fprintf(stderr, "Failed to create socket! Need root privilege\n");
         close(sock);
         exit(1);
     }
@@ -76,16 +76,35 @@ int main(int argc, char* argv[]) {
     pkt->checksum = 0;
     pkt->un.echo.id = htons(pid & 0xFFFF);
     pkt->checksum = checksum(pkt, sizeof(packet));
-    for (int i = 0; i < num_iters; ++i) {
+    int i = 0;
+    for (i = 0; i < num_iters; ++i) {
         pkt->un.echo.sequence = i;
+        struct timeval start;
+        gettimeofday(&start, NULL);
         int bytes = sendto(sock, packet, sizeof(packet), 0, (struct sockaddr *)&pingaddr, sizeof(struct sockaddr_in));
         if(bytes != sizeof(packet)) {
             fprintf(stderr, "Failed to send to receiver\n");
             close(sock);
             exit(1);
-        } else {
-            fprintf(stdout, "success");
         }
+        char inbuf[128];
+        memset(inbuf, 0, sizeof(inbuf));
+        int addrlen = sizeof(struct sockaddr_in);
+        bytes = recvfrom(sock, inbuf, sizeof(inbuf), 0, (struct sockaddr*)&pingaddr, (socklen_t*)&addrlen);
+        struct timeval end;
+        gettimeofday(&end, NULL);
+        if (bytes != sizeof(struct iphdr) + sizeof(struct icmphdr)) {
+            fprintf(stderr, "Icmp failed to received");
+        } else {
+	    struct iphdr* iph = (struct iphdr*)inbuf;
+            int hlen = (iph->ihl << 2);
+            bytes -= hlen;
+            pkt = (struct icmphdr*)(inbuf + hlen);
+            int id = ntohs(pkt->un.echo.id);
+            if (pkt->type == ICMP_ECHOREPLY && id == pid) {
+                fprintf(stdout, "%d\n", (int)(end.tv_sec * 1000000 + end.tv_usec - start.tv_sec * 1000000 - start.tv_usec));
+            }
+	}
     }
     return 0; 
 }
