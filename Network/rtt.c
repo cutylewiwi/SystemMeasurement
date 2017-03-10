@@ -10,8 +10,15 @@
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <unistd.h>
-
 #include <time.h>
+
+#ifndef ICMP_FILTER
+#define ICMP_FILTER	1
+struct icmp_filter {
+    int data;
+};
+#endif
+
 
 unsigned short checksum(void *b, int len)
 {
@@ -34,6 +41,8 @@ int main(int argc, char* argv[]) {
         fprintf(stdout, "Usage: %s hostname num_iters\n", argv[0]);
         exit(0);
     }
+    setuid(getuid());
+    int pid = getpid();
     char* hostname = argv[1];
     int num_iters = atoi(argv[2]);
     struct hostent * record = gethostbyname(hostname);
@@ -58,19 +67,17 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "setsockopt(ICMP_FILTER)");
         exit(1);
     }
-    setuid(getuid());
-    int pid = getpid();
     // set up ping packet
-    char packet[sizeof(icmphdr)];
+    char packet[sizeof(struct icmphdr)];
     memset(packet, 0, sizeof(packet));
-    struct icmphdr *pkt = (icmphdr *)packet;
+    struct icmphdr *pkt = (struct icmphdr *)packet;
     pkt->type = ICMP_ECHO;
     pkt->code = 0;
     pkt->checksum = 0;
     pkt->un.echo.id = htons(pid & 0xFFFF);
-    pkt->un.echo.sequence = i;
     pkt->checksum = checksum(pkt, sizeof(packet));
     for (int i = 0; i < num_iters; ++i) {
+        pkt->un.echo.sequence = i;
         int bytes = sendto(sock, packet, sizeof(packet), 0, (struct sockaddr *)&pingaddr, sizeof(struct sockaddr_in));
         if(bytes != sizeof(packet)) {
             fprintf(stderr, "Failed to send to receiver\n");
