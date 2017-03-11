@@ -2,7 +2,7 @@ CC=gcc
 INCLUDE=../include
 CFLAGS = -Wall
 LIB=../lib
-TARGET=rtt peak connect server
+TARGET=rtt peak setup teardown server
 
 all: network
 

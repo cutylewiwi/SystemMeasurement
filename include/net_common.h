@@ -73,7 +73,7 @@ int rio_rprecv(int sock, char* buf, int len) {
 }
 
 microtime_t timeval_to_microtime(struct timeval* tv) {
-    return tv->tv_sec * 1000000 + tv->tv_usec;
+    return tv->tv_sec * 1000000ULL + tv->tv_usec;
 }
 
 #endif
