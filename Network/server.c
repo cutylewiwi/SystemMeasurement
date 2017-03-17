@@ -46,7 +46,6 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Error listening on socket.\n");
         exit(EXIT_FAILURE);
     }
-    fprintf(stdout, "----- TCP Server -----\n");
     while (1) {
         struct sockaddr_in cli_addr;
         socklen_t cli_size;
