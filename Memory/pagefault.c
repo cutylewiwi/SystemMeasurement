@@ -19,11 +19,11 @@
 #define FIVEHUN(m)  HUNDRED(m) HUNDRED(m) HUNDRED(m) HUNDRED(m) HUNDRED(m)
 #define THOUSAND(m) FIVEHUN(m) FIVEHUN(m)
 #define ITERATIONS  3
-#define CHUNKS      10240
+#define CHUNKS      (1 << 22)
 #define PAGE        (1 << 12)       // page size
 #define STRIDE      64
 
-#define FILEPATH    "/tmp/pagefaultmmap.tmp"
+#define FILEPATH    "pagefaultmmap.tmp"
 #define FILESIZE    (CHUNKS * PAGE)
 
 unsigned long long records[CHUNKS/STRIDE];
