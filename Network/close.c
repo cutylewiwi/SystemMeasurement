@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     }
     freeaddrinfo(addr); 
     char cmd = CMD_CLOSE;
-    rio_send(sockfd, &cmd, 1);
+    rio_rpsend(sockfd, &cmd, 1);
     close(sockfd);
     return 0; 
 }
