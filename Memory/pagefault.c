@@ -19,17 +19,18 @@
 #define FIVEHUN(m)  HUNDRED(m) HUNDRED(m) HUNDRED(m) HUNDRED(m) HUNDRED(m)
 #define THOUSAND(m) FIVEHUN(m) FIVEHUN(m)
 #define ITERATIONS  3
-#define CHUNKS      10240
-#define PAGE        (1 << 12)       // page size
+#define CHUNKS      (1ll << 22)
+#define PAGE        (1ll << 12)       // page size
 #define STRIDE      64
 
-#define FILEPATH    "/tmp/pagefaultmmap.tmp"
+#define FILEPATH    "pagefaultmmap.tmp"
 #define FILESIZE    (CHUNKS * PAGE)
 
 unsigned long long records[CHUNKS/STRIDE];
 
 int main (int argc, const char * argv[]){
-    int i, j, flag;
+    unsigned long long i;
+    int j, flag;
     int fd;
     int result;
     unsigned char * map;

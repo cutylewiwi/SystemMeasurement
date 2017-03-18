@@ -14,6 +14,7 @@
 
 #define CMD_RTT 1
 #define CMD_PEAK 2
+#define CMD_CLOSE 3
 
 typedef unsigned long long microtime_t;
 

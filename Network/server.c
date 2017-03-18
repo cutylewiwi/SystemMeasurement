@@ -46,7 +46,6 @@ int main(int argc, char* argv[]) {
         fprintf(stderr, "Error listening on socket.\n");
         exit(EXIT_FAILURE);
     }
-    fprintf(stdout, "----- Benchmark Server -----\n");
     while (1) {
         struct sockaddr_in cli_addr;
         socklen_t cli_size;
@@ -73,6 +72,11 @@ int main(int argc, char* argv[]) {
                     }
                     rio_rpsend(sockfd, data, data_size);
                     break;
+                }
+                case CMD_CLOSE: {
+                    close(sockfd);
+                    close(sock);
+                    exit(EXIT_SUCCESS);
                 }
             }
         }
