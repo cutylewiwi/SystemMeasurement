@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
         rio_rpsend(sockfd, (char*)&data_size, sizeof(data_size));
         rio_rpsend(sockfd, data, data_size);
         close(sockfd);
+        usleep(1000);
     }
     freeaddrinfo(addr);
     return 0; 

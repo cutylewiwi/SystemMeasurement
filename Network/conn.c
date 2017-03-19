@@ -9,8 +9,6 @@ int main(int argc, char* argv[]) {
     char* portname = argv[2];
     int num_iters = atoi(argv[3]);
     struct addrinfo* addr = rio_resolve(hostname, portname); 
-
-    char cmd = CMD_RTT;
     for (int i = 0; i!= num_iters; ++i) {
         int sockfd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
         if (sockfd == -1) {
@@ -22,7 +20,7 @@ int main(int argc, char* argv[]) {
             close(sockfd);
             exit(EXIT_FAILURE);
         }	
-	rio_send(sockfd, &cmd, 1);
+        usleep(1000);
         close(sockfd);
         usleep(1000);
     }
