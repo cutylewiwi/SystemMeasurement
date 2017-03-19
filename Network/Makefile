@@ -2,9 +2,9 @@ CC=gcc
 INCLUDE=../include
 CFLAGS = -Wall
 LIB=../lib
-TARGET=rtt peak setup teardown close server
-SERVER_IP=172.19.222.54
-SERVER_PORT=9011
+TARGET=rtt peak conn close server
+SERVER=dyn54.sysnet.ucsd.edu
+PORT=9012
 
 all: network
 
@@ -17,22 +17,34 @@ network: $(TARGET)
 	$(CC) -o $< $<.o
 
 local_server: server
-	./server $(SERVER_PORT) &
-	sleep 1
+	./server $(PORT) &
+	sleep 0.5
 
 remote_server: server	
-	ssh heyihong@$(SERVER_IP) ~/server $(SERVER_PORT) &
-	sleep 1
+	ssh heyihong@$(SERVER) ~/server $(PORT) &
+	sleep 0.5
 
-benchmark: network local_server remote_server
-	./rtt 127.0.0.1 $(SERVER_PORT) 10000 > local_rtt.result
-	./setup 127.0.0.1 $(SERVER_PORT) 10000 > local_setup.result
-	./teardown 127.0.0.1 $(SERVER_PORT) 10000 > local_teardown.result
-	./close 127.0.0.1 $(SERVER_PORT)
-	./rtt $(SERVER_IP) $(SERVER_PORT) 10000 > remote_rtt.result
-	./setup $(SERVER_IP) $(SERVER_PORT) 10000 > remote_setup.result
-	./teardown $(SERVER_IP) $(SERVER_PORT) 10000 > remote_teardown.result
-	./close $(SERVER_IP) $(SERVER_PORT)
+rtt-benchmark: rtt local_server remote_server
+	./rtt 127.0.0.1 $(PORT) 1000
+	./rtt $(SERVER) $(PORT) 1000
+	sleep 0.5
+	./close 127.0.0.1 $(PORT)
+	./close $(SERVER) $(PORT)
+
+conn-benchmark: conn local_server remote_server
+	./conn 127.0.0.1 $(PORT) 1000
+	./conn $(SERVER) $(PORT) 1000
+	sleep 0.5
+	./close 127.0.0.1 $(PORT)
+	./close $(SERVER) $(PORT)
+
+peak-benchmark: peak local_server remote_server
+	./peak 127.0.0.1 $(PORT) 10 30000000
+	./peak $(SERVER) $(PORT) 10 30000000
+	sleep 0.5
+	./close 127.0.0.1 $(PORT)
+	./close $(SERVER) $(PORT)
+
 
 clean:
 	rm -f *.o $(TARGET)

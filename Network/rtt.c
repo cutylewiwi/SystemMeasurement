@@ -19,18 +19,13 @@ int main(int argc, char* argv[]) {
         close(sockfd);
         exit(EXIT_FAILURE);
     }
+    int yes = 1;
+    setsockopt( sockfd, IPPROTO_TCP, TCP_NODELAY, (void *)&yes, sizeof(yes));
     freeaddrinfo(addr); 
     char cmd = CMD_RTT;
-    char ch;
-    struct timeval start;
-    struct timeval end;
     for (int i = 0; i!= num_iters; ++i) {
-        gettimeofday(&start, NULL);
         rio_send(sockfd, &cmd, 1);
-        rio_recv(sockfd, &ch, 1);
-        gettimeofday(&end, NULL);
-        // microsecond
-        fprintf(stdout, "%llu\n", timeval_to_microtime(&end) - timeval_to_microtime(&start));
+        usleep(1000);
     }
     close(sockfd);
     return 0; 
