@@ -72,7 +72,7 @@ int main(int argc, const char* argv[]){
         perror("Usage: content <test file dir>\n");
     }
 
-    for (pcount = 0; pcount < MAXPROCESS; ++pcount){
+    for (pcount = 1; pcount <= MAXPROCESS; ++pcount){
 
         for (i = 0; i < pcount; ++i){
             if ((pids[i] = fork()) < 0){

@@ -11,12 +11,9 @@
 #include "proj_timing.h"
 
 #define FILEPATH "filecache.tmp"
-#define SAMPLENUM 100
-#define TESTCOUNT 1
+#define TESTCOUNT 10
 #define MAXFILESIZE 1UL << 33
-//#define MINFILESIZE 1UL << 23
-#define MINFILESIZE 1UL << 26
-//#define BLOCKSIZE 1UL << 12
+#define MINFILESIZE 1UL << 27
 
 void clearFile(char *filepath){
     FILE *fp = fopen(filepath, "w");
@@ -32,6 +29,11 @@ void createFile(unsigned long long filesize, char *filepath){
 
     if (ftell(fp) != filesize){
         perror("Create file error\n");
+        exit(1);
+    }
+    if (fflush(fp) != 0){
+        perror("Create file error\n");
+        exit(1);
     }
     fclose(fp);
 }
@@ -40,6 +42,12 @@ size_t getBlockSize(int fd){
     struct stat buf;
     fstat(fd, &buf);
     return buf.st_blksize;
+}
+
+size_t getFileSize(int fd){
+    struct stat buf;
+    fstat(fd, &buf);
+    return buf.st_size;
 }
 
 void testRead(int fd, unsigned long long filesize, int printResult){
@@ -58,8 +66,9 @@ void testRead(int fd, unsigned long long filesize, int printResult){
     for (i = 0; i < filesize; i+=blocksize){
         lseek(fd, i, SEEK_SET);
         START_COUNT(high, low);
-        if (read(fd, buf, blocksize)<0){
+        if (read(fd, buf, blocksize) != blocksize){
             perror("Read error\n");
+            exit(1);
         }
         STOP_COUNT(high1, low1);
 
@@ -79,14 +88,18 @@ int main(){
     int fd;
 
     clearFile(FILEPATH);
-    for (filesize = MINFILESIZE; filesize < MAXFILESIZE; filesize+=MINFILESIZE){
+    for (filesize = MINFILESIZE; filesize <= MAXFILESIZE; filesize+=MINFILESIZE){
         createFile(filesize, FILEPATH);
         
         fd = open(FILEPATH, O_RDONLY);
         if (fd < 0){
             perror("File open error\n");
+            exit(1);
         }
-        testRead(fd, filesize, 0);
+        if (getFileSize(fd) != filesize){
+            perror("Wrong test file size\n");
+            exit(1);
+        }
         for (i = 0; i < TESTCOUNT; ++i){
             testRead(fd, filesize, 1);
         }

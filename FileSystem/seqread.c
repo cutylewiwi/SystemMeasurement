@@ -12,9 +12,8 @@
 #include "proj_timing.h"
 
 #define FILEPREFIX "testfile"
-#define TESTCOUNT 10
 #define MAXFILESIZE 1UL << 30
-#define MINFILESIZE 1UL << 20
+#define MINFILESIZE 1UL << 22
 
 size_t getBlockSize(int fd){
     struct stat buf;
@@ -39,6 +38,13 @@ void testSeqRead(int fd, unsigned long long filesize, int printResult){
     char *buf = memalign(blocksize, blocksize);
     if (buf == NULL){
         perror("Buffer allocate error\n");
+        exit(1);
+    }
+
+    lseek(fd, 0, SEEK_SET);
+    if (read(fd, buf, blocksize) != blocksize){
+        perror("Read error\n");
+        exit(1);
     }
 
     for (i = 0; i < filesize; i+=blocksize){
@@ -46,41 +52,45 @@ void testSeqRead(int fd, unsigned long long filesize, int printResult){
         START_COUNT(high, low);
         if (read(fd, buf, blocksize) != blocksize){
             perror("Read error\n");
+            exit(1);
         }
         STOP_COUNT(high1, low1);
 
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
         totaltime += (end-start);
-        //printf("block %llu:\t%llu\n", filesize, end-start);
     }
 
     free(buf);
     if (printResult)
         printf("%llu:\t%f\n", filesize, (double)totaltime/filesize*blocksize);
-        //printf("%llu:%llu\n", filesize, totaltime);
-    
+
 }
 
 int main(int argc, const char* argv[]){
     unsigned long long i, filesize, step;
-    int fd;
+    int fd, testcount;
     char filepath[256];
 
-    if (argc != 2){
-        perror("Usage: randread <test file dir>\n");
+    if (argc != 3){
+        perror("Usage: seqread <test file dir> <test count>\n");
+        exit(1);
     }
 
-    for (filesize = MINFILESIZE; filesize < MAXFILESIZE; filesize<<=1){
-        
+    testcount = atoi(argv[2]);
+
+    for (filesize = MINFILESIZE; filesize <= MAXFILESIZE; filesize<<=1){
+
         sprintf(filepath, "%s%s%llu", argv[1], FILEPREFIX, filesize); 
-        for (i = 0; i < TESTCOUNT; ++i){
+        for (i = 0; i < testcount; ++i){
             fd = open(filepath, O_DIRECT);
             if (fd < 0){
                 perror("File open error\n");
+                exit(1);
             }
             if (getFileSize(fd) != filesize){
                 perror("Wrong test file size\n");
+                exit(1);
             }
             testSeqRead(fd, filesize, 1);
             close(fd);

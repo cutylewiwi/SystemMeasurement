@@ -8,13 +8,14 @@
 #include <fcntl.h>
 #include <time.h>
 #include <malloc.h>
+#include <dirent.h>
 
 #include "proj_timing.h"
 
 #define FILEPREFIX "testfile"
-#define TESTCOUNT 10
 #define MAXFILESIZE 1UL << 30
-#define MINFILESIZE 1UL << 20
+#define MINFILESIZE 1UL << 22
+#define MAXSAMPLENUM 1000
 
 size_t getBlockSize(int fd){
     struct stat buf;
@@ -29,7 +30,7 @@ size_t getFileSize(int fd){
 }
 
 void testRandRead(int fd, unsigned long long filesize, int printResult){
-    long long i, samplenum, offset;
+    long long i, samplenum, offset, blocknum;
     uint32_t low, low1, high, high1;
     unsigned long long start, end, totaltime;
     WARMUP(high, low, high1, low1);
@@ -39,57 +40,70 @@ void testRandRead(int fd, unsigned long long filesize, int printResult){
     char *buf = memalign(blocksize, blocksize);
     if (buf == NULL){
         perror("Buffer allocate error\n");
+        exit(1);
     }
 
-    //printf("blocksize %lu\n", blocksize);
-    samplenum = filesize/blocksize;
-    for (i = 0; i < samplenum; ++i){
-        offset = blocksize*rand()%samplenum;
-        lseek(fd, offset, SEEK_SET);
+    blocknum = filesize/blocksize;
+    samplenum = MAXSAMPLENUM;
+	lseek(fd, 0, SEEK_SET);
+	if (read(fd, buf, blocksize) != blocksize){
+		perror("Read error\n");
+        exit(1);
+	}
 
-        START_COUNT(high, low);
-        if (read(fd, buf, blocksize)<0){
-            perror("Read error\n");
-        }
-        STOP_COUNT(high1, low1);
+	for (i = 0; i < samplenum; ++i){
+		offset = blocksize*(rand()%blocknum);
+		lseek(fd, offset, SEEK_SET);
 
-        start = ((unsigned long long) high << 32) | low;
-        end = ((unsigned long long) high1 << 32) | low1;
-        totaltime += (end-start);
-    }
+		START_COUNT(high, low);
+		if (read(fd, buf, blocksize) != blocksize){
+			perror("Read error\n");
+            exit(1);
+		}
+		STOP_COUNT(high1, low1);
 
-    free(buf);
-    if (printResult)
-        printf("%llu:\t%f\n", filesize, (double)totaltime/(double)filesize*blocksize);
-    
+		start = ((unsigned long long) high << 32) | low;
+		end = ((unsigned long long) high1 << 32) | low1;
+		totaltime += (end-start);
+	}
+
+	free(buf);
+	if (printResult)
+		printf("%llu:\t%f\n", filesize, (double)totaltime/samplenum);
+
 }
 
 int main(int argc, const char* argv[]){
-    unsigned long long i, filesize, step;
-    int fd;
-    char filepath[256];
-    srand(time(NULL));
+	unsigned long long i, filesize, step;
+	int fd, testcount;
+	char filepath[256];
+	DIR *pdir;
+	srand(time(NULL));
 
-    if (argc != 2){
-        perror("Usage: randread <test file dir>\n");
-    }
-    
-    for (filesize = MINFILESIZE; filesize < MAXFILESIZE; filesize<<=1){
-        
-        sprintf(filepath, "%s%s%llu", argv[1], FILEPREFIX, filesize); 
-        for (i = 0; i < TESTCOUNT; ++i){
-            fd = open(filepath, O_DIRECT);
-            if (fd < 0){
-                perror("File open error\n");
-            }
-            if (getFileSize(fd) != filesize){
-                perror("Wrong test file size\n");
-            }
-            testRandRead(fd, filesize, 1);
-            close(fd);
-        }
-    }
+	if (argc != 3){
+		perror("Usage: randread <test file dir> <test count>\n");
+		exit(1);
+	}
 
-    return 0;
+	testcount = atoi(argv[2]);
+
+	for (filesize = MINFILESIZE; filesize <= MAXFILESIZE; filesize<<=1){
+
+		sprintf(filepath, "%s%s%llu", argv[1], FILEPREFIX, filesize); 
+		for (i = 0; i < testcount; ++i){
+			fd = open(filepath, O_DIRECT);
+			if (fd < 0){
+				perror("File open error\n");
+				exit(1);
+			}
+			if (getFileSize(fd) != filesize){
+				perror("Wrong test file size\n");
+                exit(1);
+			}
+			testRandRead(fd, filesize, 1);
+			close(fd);
+		}
+	}
+
+	return 0;
 }
-
