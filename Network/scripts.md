@@ -1,8 +1,10 @@
-#Scripts
+# Scripts
 
-copy and paste in shell
+1. make
+2. scp ./server heyihong@172.19.222.54:~
+3. to run corresponding tests, please copy and paste the script below in into the shell. Please have sudo cache in the shell.
 
-##RTT
+## RTT
 ```
 sudo tcpdump -i any 'src port 9012 or dst port 9012' &> rtt-dump.result &
 TCPDUMP_PID=$!
@@ -13,7 +15,7 @@ cat rtt-dump.result | grep dyn54.sysnet.ucsd.edu > remote-rtt.result
 rm -f rtt-dump.result
 ```
 
-##Connection
+## Connection
 ```
 sudo tcpdump -i any 'src port 9012 or dst port 9012' &> conn-dump.result &
 TCPDUMP_PID=$!
@@ -24,7 +26,7 @@ cat conn-dump.result | grep dyn54.sysnet.ucsd.edu > remote-conn.result
 rm -f conn-dump.result
 ```
 
-##Peak
+## Peak
 ```
 sudo tcpdump -i any 'src port 9012 or dst port 9012' &> peak-dump.result &
 TCPDUMP_PID=$!
