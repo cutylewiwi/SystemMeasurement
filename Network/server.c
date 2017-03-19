@@ -1,4 +1,3 @@
-#include <netinet/in.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,6 +49,7 @@ int main(int argc, char* argv[]) {
         struct sockaddr_in cli_addr;
         socklen_t cli_size;
         int sockfd = accept(sock, (struct sockaddr *) &cli_addr, &cli_size);
+        setsockopt( sockfd, IPPROTO_TCP, TCP_QUICKACK, (void *)&yes, sizeof(yes));
         if (sockfd < 0) {
             perror("accept");
             exit(EXIT_FAILURE);
@@ -61,22 +61,25 @@ int main(int argc, char* argv[]) {
             }
             switch (cmd) {
                 case CMD_RTT: {
-                    char ch = ' ';
-                    rio_rpsend(sockfd, &ch, 1);
                     break;
                 }
                 case CMD_PEAK: {
                     int data_size;
                     if (rio_rprecv(sockfd, (char*)&data_size, sizeof(data_size)) < sizeof(data_size)) {
-                        break;
+                        fprintf(stderr, "error in receiving data size\n");
+			exit(EXIT_FAILURE);
                     }
-                    rio_rpsend(sockfd, data, data_size);
+                    if (rio_rprecv(sockfd, data, data_size) != data_size) {
+                        fprintf(stderr, "error in receiving data\n");
+                        exit(EXIT_FAILURE);
+                    }
                     break;
                 }
                 case CMD_CLOSE: {
                     close(sockfd);
                     close(sock);
                     exit(EXIT_SUCCESS);
+		    break;
                 }
             }
         }

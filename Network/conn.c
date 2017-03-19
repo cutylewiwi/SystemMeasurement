@@ -9,8 +9,6 @@ int main(int argc, char* argv[]) {
     char* portname = argv[2];
     int num_iters = atoi(argv[3]);
     struct addrinfo* addr = rio_resolve(hostname, portname); 
-    struct timeval start;
-    struct timeval end;
     for (int i = 0; i!= num_iters; ++i) {
         int sockfd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
         if (sockfd == -1) {
@@ -21,12 +19,10 @@ int main(int argc, char* argv[]) {
             fprintf(stderr, "failed to connect server");
             close(sockfd);
             exit(EXIT_FAILURE);
-        }
-        gettimeofday(&start, NULL);
+        }	
+        usleep(1000);
         close(sockfd);
-        gettimeofday(&end, NULL);
-        // microsecond
-        fprintf(stdout, "%llu\n", timeval_to_microtime(&end) - timeval_to_microtime(&start));
+        usleep(1000);
     }
     freeaddrinfo(addr); 
     return 0; 

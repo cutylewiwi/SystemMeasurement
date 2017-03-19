@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -15,6 +16,7 @@
 #define CMD_RTT 1
 #define CMD_PEAK 2
 #define CMD_CLOSE 3
+
 
 typedef unsigned long long microtime_t;
 
