@@ -6,7 +6,7 @@
 
 ## RTT
 ```
-sudo tcpdump -i any 'src port 9012 or dst port 9012' &> rtt-dump.result &
+sudo tcpdump -i any 'src port 9014 or dst port 9014' &> rtt-dump.result &
 TCPDUMP_PID=$!
 make rtt-benchmark
 sudo kill $TCPDUMP_PID
@@ -17,7 +17,7 @@ rm -f rtt-dump.result
 
 ## Connection
 ```
-sudo tcpdump -i any 'src port 9012 or dst port 9012' &> conn-dump.result &
+sudo tcpdump -i any 'src port 9014 or dst port 9014' &> conn-dump.result &
 TCPDUMP_PID=$!
 make conn-benchmark
 sudo kill $TCPDUMP_PID
@@ -28,7 +28,7 @@ rm -f conn-dump.result
 
 ## Peak
 ```
-sudo tcpdump -i any 'src port 9012 or dst port 9012' &> peak-dump.result &
+sudo tcpdump -i any 'src port 9014' &> peak-dump.result &
 TCPDUMP_PID=$!
 make peak-benchmark
 sudo kill $TCPDUMP_PID
