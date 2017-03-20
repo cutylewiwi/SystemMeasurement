@@ -175,14 +175,14 @@ The software overhead mainly comes from page table maintains and protection mech
 
 The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the pagefault handling by around 2 ms. As there is a high variance for the performance of the disk, it is not strange that this difference exist. It will not experience the largest disk access overhead for each access request.
 
-The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the page fault handling by around 15000 cycles. This might be caused by two reasons: first, we might underestimate software overhead caused by Operating System's handling logic; second, the I/O speed of the HDD might not reach its theoretical speed.
+The result is shown in \textbf{Table \ref{pagefault_handle_time}}. The speed is a little bit faster than what we estimate, this should be caused by each time a page fault happened, the disk seeking and rotation overhead is not always as high as 10 ms. 
 
 For the question about speed compare between memory bandwidth and page fault page transfer bandwidth on byte scale, according to \textbf{Section \ref{Memory_bandwidth_result_section}}, on average the memory can transfer a byte in
 
-$$\frac{1 Byte}{9356.70657557 MB/s} = 0.101924 ns $$
+$$\frac{1 Byte}{7131.15239595 MB/s} = 0.133734 ns $$
 
 and the page fault mechanism can transfer a byte in
 
-$$\frac{1 Byte}{\frac{4 KB}{136875 cycles} * \frac{1}{0.358001 ns/cycle}} = 11.963229 ns $$.
+$$\frac{1 Byte}{\frac{4 KB}{8.12 ms}} = 1982.421875 ns $$.
 
-Thus the page fault handling is more than 100 times more expensive than a page hit memory access.
+Thus the page fault handling is around 15000X more expensive than a page hit memory access.
