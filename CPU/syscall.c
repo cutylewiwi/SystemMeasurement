@@ -8,7 +8,7 @@
 
 #define ITERATIONS 10
 
-#define __NR_getpid 39
+#define __NR_getpid 20
 // pid_t my_getpid()
 // {
 //     pid_t ret;
@@ -28,8 +28,8 @@ int main (int argc, const char * argv[]) {
     uint32_t low, low1;
     uint32_t high, high1;
     int i;
-    pid_t pid;
-    volatile pid_t pid1;
+    pid_t pid, pid1;
+    volatile pid_t pid2;
 
     int iterations = atoi((const char *) argv[argc-1]);
     WARMUP(high, low, high1, low1);
@@ -39,19 +39,22 @@ int main (int argc, const char * argv[]) {
 #define INST \
         asm volatile    \
         (   \
-            "syscall"   \
+            "int $0x80"   \
             : "=a" (pid)    \
             : "0"(__NR_getpid)  \
-            : "cc", "rcx", "r11", "memory"  \
+            : "cc", "edi", "esi", "memory"  \
         );
         // INST
         // INST
         // INST
         // INST
-        // INST
-        pid = getpid();
+        INST
+        // pid = getpid();
         STOP_COUNT(high1, low1);
-        pid1 = pid;
+        pid1 = getpid();
+        if (pid1 != pid) {
+            printf("1\n");
+        }
 
         printf("pid: %d\n", pid1);
 
