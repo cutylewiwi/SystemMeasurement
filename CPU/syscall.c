@@ -30,8 +30,6 @@ int main (int argc, const char * argv[]) {
     int i;
     pid_t pid;
 
-    return 0;
-
     int iterations = atoi((const char *) argv[argc-1]);
     WARMUP(high, low, high1, low1);
 
