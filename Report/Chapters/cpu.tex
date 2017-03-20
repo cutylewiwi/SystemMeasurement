@@ -40,7 +40,7 @@ The estimation and the measurement result will be list in the following table:
       \textbf{Hardware Overhead} & \textbf{Software Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard} \\
       \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &   & \textbf{Deviation}  \\
   \hline
-      6 (inst) or 44 (cycles) & 0 & 6 (instructions) & 102 & 3.8\\
+      6 (inst) or 44 (cycles) & 0 & 6 (instructions) (15.7520 ns) & 102 (36.5161 ns) & 3.8\\
   \hline
   \end{tabular}
   \end{threeparttable}
@@ -251,13 +251,13 @@ The estimation and the measurement result will be list in the \textbf{Table \ref
   \centering
   \caption{\textbf{Process/Thread Creation Time: Estimation and Experiment Results}}
   \begin{threeparttable}
-  \begin{tabular}{cccccc}
+  \hspace*{-3em}\begin{tabular}{cccccc}
   \hline
       \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard}\\
       \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
   \hline
-      \textbf{Process} & NA & NA & 20000 ($7.16 \mu s$) & 134507 & 3062 \\
-      \textbf{Kernel Thread} & NA & NA & 10000 ($3.58 \mu s$) & 20635 & 1546 \\
+      \textbf{Process} & NA & NA & 20000 ($7.16 \mu s$) & 134507 ($48.154 \mu s$) & 3062 \\
+      \textbf{Kernel Thread} & NA & NA & 10000 ($3.58 \mu s$) & 20635 ($7.387 \mu s$)  & 1546 \\
   \hline
   \end{tabular}
   \end{threeparttable}
@@ -297,8 +297,8 @@ The method for thread is similar, the difference is we use \textbf{pthread\_cond
         \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr.        Results} & \textbf{Standard} \\
         \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  & (AVG)   & \textbf{Deviation}\\
         \hline
-        \textbf{Process} & NA & NA & 20000 & 79097  &  650\\
-        \textbf{Kernel Thread} & NA & NA & 10000 & 2562 & 538\\
+        \textbf{Process} & NA & NA & 20000 ($7.16 \mu s$) & 79097 ($28.317 \mu s$)  &  650\\
+        \textbf{Kernel Thread} & NA & NA & 10000 ($3.58 \mu s$) & 2562 ($0.917 \mu s$) & 538\\
         \hline
         \end{tabular}
     \end{threeparttable}
