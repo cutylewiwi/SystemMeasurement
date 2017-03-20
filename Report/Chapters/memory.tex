@@ -57,10 +57,10 @@ where iter is the head of the linklist. We will measure 100 times of accesing me
       \textbf{Memory}    & \textbf{Latency}   & \textbf{Expr. Results} \\
       \textbf{Hiracht}   & \textbf{Estimation}  & (AVG)   \\
   \hline
-      \textbf{L1}  & 5 cycles & 9 cycles   \\
-      \textbf{L2}  & 20 cycles & 20 cycles   \\
-      \textbf{L3}  & 60 cycles & 70 cycles   \\
-      \textbf{L4}  & 150 cycles & 190 cycles   \\
+      \textbf{L1}  & 5 cycles (1.79 ns) & 9 cycles (3.22 ns)   \\
+      \textbf{L2}  & 20 cycles (7.16 ns) & 20 cycles (7.16 ns)  \\
+      \textbf{L3}  & 60 cycles (21.48 ns) & 70 cycles (25.06 ns)  \\
+      \textbf{Memory}  & 150 cycles (53.70 ns)  & 190 cycles (68.02 ns)  \\
   \hline
   \end{tabular}
   \end{threeparttable}
@@ -117,6 +117,8 @@ When measuring page fault handling overhead, we will first create a large file (
 
 There is still one problem needs to be addressed out, the file system optimization. The file system will cache the contents of the file and also perform file prefetch from the disk, so that, if we failed to bypass those optimization, we could not accurately measure the page fault handling overhead. To bypass those optimization, the measurement program will access the file with a stride applied with a random offset on page.
 
+We used to create a 150 MB file in /tmp directory for mapping, however, it turns out that the overhead for handling pagefault after mapping in this file is significantly smaller than a HDD's overhead, and there is no seek penalty exist, and obviously this file is actually stored in memory. In the second round, we changed the directory for the tmp mapping file to the current directory of the benchmark binary, the expanded the file size to 16 GB, after that, we can observe seek penalty now.
+
 \subsubsection{Estimation and Results}
 
 \begin{table}[ht]
@@ -128,7 +130,7 @@ There is still one problem needs to be addressed out, the file system optimizati
         \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard}\\
         \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
   \hline
-        111600 cycles & 10000 cycles & 121600 cycles  & 136875.058065 cycles & 13433.5243954 \\
+        28000000 cycles & 10000 cycles & 28010000 cycles (10.03 ms)  & 22672005.8858 cycles (8.12 ms) & 7299383.2799 \\
   \hline
   \end{tabular}
   \end{threeparttable}
@@ -141,9 +143,15 @@ $$ \frac{4KB}{100 MB/s} = \frac{1}{25600} s $$
 
 $\frac{1}{25600} s$ equals to around $111600 cycles$.
 
+In checkpoint 2 we made a mistake: we ignored that in a HDD environment, seek and rotation is the most significant overhead for page fault handling, when taking in consider about seek and rotation, the time consumption is of the order of 10 ms. So that, the hardware overhead should be:
+
+$$\frac{10 ms}{0.350001 ns/cycle} = 27932882 cycles$$
+
+So the totally hardware overhead should be around $28000000 cycles$
+
 The software overhead mainly comes from page table maintains and protection mechanism, and we assume this overhead is around 10000 cycles. Then, the total estimation overhead for a pagefault handling is 121600 cycles.
 
-The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the pagefault handling by around 15000 cycles. This might be caused by two reasons: first, we might underestimate software overhead caused by Operating System's handling logic; second, the I/O speed of the HDD might not reach its theorical speed.
+The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the pagefault handling by around 2 ms. As there is a high variance for the performance of the disk, it is not strange that this difference exist. It will not experience the largest disk access overhead for each access request.
 
 For the question about speed compare between memory bandwidth and page fault page transfer bandwidth on byte scale, according to \textbf{Section \ref{Memory_bandwidth_result_section}}, on average the memory can transfer a byte in
 
