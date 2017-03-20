@@ -1,0 +1,122 @@
+
+% \addbibresource{./references.bib}
+
+This section we will mainly discuss our measurement about network performance on the target machine. More specifically, we will report measurements about round trip time, peak bandwidth and connection overhead for the tcp protocol.
+
+\subsection{Round Trip Time}
+
+\subsubsection{Methodology}
+
+When measuring round trip time, basically we measure the round trip time by calculating time interval between the send time and the ack time for each packet. We first start a tcp server and a tcp client. And then, the client connects the server and sends one byte data to the server every 1 millisecond. We use tcpdump to capture tcp traffics on the client side and calculate the round trip time according to the tcpdump result.  We recognize the send and the ack packet by checking whether two consecutive packets match the flag patterns [P.] and [.] respectively. Below is an example of the send and ack pattern for remote interface:
+
+\begin{lstlisting}
+21:01:10.718357 IP 0xcc.ucsd.edu.45618 > dyn54.sysnet.ucsd.edu.9012: Flags [P.], seq 1:2, ack 1, win 229, options [nop,nop,TS val 866810420 ecr 177244638], length 1
+21:01:10.718623 IP dyn54.sysnet.ucsd.edu.9012 > 0xcc.ucsd.edu.45618: Flags [.], ack 2, win 227, options [nop,nop,TS val 177244638 ecr 866810420], length 0
+\end{lstlisting}
+
+In order to make the round trip time more accurate, on the server side, we mark each socket quick ack, which means that the tcp server immediately reply an ack after receiving each packet. In our experiment, the tcp client sends 10,000 times 1 byte data to the server.
+
+\subsubsection{Estimation and Results}
+
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Round Trip Time: Estimation and Experiment Results}}
+  \begin{threeparttable}
+  \begin{tabular}{ccccc}
+  \hline
+      \textbf{Remote or} & \textbf{RTT}   & \textbf{Expr. Results} & \textbf{Standard}\\
+      \textbf{Local}   &  \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
+  \hline
+      \textbf{Remote}  & 0.395ms & 0.336 ms & 0.077  \\
+      \textbf{Local} & 0.025ms & 0.026ms & 0.109  \\
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{round_trip_time_table}
+\end{table}
+
+We take average of 100 ping results as our estimation. The difference between the estimation results and the experiment results are small and acceptable. 
+
+\subsection{Peak Bandwidth}
+
+\subsubsection{Methodology}
+When measuring peak bandwidth, basically we measure the peak bandwidth by calculating maximum number of bytes newly acked by the server every second. We first start a tcp server and a tcp client. And then, the client connects the server and sends 1 GB data to the server. We use tcpdump to capture tcp ack traffics on the client side and calculate peak bandwidth according to the tcpdump result. 
+
+\subsubsection{Estimation and Results}
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Peak Bandwidth: Estimation and Experiment Results}}
+  \begin{threeparttable}
+  \begin{tabular}{ccccc}
+  \hline
+      \textbf{Remote or} & \textbf{Peak Bandwidth}   & \textbf{Expr. Results} & \textbf{Standard}\\
+      \textbf{Local}   &  \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
+  \hline
+      \textbf{Remote}  & 125MB/s & 112MB/s & 0.077  \\
+      \textbf{Local} &  & 802MB/s & 0.109  \\
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{peak_bandwidth_table}
+\end{table}
+
+For estimation, according to the machine description, the NIC has a 1Gbit/s capacity. So the estimation for the remote interface is 125MB/s.
+
+\subsection{Connection Overhead}
+
+\subsubsection{Methodology}
+When measuring connection overhead, basically we measure the connection overhead by calculating time interval between the sending the first setup packet and sending the last setup packet for each connection and time interval between sending the first teardown packet and sending the last teardown packet for each connection. We first start a tcp server and a tcp client. And then, the client connects the server and then closes the connection after 1 millisecond. We use tcpdump to capture tcp traffics on the client side and calculate the connection overhead according to the tcpdump result.  We recognize setup packets by checking whether three consecutive packets match the flag patterns [S], [S.], [.] respectively and teardown packets by checking whether three consecutive packets match the flag patterns [F.], [F.], [.]. Below are examples of the setup and teardown patterns for remote interface:
+
+\begin{lstlisting}
+21:56:37.340417 IP 0xcc.ucsd.edu.55148 > dyn54.sysnet.ucsd.edu.9014: Flags [S], seq 1531103784, win 29200, options [mss 1460,sackOK,TS val 867642075 ecr 0,nop,wscale 7], length 0
+21:56:37.340766 IP dyn54.sysnet.ucsd.edu.9014 > 0xcc.ucsd.edu.55148: Flags [S.], seq 1736035707, ack 1531103785, win 28960, options [mss 1460,sackOK,TS val 178076294 ecr 867642075,nop,wscale 7], length 0
+21:56:37.340805 IP 0xcc.ucsd.edu.55148 > dyn54.sysnet.ucsd.edu.9014: Flags [.], ack 1, win 229, options [nop,nop,TS val 867642075 ecr 178076294], length 0
+\end{lstlisting}
+
+\begin{lstlisting}
+21:56:37.341915 IP 0xcc.ucsd.edu.55148 > dyn54.sysnet.ucsd.edu.9014: Flags [F.], seq 1, ack 1, win 229, options [nop,nop,TS val 867642076 ecr 178076294], length 0
+21:56:37.342255 IP dyn54.sysnet.ucsd.edu.9014 > 0xcc.ucsd.edu.55148: Flags [F.], seq 1, ack 2, win 227, options [nop,nop,TS val 178076294 ecr 867642076], length 0
+21:56:37.342287 IP 0xcc.ucsd.edu.55148 > dyn54.sysnet.ucsd.edu.9014: Flags [.], ack 2, win 229, options [nop,nop,TS val 867642076 ecr 178076294], length 0
+\end{lstlisting}
+
+\subsubsection{Estimation and Results}
+
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Setup Overhead: Estimation and Experiment Results}}
+  \begin{threeparttable}
+  \begin{tabular}{ccccc}
+  \hline
+      \textbf{Remote or} & \textbf{Setup Overhead}  & \textbf{Expr. Setup Results} & \textbf{Standard} \\ 
+      \textbf{Local}  & \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
+  \hline
+      \textbf{Remote}  & 0.405ms & 0.353ms & 0.031 \\
+      \textbf{Local} & 0.035ms & 0.029ms & 0.004 \\
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{setup_overhead_table}
+\end{table}
+
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Teardown Overhead: Estimation and Experiment Results}}
+  \begin{threeparttable}
+  \begin{tabular}{ccccc}
+  \hline
+      \textbf{Remote or} & \textbf{Teardown Overhead}  & \textbf{Expr. Teardown Results} & \textbf{Standard} \\ 
+      \textbf{Local}  & \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
+  \hline
+      \textbf{Remote}  & 0.415ms & 0.361ms & 0.043 \\
+      \textbf{Local} & 0.045ms & 0.042ms & 0.012 \\
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{setup_table}
+\end{table}
+
+For setup overhead estimation, there is a three-way handshake process between the client and the server. So the setup overhead is equal to RTT + time of processing the setup packet on the server side + time of sending the third setup packet on the client side. In our estimation, remote RTT is equal to 0.395ms and local RTT is equal to 0.025ms, processing time and sending time should be some microseconds. So the remote setup estimation is 0.405ms and the local setup estimation is 0.035ms.
+
+For teardown overhead estimation, in our case, the teardown is three-way since only the client actively close the connection. So the teardown overhead is equal to RTT + time of processing the teardown packet on the server side + time of sending the third teardown packet on the client side. In our estimation, remote RTT is equal to 0.395ms and local RTT is equal to 0.025ms, processing time and sending time should be some microseconds but it needs to go through some user-level logics on the server side. So the remote teardown estimation is 0.415ms and the local teardown estimation is 0.045ms.
+
+The difference between estimation and result is small and acceptable.
