@@ -10,8 +10,8 @@ This section we will mainly discuss our measurement about network performance on
 When measuring round trip time, basically we measure the round trip time by calculating time interval between the send time and the ack time for each packet. We first start a tcp server and a tcp client. And then, the client connects the server and sends one byte data to the server every 1 millisecond. We use tcpdump to capture tcp traffics on the client side and calculate the round trip time according to the tcpdump result.  We recognize the send and the ack packet by checking whether two consecutive packets match the flag patterns [P.] and [.] respectively. Below is an example of the send and ack pattern for remote interface:
 
 \begin{lstlisting}
-21:01:10.718357 IP 0xcc.ucsd.edu.45618 > dyn54.sysnet.ucsd.edu.9012: Flags [P.], seq 1:2, ack 1, win 229, options [nop,nop,TS val 866810420 ecr 177244638], length 1
-21:01:10.718623 IP dyn54.sysnet.ucsd.edu.9012 > 0xcc.ucsd.edu.45618: Flags [.], ack 2, win 227, options [nop,nop,TS val 177244638 ecr 866810420], length 0
+23:10:17.953051 IP 0xcc.ucsd.edu.39660 > dyn54.sysnet.ucsd.edu.9014: Flags [P.], seq 1:2, ack 1, win 229, options [nop,nop,TS val 890347228 ecr 200781447], length 1
+23:10:17.953387 IP dyn54.sysnet.ucsd.edu.9014 > 0xcc.ucsd.edu.39660: Flags [.], ack 2, win 227, options [nop,nop,TS val 200781447 ecr 890347228], length 0
 \end{lstlisting}
 
 In order to make the round trip time more accurate, on the server side, we mark each socket quick ack, which means that the tcp server immediately reply an ack after receiving each packet. In our experiment, the tcp client sends 10,000 times 1 byte data to the server.
@@ -27,20 +27,20 @@ In order to make the round trip time more accurate, on the server side, we mark 
       \textbf{Remote or} & \textbf{RTT}   & \textbf{Expr. Results} & \textbf{Standard}\\
       \textbf{Local}   &  \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
   \hline
-      \textbf{Remote}  & 0.395ms & 0.336 ms & 0.077  \\
-      \textbf{Local} & 0.025ms & 0.026ms & 0.109  \\
+      \textbf{Remote}  & 0.395ms & 0.338 ms & 0.099 \\
+      \textbf{Local} & 0.025ms & 0.028ms & 0.0.95 \\
   \hline
   \end{tabular}
   \end{threeparttable}
   \label{round_trip_time_table}
 \end{table}
 
-We take average of 100 ping results as our estimation. The difference between the estimation results and the experiment results are small and acceptable. 
+We take average of 100 ping results as our estimation. For both the remote interface and the local interface, the estimations are close to the experiment result with tolerable errors.
 
 \subsection{Peak Bandwidth}
 
 \subsubsection{Methodology}
-When measuring peak bandwidth, basically we measure the peak bandwidth by calculating maximum number of bytes newly acked by the server every second. We first start a tcp server and a tcp client. And then, the client connects the server and sends 1 GB data to the server. We use tcpdump to capture tcp ack traffics on the client side and calculate peak bandwidth according to the tcpdump result. 
+When measuring peak bandwidth, basically we measure the peak bandwidth by calculating maximum number of bytes newly acked by the server every second. We first start a tcp server and a tcp client. And then, the client connects the server and sends 5GB data to the server. We use tcpdump to capture tcp ack traffics on the client side and calculate peak bandwidth according to the tcpdump result. 
 
 \subsubsection{Estimation and Results}
 \begin{table}[ht]
@@ -49,18 +49,24 @@ When measuring peak bandwidth, basically we measure the peak bandwidth by calcul
   \begin{threeparttable}
   \begin{tabular}{ccccc}
   \hline
-      \textbf{Remote or} & \textbf{Peak Bandwidth}   & \textbf{Expr. Results} & \textbf{Standard}\\
-      \textbf{Local}   &  \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
+      \textbf{Remote or} & \textbf{Peak Bandwidth}   & \textbf{Expr. Results} \\
+      \textbf{Local}   &  \textbf{Estimation}  & (AVG) \\
   \hline
-      \textbf{Remote}  & 125MB/s & 112MB/s & 0.077  \\
-      \textbf{Local} &  & 802MB/s & 0.109  \\
+      \textbf{Remote}  & 125MB/s & 112MB/s \\
+      \textbf{Local} & 2.6GB/s & 2.7GB/s \\
   \hline
   \end{tabular}
   \end{threeparttable}
   \label{peak_bandwidth_table}
 \end{table}
 
-For estimation, according to the machine description, the NIC has a 1Gbit/s capacity. So the estimation for the remote interface is 125MB/s.
+For remote estimation, its remote interface is ethernet and has 1Gbit/s capacity according to machine description. And in the tcp protocol, its maximum protocol bandwidth is $$\frac{maximum\_window\_size}{estimated\_round\_time\_trip} = \frac{65536 Bytes}{0.000395 seconds} = 166MB/s$$So the remote estimation for the remote interface is 125MB/s.
+
+For local estimation, its local interface is loopback and its bandwidth should be equal to the memory bandwidth which is 10GB/s. And in the tcp protocol, its maximum protocol bandwidth is $$\frac{maximum\_window\_size}{estimated\_round\_time\_trip} = \frac{65536 Bytes}{0.000025 seconds} = 2.6GB/s$$So the local estimation for the remote interface is 2.6GB/s.
+
+For remote result, the experiment is a little less than the estimation. The reason should be that there are transmission overhead in network.
+
+For local result, the experiment is a little larger than the estimation. The reason should be that the round trip time is so small that even a tiny error may cause the huge change in the estimated bandwidth value.
 
 \subsection{Connection Overhead}
 
