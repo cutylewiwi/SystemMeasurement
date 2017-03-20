@@ -6,4 +6,4 @@ all:
 	xelatex Report
 
 clean:
-	rm Chapters/*.aux *.aux *.bcf *.dvi *.log *.pdf *.xml
+	rm Chapters/*.aux *.aux *.bcf *.dvi *.log *.pdf *.xml *.bbl *.blg
