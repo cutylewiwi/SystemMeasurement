@@ -24,7 +24,7 @@ int main (int argc, const char * argv[]) {
     int i, j, k;
     uint32_t low, low1;
     uint32_t high, high1;
-    uint64_t start, end;
+    unsigned long long start, end;
 
     if (argc != 3){
         printf("usage: loop_ovh loopscale iterations\n");

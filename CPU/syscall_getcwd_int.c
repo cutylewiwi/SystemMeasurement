@@ -29,7 +29,6 @@ int main (int argc, const char * argv[]) {
     uint32_t high, high1;
     int i;
     pid_t pid;
-    volatile pid_t pid1;
     char cwd[1024];
 
     int iterations = atoi((const char *) argv[argc-1]);
@@ -46,7 +45,6 @@ int main (int argc, const char * argv[]) {
             : "cc", "edi", "esi", "memory"
         );
         STOP_COUNT(high1, low1);
-        pid1 = pid;
 
         // printf("pid: %d\n", pid1);
 
