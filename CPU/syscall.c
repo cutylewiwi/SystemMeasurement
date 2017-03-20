@@ -53,6 +53,8 @@ int main (int argc, const char * argv[]) {
         STOP_COUNT(high1, low1);
         pid1 = pid;
 
+        printf("pid: %d\n", pid1);
+
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
 
