@@ -1,7 +1,7 @@
 
 % \addbibresource{./references.bib}
 
-This section we will mainly discuss our measurement about network performance on the target machine. More specifically, we will report measurements about round trip time, peak bandwidth and connection overhead for the tcp protocol.
+This section we will mainly discuss our measurement about network performance on the target machine. More specifically, we will report measurements about round trip time, peak bandwidth and connection overhead for the TCP protocol.
 
 \subsection{Machine Description}
 \label{Network_machine_desc}
@@ -26,14 +26,14 @@ When running this project, the operating system running on the machine is normal
 
 \subsubsection{Methodology}
 
-When measuring round trip time, basically we measure the round trip time by calculating time interval between the send time and the ack time for each packet. We first start a tcp server and a tcp client. And then, the client connects the server and sends one byte data to the server every 1 millisecond. We use tcpdump to capture tcp traffics on the client side and calculate the round trip time according to the tcpdump result.  We recognize the send and the ack packet by checking whether two consecutive packets match the flag patterns [P.] and [.] respectively. Below is an example of the send and ack pattern for remote interface:
+When measuring round trip time, basically we measure the round trip time by calculating time interval between the send time and the ack time for each packet. We first start a TCP server and a TCP client. And then, the client connects the server and sends one byte data to the server every 1 millisecond. We use tcpdump to capture TCP traffics on the client side and calculate the round trip time according to the tcpdump result.  We recognize the send and the ack packet by checking whether two consecutive packets match the flag patterns [P.] and [.] respectively. Below is an example of the send and ack pattern for remote interface:
 
 \begin{lstlisting}
 23:10:17.953051 IP 0xcc.ucsd.edu.39660 > dyn54.sysnet.ucsd.edu.9014: Flags [P.], seq 1:2, ack 1, win 229, options [nop,nop,TS val 890347228 ecr 200781447], length 1
 23:10:17.953387 IP dyn54.sysnet.ucsd.edu.9014 > 0xcc.ucsd.edu.39660: Flags [.], ack 2, win 227, options [nop,nop,TS val 200781447 ecr 890347228], length 0
 \end{lstlisting}
 
-In order to make the round trip time more accurate, on the server side, we mark each socket quick ack, which means that the tcp server immediately reply an ack after receiving each packet. In our experiment, the tcp client sends 10,000 times 1 byte data to the server.
+In order to make the round trip time more accurate, on the server side, we mark each socket quick ack, which means that the TCP server immediately reply an ack after receiving each packet. In our experiment, the TCP client sends 10,000 times 1 byte data to the server.
 
 \subsubsection{Estimation and Results}
 
@@ -54,12 +54,12 @@ In order to make the round trip time more accurate, on the server side, we mark 
   \label{round_trip_time_table}
 \end{table}
 
-We take average of 100 ping results as our estimation. For both the remote interface and the local interface, the estimations are close to the experiment result with tolerable errors.
+We take an average of 100 ping results as our estimation. For both the remote interface and the local interface, the estimations are close to the experiment result with tolerable errors.
 
 \subsection{Peak Bandwidth}
 
 \subsubsection{Methodology}
-When measuring peak bandwidth, basically we measure the peak bandwidth by calculating maximum number of bytes newly acked by the server every second. We first start a tcp server and a tcp client. And then, the client connects the server and sends 5GB data to the server. We use tcpdump to capture tcp ack traffics on the client side and calculate peak bandwidth according to the tcpdump result.
+When measuring peak bandwidth, basically we measure the peak bandwidth by calculating the maximum number of bytes newly acked by the server every second. We first start a TCP server and a TCP client. And then, the client connects the server and sends 5GB data to the server. We use tcpdump to capture TCP ack traffics on the client side and calculate peak bandwidth according to the tcpdump result.
 
 \subsubsection{Estimation and Results}
 \begin{table}[ht]
@@ -79,18 +79,18 @@ When measuring peak bandwidth, basically we measure the peak bandwidth by calcul
   \label{peak_bandwidth_table}
 \end{table}
 
-For remote estimation, its remote interface is ethernet and has 1Gbit/s capacity according to machine description. And in the tcp protocol, its maximum protocol bandwidth is $$\frac{maximum\_window\_size}{estimated\_round\_time\_trip} = \frac{65536 Bytes}{0.000395 seconds} = 166MB/s$$So the remote estimation for the remote interface is 125MB/s.
+For remote estimation, its remote interface is ethernet and has 1Gbit/s capacity according to machine description. And in the TCP protocol, its maximum protocol bandwidth is $$\frac{maximum\_window\_size}{estimated\_round\_time\_trip} = \frac{65536 Bytes}{0.000395 seconds} = 166MB/s$$So the remote estimation for the remote interface is 125MB/s.
 
-For local estimation, its local interface is loopback and its bandwidth should be equal to the memory bandwidth which is 10GB/s. And in the tcp protocol, its maximum protocol bandwidth is $$\frac{maximum\_window\_size}{estimated\_round\_time\_trip} = \frac{65536 Bytes}{0.000025 seconds} = 2.6GB/s$$So the local estimation for the remote interface is 2.6GB/s.
+For local estimation, its local interface is loopback and its bandwidth should be equal to the memory bandwidth which is 10GB/s. And in the TCP protocol, its maximum protocol bandwidth is $$\frac{maximum\_window\_size}{estimated\_round\_time\_trip} = \frac{65536 Bytes}{0.000025 seconds} = 2.6GB/s$$So the local estimation for the remote interface is 2.6GB/s.
 
-For remote result, the experiment is a little less than the estimation. The reason should be that there are transmission overhead in network.
+For the remote result, the experiment is a little less than the estimation. The reason should be that there are transmission overhead in network.
 
-For local result, the experiment is a little larger than the estimation. The reason should be that the round trip time is so small that even a tiny error may cause the huge change in the estimated bandwidth value.
+For the local result, the experiment is a little larger than the estimation. The reason should be that the round trip time is so small that even a tiny error may cause the huge change in the estimated bandwidth value.
 
 \subsection{Connection Overhead}
 
 \subsubsection{Methodology}
-When measuring connection overhead, basically we measure the connection overhead by calculating time interval between the sending the first setup packet and sending the last setup packet for each connection and time interval between sending the first teardown packet and sending the last teardown packet for each connection. We first start a tcp server and a tcp client. And then, the client connects the server and then closes the connection after 1 millisecond. We use tcpdump to capture tcp traffics on the client side and calculate the connection overhead according to the tcpdump result.  We recognize setup packets by checking whether three consecutive packets match the flag patterns [S], [S.], [.] respectively and teardown packets by checking whether three consecutive packets match the flag patterns [F.], [F.], [.]. Below are examples of the setup and teardown patterns for remote interface:
+When measuring connection overhead, basically we measure the connection overhead by calculating the time interval between the sending the first setup packet and sending the last setup packet for each connection and the time interval between sending the first teardown packet and sending the last teardown packet for each connection. We first start a TCP server and a TCP client. And then, the client connects the server and then closes the connection after 1 millisecond. We use tcpdump to capture TCP traffics on the client side and calculate the connection overhead according to the tcpdump result.  We recognize setup packets by checking whether three consecutive packets match the flag patterns [S], [S.], [.] respectively and teardown packets by checking whether three consecutive packets match the flag patterns [F.], [F.], [.]. Below are examples of the setup and teardown patterns for remote interface:
 
 \begin{lstlisting}
 21:56:37.340417 IP 0xcc.ucsd.edu.55148 > dyn54.sysnet.ucsd.edu.9014: Flags [S], seq 1531103784, win 29200, options [mss 1460,sackOK,TS val 867642075 ecr 0,nop,wscale 7], length 0
@@ -142,6 +142,6 @@ When measuring connection overhead, basically we measure the connection overhead
 
 For setup overhead estimation, there is a three-way handshake process between the client and the server. So the setup overhead is equal to RTT + time of processing the setup packet on the server side + time of sending the third setup packet on the client side. In our estimation, remote RTT is equal to 0.395ms and local RTT is equal to 0.025ms, processing time and sending time should be some microseconds. So the remote setup estimation is 0.405ms and the local setup estimation is 0.035ms.
 
-For teardown overhead estimation, in our case, the teardown is three-way since only the client actively close the connection. So the teardown overhead is equal to RTT + time of processing the teardown packet on the server side + time of sending the third teardown packet on the client side. In our estimation, remote RTT is equal to 0.395ms and local RTT is equal to 0.025ms, processing time and sending time should be some microseconds but it needs to go through some user-level logics on the server side. So the remote teardown estimation is 0.415ms and the local teardown estimation is 0.045ms.
+For teardown overhead estimation, in our case, the teardown is three-way since only the client actively closes the connection. So the teardown overhead is equal to RTT + time of processing the teardown packet on the server side + time of sending the third teardown packet on the client side. In our estimation, remote RTT is equal to 0.395ms and local RTT is equal to 0.025ms, processing time and sending time should be some microseconds but it needs to go through some user-level logics on the server side. So the remote teardown estimation is 0.415ms and the local teardown estimation is 0.045ms.
 
 The difference between estimation and result is small and acceptable.

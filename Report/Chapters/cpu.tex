@@ -214,7 +214,7 @@ For the questions about comparison between system call and procedure call, syste
 \subsubsection{Methodology}
 \label {creation_methodology}
 
-When measuring Task, or process creation time, we need to ensure several things. The first one when the measurement process fork a child process after fork syscall, the os will schedule either the measurement process or the child of the measurement process to be executed. To ensure that, we run our measurement process with the round robin real time scheduler and set the process the highest priority. The cmd is as follows:
+When measuring the task, or the process creation time, we need to ensure several things. The first one when the measurement a process fork a child process after fork syscall, the os will schedule either the measurement process or the child of the measurement process to be executed. To ensure that, we run our measurement process with the round robin real-time scheduler and set the process the highest priority. The cmd is as follows:
 
 \begin{lstlisting}
     sudo chrt -rr 99 ./measurement
@@ -236,9 +236,9 @@ For the kernel thread creation, we use a similar method. The measurement sequenc
 \begin{enumerate}
     \item We initialize a global variable for child process to store the end clock cycle count \label{thread_creation_gv}
     \item We start counting cycles before we call pthread\_create
-    \item Both at the main and the peer thread start point after pthread\_create finished, we stop counting cycles
-    \item peer thread passing the end counting to the main thread via the global variable we initialized at \textbf{\ref{thread_creation_gv}}
-    \item We calculate both cycles spend for main thread pthread\_create return and pthread\_create start execution, then choose the smaller one (as the smaller one indicates that this thread executes before the other one)
+    \item Both at the main and the peer threads start point after pthread\_create finished, we stop counting cycles
+    \item peer threads passing the end counting to the main thread via the global variable we initialized at \textbf{\ref{thread_creation_gv}}
+    \item We calculate both cycles spend for the main thread pthread\_create return and pthread\_create start execution, then choose the smaller one (as the smaller one indicates that this thread executes before the other one)
 \end{enumerate}
 
 We repeat each measurement for 10000 times to get the accurate cycles.
@@ -264,27 +264,27 @@ The estimation and the measurement result will be list in the \textbf{Table \ref
   \label{process_creation_time}
 \end{table}
 
-When we make estimation, it is hard for us to do the hard ware and software estimation, as there are a lot of issues hard to estimate. For example, for fork(), the kernel will create a new process control block for the new process, and then set
-up a bunch of member's value inside the pcb; after that, it will at least initialize the child process's address space, by creating a bunch of page tables; all these operations might cost more then 20000 cycles. Compared with process creation,
-thread creation is much more light weight, as thread doesn't need to construct a new address space. Finally we made a prediction that, process creation will cost 20000 cycles and thread will cost half of the process cost, 10000 cycles; or in other
-word, $7.16 \mu s$ for process and $3.58 \mu s$ for thread.
+When we make the estimation, it is hard for us to do the hardware and software estimation, as there are a lot of issues hard to estimate. For example, for fork(), the kernel will create a new process control block for the new process, and then set
+up a bunch of member's value inside the PCB; after that, it will at least initialize the child process's address space, by creating a bunch of page tables; all these operations might cost more than 20000 cycles. Compared with process creation,
+thread creation is much more light weight, as a thread doesn't need to construct a new address space. Finally, we made a prediction that, the process creation will cost 20000 cycles and the thread will cost half of the process cost, 10000 cycles; or in other
+words, $7.16 \mu s$ for processes and $3.58 \mu s$ for threads.
 
-Our experimental results show that the process creation and thread creation takes 134507 and 20635 cycles correspondingly, which means creating a process takes much longer time than we have estimated and creating a thread is much more lightweight. The standard deviations for our experiments are 3062 and 1546, which are relatively small to the average results.
+Our experimental results show that the process creation and the thread creation takes 134507 and 20635 cycles correspondingly, which means creating a process takes much longer time than we have estimated and creating a thread is much more lightweight. The standard deviations for our experiments are 3062 and 1546, which are relatively small to the average results.
 
 
 \subsection{Process and Kernel Thread Context Switch}
 
 \subsubsection{Methodology}
 
-For the overhead measurement of the context switch, the basic idea to measure the overhead is to count the cycles spend on switch from one process (thread) to another process (thread). To make our measurement accurate, we need to ensure the same thing we indicates in
+For the overhead measurement of the context switch, the basic idea to measure the overhead is to count the cycles spend on switch from one process (thread) to another process (thread). To make our measurement accurate, we need to ensure the same thing we indicated in
 \textbf{section \ref{creation_methodology}}, that the measuring processes (threads) are the only two processes (threads) that to be scheduled. In the real system, this is impossible, but we can estimate this situation by increasing the priority of the process (threads).
 
-For specific how to count the cycles of a context switch, we need to force a context switch to happen in one process (thread) the another (thread) process can stop the counting afterwards. To achieve this goal, we implement the following measure sequence by using blocking
-reading pipe. To be more precisely, at parent process, we first start a pipe for communication, then fork new process; after that, parent process will first start counting cycles, then write to the communicating pipe, then call wait() to wait the child process; at the same time, child process will read from the pipe, then stop counting the cycles, and finally send the stop cycles back to the parent process via the pipe then exit; after that, parent will wake up and get the value and count the tick.
+For specific how to count the cycles of a context switch, we need to force a context switch to happen in one process (thread) the another (thread) process can stop the counting afterward. To achieve this goal, we implement the following measure sequence by using blocking
+the reading pipe. To be more precisely, at parent process, we first start a pipe for communication, then fork new process; after that, parent process will first start counting cycles, then write to the communicating pipe, then call wait() to wait for the child process; at the same time, child process will read from the pipe, then stop counting the cycles, and finally send the stop cycles back to the parent process via the pipe then exit; after that, parent will wake up and get the value and count the tick.
 
 This method uses read and wait to synchronize. Either child or parent process executing first, the final result will be the period start from parent writing to the pipe, then context switch to the child, and finally the the child read from pipe.
 
-The method for thread is similar, the difference is we use \textbf{pthread\_cond\_wait()} to synchronize threads.
+The method for threads is similar, the difference is we use \textbf{pthread\_cond\_wait()} to synchronize threads.
 
 
 \subsubsection{Estimation and results}
@@ -305,9 +305,9 @@ The method for thread is similar, the difference is we use \textbf{pthread\_cond
     \label{context_switch_time}
 \end{table}
 
-For the estimation of the overhead of a context switch, we are not pretty sure the precise overhead of the context switch, so we just make a guess that the overhead should be more then 10000 cycles for thread, and the overhead for the process should be at least twice as the thread's.
+For the estimation of the overhead of a context switch, we are not pretty sure the precise overhead of the context switch, so we just make a guess that the overhead should be more than 10000 cycles for thread, and the overhead for the process should be at least twice as the thread's.
 
-The final results shows that we under estimate the overhead of the process context switch, and it should be around 80000 cycles; but amazingly for the thread one, it only cost around 2500 cycles for context switch. We might perform some more measurement about that in the future.
+The final results shows that we underestimate the overhead of the process context switch, and it should be around 80000 cycles; but amazingly for the thread one, it only cost around 2500 cycles for context switch. We might perform some more measurement about that in the future.
 
-For the question about difference between process context switch and kernel context switch, as the results show that, the overhead of thread context switch around 30 times less then process context switch. The main difference between thread and process context switch
-is that, when thread context switching, kernel need neither to construct the virtual memory space to the thread switch to, nor to flush the tlb, which means that thread context switch is much less expensive than process context switch.
+For the question about the difference between the process context switch and the kernel thread context switch, as the results show that, the overhead of the thread context switch around 30 times less then process context switch. The main difference between the thread and the process context switch
+is that, when a thread context switching, kernel need neither to construct the virtual memory space to the thread switch to, nor to flush the TLB, which means that thread context switch is much less expensive than process context switch.
