@@ -1,3 +1,48 @@
+\subsection{Code Mapping}
+
+We explain in this subsection for all our source code measuring which part of this project.
+
+\subsubsection{CPU}
+\begin{itemize}
+    \item Measurement Overhead: time_ovh.c
+    \item Loop Overhead: loop_ovh.c
+    \item Procedure Call: procedure.c
+    \item System Call: syscall*.c
+    \item Process Creation: process.c
+    \item Thread Creation: thread.c
+    \item Process Context Switch: proc_switch.c
+    \item Thread COntext Switch: thread_switch.c
+\end{itemize}
+
+\subsubsection{Memory}
+\begin{itemize}
+    \item Memory Hirachy Latency: access_ptr.c
+    \item Memory Bandwidth: bandwidth*.c
+    \item Page Fault Handling: pagefault.c
+    \item Large File Generate: largefile.c
+\end{itemize}
+
+\subsubsection{Networking}
+\begin{itemize}
+    \item Round Trip Time: rtt.c
+    \item Peak Bandwidth: peak.c
+    \item Connection Overhead: conn.c
+    \item Server Side: server.c
+\end{itemize}
+
+\subsubsection{File System}
+\begin{itemize}
+    \item File Cache: filecache.c
+    \item Sequential File Read: seqread.c seqread.sh
+    \item Random File Read: randread.c randread.sh
+    \item Remote Sequential File Read: rseqread.sh
+    \item Remote Random File Read: rrandread.sh
+    \item Contention: contention.c
+\end{itemize}
+
+\subsection{Measurement Results Summary}
+
+Here we summary all the results we have in \textbf{Table \ref{Summary_Table}}
 
 \begin{table}[ht]
   \centering
