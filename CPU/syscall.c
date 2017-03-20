@@ -44,12 +44,12 @@ int main (int argc, const char * argv[]) {
             : "0"(__NR_getpid)  \
             : "cc", "rcx", "r11", "memory"  \
         );
-        INST
-        INST
-        INST
-        INST
-        INST
-        // pid = getpid();
+        // INST
+        // INST
+        // INST
+        // INST
+        // INST
+        pid = getpid();
         STOP_COUNT(high1, low1);
         pid1 = pid;
 
