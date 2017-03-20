@@ -1,13 +1,13 @@
 
 % \addbibresource{./references.bib}
 
-This section we will mainly discuss our measurement about memory performance on the target machine. More specificly, we will report measurements about access latency on each level of memory hirachy, the memory bandwidth, and the overhead of page fault handling.
+This section we will mainly discuss our measurement about memory performance on the target machine. More specifically, we will report measurements about access latency on each level of memory hierarchy, the memory bandwidth, and the overhead of page fault handling.
 
 \subsection{Memory Latency}
 
 \subsubsection{Methodology}
 
-When measure access latency on each level of memory hirachy, basically we followed the method suggest by lmbench\cite{mcvoy1996lmbench}.
+When measure access latency on each level of memory hierarchy, basically we followed the method suggest by lmbench\cite{mcvoy1996lmbench}.
 
 We create a linklist which only contains a pointer to the next element:
 
@@ -19,9 +19,9 @@ We create a linklist which only contains a pointer to the next element:
     typedef struct Linklist Linklist;
 \end{lstlisting}
 
-The total size of the linklist will increase from 1 KB to 256 MB, by the factor of 2. When initializing, a stride will be provided by the tester. The number of the elements in the linklist is always divisible by the stride, and when initializing, the linklist will be devided as many chunks contains stride elements, and each elements in one chunk will point to a random element in the next chunk, and the last chunk in the linklist element array will point to the first chunk, which make this linklist an infinite cyclical linklist. This structure will eliminate the impact of cache prefetch, as the stride and random elements can easily make the next element in the linklist out of the prefetch range of each level of cache.
+The total size of the linklist will increase from 1 KB to 256 MB, by the factor of 2. When initializing, a stride will be provided by the tester. The number of the elements in the linklist is always divisible by the stride, and when initializing, the linklist will be decided as many chunks contains stride elements, and each elements in one chunk will point to a random element in the next chunk, and the last chunk in the linklist element array will point to the first chunk, which make this linklist an infinite cyclical linklist. This structure will eliminate the impact of cache prefetch, as the stride and random elements can easily make the next element in the linklist out of the prefetch range of each level of cache.
 
-When performing measurement, in order to get rid of all other unnecessary memory access, we have to use at least \textbf{O1} optimization; however, \textbf{O1} optimization will also optimized the code accesing the linklist. In our final measurement code, the travel of the linklist if write in inline assembly which can avoid compiler optimizations:
+When performing measurement, in order to get rid of all other unnecessary memory access, we have to use at least \textbf{O1} optimization; however, \textbf{O1} optimization will also optimized the code accessing the linklist. In our final measurement code, the travel of the linklist if write in inline assembly which can avoid compiler optimizations:
 
 \begin{lstlisting}[language=C]
     START_COUNT(high, low);
@@ -37,7 +37,7 @@ When performing measurement, in order to get rid of all other unnecessary memory
     STOP_COUNT(high1, low1);
 \end{lstlisting}
 
-where iter is the head of the linklist. We will measure 100 times of accesing memory on each measurement, and totally perform 1000 (stored in \textbf{step}) measurements.
+where iter is the head of the linklist. We will measure 100 times of accessing memory on each measurement, and totally perform 1000 (stored in \textbf{step}) measurements.
 
 \subsubsection{Estimation and Results}
 
@@ -50,7 +50,7 @@ where iter is the head of the linklist. We will measure 100 times of accesing me
 
 \begin{table}[ht]
   \centering
-  \caption{\textbf{Memory Hirachy Latency: Estimation and Experiment Results}}
+  \caption{\textbf{Memory hierarchy Latency: Estimation and Experiment Results}}
   \begin{threeparttable}
   \begin{tabular}{ccc}
   \hline
@@ -69,15 +69,15 @@ where iter is the head of the linklist. We will measure 100 times of accesing me
 
 For estimation, we believe the latency for l1 cache references should be pretty low, let's say, within 5 cycles; the latency for l2 cache should be higher, let's say, 20 cycles; the latency for l3 cache should be much higher than l2, let's say, 60 cycles; and the latency for main memory should be the highest and much higher than l3 cache, let's say, 150 cycles.
 
-The result is shown in \textbf{Figure \ref{mem_latency_result}} and \textbf{Table \ref{memory_latency_table}}. In \textbf{Figure \ref{memory_latency_table}}, the real lines separate the latency turning point for different level of memory hirachy, and the dotted lines separate the real size of different level of memory hirachy in the target machine. As we can see in the figure, the dotted line and the real line for l1 cache is on the same position, but for l2 cache and l3 cache, the latency turning point is always a little bit smaller than the actual size point. For why that happened, we guess that the following reason contribute it: as both l2 and l3 cache are unify instruction and data cache, so that some instructions stored in the l2 cache and l3 cache will accelarate that data access latency turning point to happen.
+The result is shown in \textbf{Figure \ref{mem_latency_result}} and \textbf{Table \ref{memory_latency_table}}. In \textbf{Figure \ref{memory_latency_table}}, the real lines separate the latency turning point for different level of memory hierarchy, and the dotted lines separate the real size of different level of memory hierarchy in the target machine. As we can see in the figure, the dotted line and the real line for l1 cache is on the same position, but for l2 cache and l3 cache, the latency turning point is always a little bit smaller than the actual size point. For why that happened, we guess that the following reason contribute it: as both l2 and l3 cache are unify instruction and data cache, so that some instructions stored in the l2 cache and l3 cache will accelarate that data access latency turning point to happen.
 
-\textbf{Table \ref{memory_latency_table}} shows the latency esitimation and measurement results. We under estimate the access latency of l1 cache and memory.
+\textbf{Table \ref{memory_latency_table}} shows the latency estimation and measurement results. We under estimate the access latency of l1 cache and memory.
 
 \subsection{Memory Bandwidth}
 
 \subsubsection{Methodology}
 
-When measuring memory bandwidth, we used \textbf{memcpy()} function, to copy a large chunks of data (same size as l3 cache) from main memory to l3 cache when measuring read bandwith, or to copy a large chunks of data (same size as l3 cahce) from l3 cache to main memory when measuring write bandwidth. When calculating the results, we made an assumption that, only around a half of the overhead of \textbf{memcpy()} is caused by main memory reading or writing, as \textbf{memcpy()} itself will perform a lot of protection and validation operations. We believe that it is reasonable to assume that around a half of the overhead is caused by desired memory accesing.
+When measuring memory bandwidth, we used \textbf{memcpy()} function, to copy a large chunks of data (same size as l3 cache) from main memory to l3 cache when measuring read bandwidth, or to copy a large chunks of data (same size as l3 cahce) from l3 cache to main memory when measuring write bandwidth. When calculating the results, we made an assumption that, only around a half of the overhead of \textbf{memcpy()} is caused by main memory reading or writing, as \textbf{memcpy()} itself will perform a lot of protection and validation operations. We believe that it is reasonable to assume that around a half of the overhead is caused by desired memory accessing.
 
 \subsubsection{Estimation and Results}
 \label{Memory_bandwidth_result_section}
@@ -135,15 +135,15 @@ There is still one problem needs to be addressed out, the file system optimizati
   \label{pagefault_handle_time}
 \end{table}
 
-For estimation, the I/O speed of a 7200 RPM HDD is at the scale of 100 MB/s \cite{wiki:hdd}, so that transfering a 4K page will take:
+For estimation, the I/O speed of a 7200 RPM HDD is at the scale of 100 MB/s \cite{wiki:hdd}, so that transferring a 4K page will take:
 
 $$ \frac{4KB}{100 MB/s} = \frac{1}{25600} s $$
 
 $\frac{1}{25600} s$ equals to around $111600 cycles$.
 
-The software overhead mainly comes from page table maintains and protection mechanism, and we assume this overhead is around 10000 cycles. Then, the total estimation overhead for a pagefault handling is 121600 cycles.
+The software overhead mainly comes from page table maintains and protection mechanism, and we assume this overhead is around 10000 cycles. Then, the total estimation overhead for a page fault handling is 121600 cycles.
 
-The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the pagefault handling by around 15000 cycles. This might be caused by two reasons: first, we might underestimate software overhead caused by Operating System's handling logic; second, the I/O speed of the HDD might not reach its theorical speed.
+The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the page fault handling by around 15000 cycles. This might be caused by two reasons: first, we might underestimate software overhead caused by Operating System's handling logic; second, the I/O speed of the HDD might not reach its theoritical speed.
 
 For the question about speed compare between memory bandwidth and page fault page transfer bandwidth on byte scale, according to \textbf{Section \ref{Memory_bandwidth_result_section}}, on average the memory can transfer a byte in
 
