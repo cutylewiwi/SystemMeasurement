@@ -9,18 +9,18 @@
 #define ITERATIONS 10
 
 #define __NR_getpid 39
-pid_t my_getpid()
-{
-    pid_t ret;
-    asm volatile
-    (
-        "syscall"
-        : "=a" (ret)
-        : "0"(__NR_getpid)
-        : "cc", "rcx", "r11", "memory"
-    );
-    return ret;
-}
+// pid_t my_getpid()
+// {
+//     pid_t ret;
+//     asm volatile
+//     (
+//         "syscall"
+//         : "=a" (ret)
+//         : "0"(__NR_getpid)
+//         : "cc", "rcx", "r11", "memory"
+//     );
+//     return ret;
+// }
 
 int main (int argc, const char * argv[]) {
     unsigned long long start;
@@ -28,20 +28,22 @@ int main (int argc, const char * argv[]) {
     uint32_t low, low1;
     uint32_t high, high1;
     int i;
-    char cwd[1024];
+    pid_t pid;
 
-    pid_t pid1 = my_getpid();
-    pid_t pid2 = getpid();
-    if (pid1 == pid2) {
-        printf("%d\n", pid1);
-    }
+    return 0;
 
     int iterations = atoi((const char *) argv[argc-1]);
     WARMUP(high, low, high1, low1);
 
     for (i = 0; i < iterations; i++) {
         START_COUNT(high, low);
-        getcwd(cwd, sizeof(cwd));
+        asm volatile
+        (
+            "syscall"
+            : "=a" (pid)
+            : "0"(__NR_getpid)
+            : "cc", "rcx", "r11", "memory"
+        );
         STOP_COUNT(high1, low1);
 
         start = ((unsigned long long) high << 32) | low;
