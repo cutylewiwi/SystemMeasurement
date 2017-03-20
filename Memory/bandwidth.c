@@ -85,10 +85,10 @@ do {    \
     start = ((unsigned long long) high << 32) | low;    \
     end = ((unsigned long long) high1 << 32) | low1;    \
     records[flag++] = end - start;  \
+    manarray += 6400; \
 }while(0);
         flag = 0;
         HUNDRED(READINST);
-        manarray += 6400;
 
         for (j = 0; j < flag; j++) {
             printf("read%d%02d:\t %llu\n", i, j, records[j]);
@@ -112,11 +112,11 @@ do{ \
     start = ((unsigned long long) high << 32) | low;    \
     end = ((unsigned long long) high1 << 32) | low1;    \
     records[flag++] = end - start;  \
+    manarray += 6400; \
 }while (0);
 
         flag = 0;
         HUNDRED(WRITEINST);
-        manarray += 6400;
 
         for (j = 0; j < flag; j++) {
             printf("write%d%02d:\t %llu\n", i, j, records[j]);
