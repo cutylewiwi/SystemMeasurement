@@ -7,9 +7,9 @@
 
 #include "../include/net_common.h"
 
-#define DATA_SIZE 1 << 30
+#define DATA_SIZE_KB (1 << 20)
 
-char data[DATA_SIZE];
+char data[DATA_SIZE_KB * 1000];
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -69,9 +69,14 @@ int main(int argc, char* argv[]) {
                         fprintf(stderr, "error in receiving data size\n");
 			exit(EXIT_FAILURE);
                     }
-                    if (rio_rprecv(sockfd, data, data_size) != data_size) {
-                        fprintf(stderr, "error in receiving data\n");
-                        exit(EXIT_FAILURE);
+                      
+                    while (data_size > 0) {
+                        int recv_size = min(data_size, DATA_SIZE_KB);
+                        if (rio_rprecv(sockfd, data, recv_size * 1000) != recv_size * 1000) {
+                            fprintf(stderr, "error in receiving data\n");
+                            exit(EXIT_FAILURE);
+                        }
+                        data_size -= recv_size;
                     }
                     break;
                 }
