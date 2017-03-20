@@ -1,4 +1,4 @@
-	
+
 % \addbibresource{./references.bib}
 
 This section we will mainly discuss our measurement about memory performance on the target machine. More specifically, we will report measurements about access latency on each level of memory hierarchy, the memory bandwidth, and the overhead of page fault handling.
@@ -143,7 +143,6 @@ $$ \frac{4KB}{100 MB/s} = \frac{1}{25600} s $$
 
 $\frac{1}{25600} s$ equals to around $111600 cycles$.
 
-<<<<<<< HEAD
 In checkpoint 2 we made a mistake: we ignored that in a HDD environment, seek and rotation is the most significant overhead for page fault handling, when taking in consider about seek and rotation, the time consumption is of the order of 10 ms. So that, the hardware overhead should be:
 
 $$\frac{10 ms}{0.350001 ns/cycle} = 27932882 cycles$$
@@ -153,15 +152,8 @@ So the totally hardware overhead should be around $28000000 cycles$
 The software overhead mainly comes from page table maintains and protection mechanism, and we assume this overhead is around 10000 cycles. Then, the total estimation overhead for a pagefault handling is 121600 cycles.
 
 The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the pagefault handling by around 2 ms. As there is a high variance for the performance of the disk, it is not strange that this difference exist. It will not experience the largest disk access overhead for each access request.
-=======
-The software overhead mainly comes from page table maintains and protection mechanism, and we assume this overhead is around 10000 cycles. Then, the total estimation overhead for a page fault handling is 121600 cycles.
 
-<<<<<<< HEAD
 The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the page fault handling by around 15000 cycles. This might be caused by two reasons: first, we might underestimate software overhead caused by Operating System's handling logic; second, the I/O speed of the HDD might not reach its theoretical speed.
-=======
-The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the page fault handling by around 15000 cycles. This might be caused by two reasons: first, we might underestimate software overhead caused by Operating System's handling logic; second, the I/O speed of the HDD might not reach its theoritical speed.
->>>>>>> aa0eb05b3c95f690ebda56b84d627138014d694c
->>>>>>> 0cab346a08882e18abbe0bcebd0c85a7e7fdbcc5
 
 For the question about speed compare between memory bandwidth and page fault page transfer bandwidth on byte scale, according to \textbf{Section \ref{Memory_bandwidth_result_section}}, on average the memory can transfer a byte in
 
