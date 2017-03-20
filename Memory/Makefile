@@ -15,7 +15,7 @@ bandwidth: bandwidth.o
 	$(CC) -o bandwidth bandwidth.o
 
 bandwidth.o: bandwidth.c
-	$(CC) -I$(INCLUDE) -c bandwidth.c -O0
+	$(CC) -I$(INCLUDE) -c bandwidth.c -O1
 
 pagefault: pagefault.o
 	$(CC) -o pagefault pagefault.o

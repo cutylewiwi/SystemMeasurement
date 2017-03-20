@@ -21,7 +21,7 @@
 #define ITERATIONS  3
 #define CHUNKS      (1ll << 22)
 #define PAGE        (1ll << 12)       // page size
-#define STRIDE      64
+#define STRIDE      16384
 
 #define FILEPATH    "pagefaultmmap.tmp"
 #define FILESIZE    (CHUNKS * PAGE)
