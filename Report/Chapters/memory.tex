@@ -1,4 +1,4 @@
-
+	
 % \addbibresource{./references.bib}
 
 This section we will mainly discuss our measurement about memory performance on the target machine. More specifically, we will report measurements about access latency on each level of memory hierarchy, the memory bandwidth, and the overhead of page fault handling.
@@ -7,7 +7,7 @@ This section we will mainly discuss our measurement about memory performance on 
 
 \subsubsection{Methodology}
 
-When measure access latency on each level of memory hierarchy, basically we followed the method suggest by lmbench\cite{mcvoy1996lmbench}.
+When measuring access latency on each level of memory hierarchy, basically we followed the method suggest by lmbench\cite{mcvoy1996lmbench}.
 
 We create a linklist which only contains a pointer to the next element:
 
@@ -156,8 +156,12 @@ The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestim
 =======
 The software overhead mainly comes from page table maintains and protection mechanism, and we assume this overhead is around 10000 cycles. Then, the total estimation overhead for a page fault handling is 121600 cycles.
 
+<<<<<<< HEAD
+The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the page fault handling by around 15000 cycles. This might be caused by two reasons: first, we might underestimate software overhead caused by Operating System's handling logic; second, the I/O speed of the HDD might not reach its theoretical speed.
+=======
 The result is shown in \textbf{Table \ref{pagefault_handle_time}}. We underestimate the overhead of the page fault handling by around 15000 cycles. This might be caused by two reasons: first, we might underestimate software overhead caused by Operating System's handling logic; second, the I/O speed of the HDD might not reach its theoritical speed.
 >>>>>>> aa0eb05b3c95f690ebda56b84d627138014d694c
+>>>>>>> 0cab346a08882e18abbe0bcebd0c85a7e7fdbcc5
 
 For the question about speed compare between memory bandwidth and page fault page transfer bandwidth on byte scale, according to \textbf{Section \ref{Memory_bandwidth_result_section}}, on average the memory can transfer a byte in
 
