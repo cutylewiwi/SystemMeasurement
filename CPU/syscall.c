@@ -29,6 +29,7 @@ int main (int argc, const char * argv[]) {
     uint32_t high, high1;
     int i;
     pid_t pid;
+    asm volatile pid1;
 
     int iterations = atoi((const char *) argv[argc-1]);
     WARMUP(high, low, high1, low1);
@@ -48,7 +49,9 @@ int main (int argc, const char * argv[]) {
         INST
         INST
         INST
+        // pid = getpid();
         STOP_COUNT(high1, low1);
+        pid1 = pid;
 
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
