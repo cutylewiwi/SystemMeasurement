@@ -74,7 +74,7 @@ When measuring peak bandwidth, basically we measure the peak bandwidth by calcul
       \textbf{Remote or} & \textbf{Peak Bandwidth}   & \textbf{Expr. Results} \\
       \textbf{Local}   &  \textbf{Estimation}  & (AVG) \\
   \hline
-      \textbf{Remote}  & 125MB/s & 112MB/s \\
+      \textbf{Remote}  & 125MB/s & 111MB/s \\
       \textbf{Local} & 2.6GB/s & 2.7GB/s \\
   \hline
   \end{tabular}
@@ -82,9 +82,9 @@ When measuring peak bandwidth, basically we measure the peak bandwidth by calcul
   \label{peak_bandwidth_table}
 \end{table}
 
-For remote estimation, its remote interface is ethernet and has 1Gbit/s capacity according to machine description. And in the TCP protocol, its maximum protocol bandwidth is $$\frac{maximum\_window\_size}{estimated\_round\_time\_trip} = \frac{65536 Bytes}{0.000395 seconds} = 166MB/s$$So the remote estimation for the remote interface is 125MB/s.
+For remote estimation, its remote interface is ethernet and has 1Gbit/s capacity according to machine description. And in the TCP protocol, its maximum protocol bandwidth is $$\frac{maximum\_window\_size}{estimated\_round\_time\_trip} = \frac{65535 Bytes}{0.000395 seconds} = 166MB/s$$So the remote estimation for the remote interface is 125MB/s.
 
-For local estimation, its local interface is loopback and its bandwidth should be equal to the memory bandwidth which is 10GB/s. And in the TCP protocol, its maximum protocol bandwidth is $$\frac{maximum\_window\_size}{estimated\_round\_time\_trip} = \frac{65536 Bytes}{0.000025 seconds} = 2.6GB/s$$So the local estimation for the remote interface is 2.6GB/s.
+For local estimation, its local interface is loopback and its bandwidth should be equal to the memory bandwidth which is 10GB/s. And in the TCP protocol, its maximum protocol bandwidth is $$\frac{maximum\_window\_size}{estimated\_round\_time\_trip} = \frac{65535 Bytes}{0.000025 seconds} = 2.6GB/s$$So the local estimation for the remote interface is 2.6GB/s.
 
 For the remote result, the experiment is a little less than the estimation. The reason should be that there are transmission overhead in network.
 
