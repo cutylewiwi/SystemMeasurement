@@ -137,7 +137,7 @@ When calculating the time consumed by procedure\_0, we first calculate the arith
 We estimate the procedure call with no parameters will take 4 cycles and expect for two additional cycles for every one more parameter.
 
 \textbf{Figure \ref{procedure_overhead_result}} shows our Estimation and the measurement results. The comparison indicates that procedure call is far more quicker than we expected and the overhead increases linearly when the parameter number increases. The variance line justifies that we have successfully eliminated most variance. There is a sudden jump on overhead between 2 and 3 parameters calls, and we speculate it is caused by the different alignments when the callees push 2 and 3
-parameters to stack to save registers. 
+parameters to stack to save registers.
 
 
 \begin{figure}[h]
@@ -152,26 +152,49 @@ parameters to stack to save registers.
 
 \subsubsection{Methodology}
 
-When measuring the system calls, basically we want to measure the cycle ticks between the begin and the return points of the system call. This means that we require the kernel return the control to the process immediately after the system call service routine finishes, so that what we can measure is some 'light weight' system call, like \textbf{getpid()} or \textbf{getcwd()}. However, \textbf{getpid()} will be cached by the kernel, so that only the first call of the getpid() can trap into
-the kernel space, so that in the end, we choose \textbf{getcwd()} system call to be the system call we measured.
+When measuring the system calls, basically we want to measure the cycle ticks between the begin and the return points of the system call. This means that we require the kernel return the control to the process immediately after the system call service routine finishes, so that what we can measure is some `light weight' system call, like \textbf{getpid()} or \textbf{getcwd()}. However, \textbf{getpid()} will be cached by the libc, so that only the first call of the getpid() can trap into
+the kernel space. The \textbf{getcwd()} system call will always trap into kernel, so that it is a choice to measure system call overhead.
 
 For specific implementation, the measurement process will first start counting cycles, then invoke \textbf{getcwd()} system call, finally stop counting. The cycles counted should be the overhead of the \textbf{getcwd()} system call.
 
+On the other hand, as system call cache is made by libc layer, another way to bypass this cache is to directly use linux kernel abis, instead of libc wrapping functions. There are two way to invoke kernel system call abis, first, by interrupt gate, and second, by syscall instruction. For example, when invoke \textbf{getpid()} system call, we can use:
+
+\lstinputlisting{int.c}
+
+or
+
+\begin{lstlisting}
+    #define __NR_getpid 39
+    asm volatile
+    (
+        "syscall"
+        : "=a" (pid)
+        : "0"(__NR_getpid)
+        : "cc", "rcx", "r11", "memory"
+    );
+\end{lstlisting}
+
+For the second method (bypass glibc layer), we measure and compare the overhead of \textbf{getpid()} and \textbf{getcwd()}.
 
 \subsubsection{Estimation and results}
 
 The estimation and the measurement results are shown in \textbf{Table \ref{measurement_syscall_table}}
 
+
 \begin{table}[ht]
   \centering
   \caption{\textbf{System Call Overhead: Estimation and Experiment Results}}
-  \begin{threeparttable}
-  \begin{tabular}{ccccc}
+  \hspace*{-2em}\begin{threeparttable}
+  \begin{tabular}{cccccc}
   \hline
-      \textbf{Hardware Overhead} & \textbf{Software Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard}\\
-      \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &     & \textbf{Deviation}\\
+     \textbf{system call} & \textbf{H/W Overhead} & \textbf{S/W Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard}\\
+     \textbf{type} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &     & \textbf{Deviation}\\
   \hline
-  1000 inst & 0 & 1000 inst & 1250 & 31 \\
+  getcwd() libc & 1000 cycles & 0 & 1000 cycles & 1250 & 31 \\
+  getcwd() int  & N/A & N/A & N/A & &  \\
+  getcwd() syscall  & N/A & N/A & N/A & & \\
+  getpid() int  & N/A & N/A & N/A & & \\
+  getpid() syscall  & N/A & N/A & N/A & & \\
   \hline
   \end{tabular}
   \end{threeparttable}
@@ -259,12 +282,7 @@ reading pipe. To be more precisely, at parent process, we first start a pipe for
 
 This method uses read and wait to synchronize. Either child or parent process executing first, the final result will be the period start from parent writing to the pipe, then context switch to the child, and finally the the child read from pipe.
 
-The method for thread is similar, the differences are:
-
-\begin{enumerate}
-    \item We use pthread\_join() instead of wait()
-    \item We use global variable, instead of pipe, to pass the final tick to the main thread;
-\end{enumerate}
+The method for thread is similar, the difference is we use \textbf{pthread\_cond\_wait()} to synchronize threads.
 
 
 \subsubsection{Estimation and results}

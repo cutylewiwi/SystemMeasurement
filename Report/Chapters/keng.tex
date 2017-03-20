@@ -1,0 +1,46 @@
+
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Summary The Results}}
+  \hspace*{-3em}\begin{threeparttable}
+  \begin{tabular}{lccccc}
+  \hline
+     \textbf{Operation}     & \textbf{Base Hardware}    & \textbf{Est. Software} & \textbf{Predicted} & \textbf{Measured} & \textbf{Standard}\\
+     \textbf{Type}          & \textbf{Performance}      &  \textbf{Overhead}          & \textbf{Time}      &     \textbf{Results} & \textbf{Deviation}\\
+  \hline
+  \textbf{Measurement}      & 15.7520 ns & 0 & 15.7520 ns  & 36.5161 ns & 1.36 \\
+  \hline
+  \textbf{Loop}             & 1.79 ns/round & 0 & 1.79 ns/round & 6.3 ns/loop round & N/A \\
+  \hline
+  \textbf{Procedure Call}   & N/A & N/A & N/A & & \\
+  \hline
+  \textbf{System Call}      & N/A & N/A & N/A & & \\
+  \hline
+  \textbf{Process Creation} & N/A & N/A & $7.16 \mu s$ & $ 48.154 \mu s$ & 1.096 \\
+  \hline
+  \textbf{Thread Creation}  & N/A & N/A & $3.58 \mu s$ & $7.387 \mu s$ & 0.553 \\
+  \hline
+  \textbf{Process Switch}   & N/A & N/A & $7.16 \mu s$ & $28.317 \mu s$ & 0.233 \\
+  \hline
+  \textbf{Thread Switch}    & N/A & N/A & $3.58 \mu s$ & $0.917 \mu s$ & 0.193 \\
+  \textbf{L1 Cache Access}  & 1.79 ns & N/A & 1.79 ns & 3.22 ns & N/A \\
+  \textbf{L2 Cache Access}  & 7.16 ns & N/A & 7.17 ns & 7.17 ns & N/A \\
+  \textbf{L3 Cache Access}  & 21.48 ns & N/A & 21.48 ns & 25.06 ns & N/A \\
+  \textbf{Memory Access}    & 53.70 ns & N/A & 53.70 ns & 68.02 ns & N/A \\
+  \textbf{Mem Read Bandwidth}  & 10600 MB/s & N/A & 10600 MB/s & 7131.1524 MB/s & 394.4901 \\
+  \textbf{Mem Write Bandwidth}  & 10600 MB/s & N/A & 10600 MB/s & 6709.4988 MB/s & 1191.1206 \\
+  \textbf{Page Fault}  & 10.024 ms & 0.004 ms & 10.03 ms & 8.12 ms & 2.6131 \\
+  \textbf{RTT Remote}  & 0.395 ms  & N/A & 0.395 ms & 0.338 ms & 0.099 \\
+  \textbf{RTT Local}  & 0.025 ms & N/A & 0.025 ms & 0.028 ms & 0.095 \\
+  \textbf{Local Peak Bandwidth}  & 125 MB/s & N/A & 125 MB/s & 112 MB/s & N/A\\
+  \textbf{Remote Peak Bandwidth} & 2.6 GB/s & N/A & 2.6 GB/s & 2.7 GB/s & N/A \\
+  \textbf{Remote Conn. Setup}  & 0.045 ms & N/A & 0.045 ms & 0.353 ms & 0.031 \\
+  \textbf{Local Conn. Setup}  & 0.035 ms & N/A & 0.035 ms & 0.028 ms & 0.031 \\
+  \textbf{Remote Conn. Teardown}  & 0.415 ms & N/A & 0.415 ms & 0.361 ms & 0.043 \\
+  \textbf{Local Conn. Teardown}  & 0.045 ms & N/A & 0.045 ms & 0.042 ms & N/A \\
+
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{Summary_Table}
+\end{table}

@@ -46,7 +46,7 @@ In order to make the round trip time more accurate, on the server side, we mark 
       \textbf{Local}   &  \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
   \hline
       \textbf{Remote}  & 0.395ms & 0.338 ms & 0.099 \\
-      \textbf{Local} & 0.025ms & 0.028ms & 0.0.95 \\
+      \textbf{Local} & 0.025ms & 0.028ms & 0.095 \\
   \hline
   \end{tabular}
   \end{threeparttable}
@@ -58,7 +58,7 @@ We take average of 100 ping results as our estimation. For both the remote inter
 \subsection{Peak Bandwidth}
 
 \subsubsection{Methodology}
-When measuring peak bandwidth, basically we measure the peak bandwidth by calculating maximum number of bytes newly acked by the server every second. We first start a tcp server and a tcp client. And then, the client connects the server and sends 5GB data to the server. We use tcpdump to capture tcp ack traffics on the client side and calculate peak bandwidth according to the tcpdump result. 
+When measuring peak bandwidth, basically we measure the peak bandwidth by calculating maximum number of bytes newly acked by the server every second. We first start a tcp server and a tcp client. And then, the client connects the server and sends 5GB data to the server. We use tcpdump to capture tcp ack traffics on the client side and calculate peak bandwidth according to the tcpdump result.
 
 \subsubsection{Estimation and Results}
 \begin{table}[ht]
@@ -111,7 +111,7 @@ When measuring connection overhead, basically we measure the connection overhead
   \begin{threeparttable}
   \begin{tabular}{ccccc}
   \hline
-      \textbf{Remote or} & \textbf{Setup Overhead}  & \textbf{Expr. Setup Results} & \textbf{Standard} \\ 
+      \textbf{Remote or} & \textbf{Setup Overhead}  & \textbf{Expr. Setup Results} & \textbf{Standard} \\
       \textbf{Local}  & \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
   \hline
       \textbf{Remote}  & 0.405ms & 0.353ms & 0.031 \\
@@ -128,7 +128,7 @@ When measuring connection overhead, basically we measure the connection overhead
   \begin{threeparttable}
   \begin{tabular}{ccccc}
   \hline
-      \textbf{Remote or} & \textbf{Teardown Overhead}  & \textbf{Expr. Teardown Results} & \textbf{Standard} \\ 
+      \textbf{Remote or} & \textbf{Teardown Overhead}  & \textbf{Expr. Teardown Results} & \textbf{Standard} \\
       \textbf{Local}  & \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
   \hline
       \textbf{Remote}  & 0.415ms & 0.361ms & 0.043 \\
