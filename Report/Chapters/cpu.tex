@@ -17,9 +17,9 @@ When measuring the overhead of the measurement code we mentioned above, we use t
 
 \lstinputlisting[language=C, firstline=21, lastline=22]{../CPU/time_ovh.c}
 
-We just measure nothing between two count marcos, so that this measurement will response the overhead of the execution of thos two marcos.
+We just measure nothing between two count macros, so that this measurement will response the overhead of the execution of those two macros.
 
-When performing the measurement, we will run the measurement code in a 10000 round loop, then we take the arithmatic mean of the cycles responsed as the final result.
+When performing the measurement, we will run the measurement code in a 10000 round loop, then we take the arithmetic mean of the cycles responsded as the final result.
 
 % because this minimal
 % cycles results can be an evidence that our cpu can finish running the target code within this minimal cycles ticks, and also, all other greater cycles ticks might imply that
@@ -64,23 +64,23 @@ When estimation, the first evidence for us to perform the estimation is the code
     400612:	89 75 dc             	mov    %esi,-0x24(%rbp)
 \end{lstlisting}
 
-We can found out: there are 4 instructions between RDTSC and RDTSCP instruction: two of them are inline aseembly we write in code, and the rest two are compile-time generated code caused by
+We can found out: there are 4 instructions between RDTSC and RDTSCP instruction: two of them are inline assembly we write in code, and the rest two are compile-time generated code caused by
 register saving, so the totally overhead for the measurement should be 4 instructions + 2 instructions (RDTSC and RDTSCP themselves).
 
 The second issue for estimating the hardware overhead is that, how many cycles each instruction will take, or in other words, what is the cpu's CPI (cycles per instruction). We haven't found out
 the most related information, so we performed the following estimation: for those 6 instructions, we assume that each cycle the cpu can commit one instruction, and the pipeline stages is around 20;
-as those 6 instructions don't have any data dependencies that can not be solved by data forwarding, the pipeline will not stall,and for those 6 instructions, from first instruction enter the pipeline
+as those 6 instructions don't have any data dependencies that can not be solved by data forwarding, the pipeline will not stall, and for those 6 instructions, from first instruction enter the pipeline
 to the last instruction commit, the cycles consumed should be:
     $$ 20 + 4 + 20 = 44 cycles $$
 
 After the experiments, the result shows that we underestimated the overhead by around 50\%, but as we don't know much about the internal of the Intel CPU, so that this kind of mistakes is somewhat reasonable.
 
 \subsection{Loop Overhead}
-When performing estimation, it is reasonable that using repeated experiments to reduce the impact of variance, so before all other overhead measurement, we need to determin the overhead of the loop first.
+When performing estimation, it is reasonable that using repeated experiments to reduce the impact of variance, so before all other overhead measurement, we need to determine the overhead of the loop first.
 
 \subsubsection{Methodology}
 
-When measuring the loop overhead, we simply measures the cycles diff before and after a simple do nothing loop. In order to reduce the impact of variance, we also run this test 10000 times, and then take the arithmatic
+When measuring the loop overhead, we simply measures the cycles diff before and after a simple do nothing loop. In order to reduce the impact of variance, we also run this test 10000 times, and then take the arithmetic
 means of 10000 samples. We also subtract the time measurement overhead (102 cycles as \textbf{Section \ref{overhead_estimation}}) from the loop overhead, so the final loop overhead should be:
     $$ average(cycles) - 102 $$
 
@@ -111,7 +111,7 @@ As shown in the graph, when estimating, we estimate the overhead increasing by 8
 As shown in above, there will be 4 instructions for each round of the loop, as the \textbf{Section \ref{overhead_estimation}} shows that, each instruction will taken more than one cycle tick in average.
 We finally made a assumption that each instructions will take up 2 cycles on average.
 
-The result shows that we still underestimated the increament ratio of the overhead, and in fact, each each loop round increase will increase the overhead by 18. The red line is the variance of our data, which shows our result is quite stable.
+The result shows that we still underestimated the incremental ratio of the overhead, and in fact, each each loop round increase will increase the overhead by 18. The red line is the variance of our data, which shows our result is quite stable.
 
 \subsection{Procedure Call}
 
@@ -129,7 +129,7 @@ for (i = 0; i < outerloop; i++) {
 }
 \end{lstlisting}
 
-When calculating the time consumed by procedure\_0, we first calculate the arithmatic mean of the duration cycles collected by START\_COUNT and STOP\_COUNT, then subtract the overhead of the time measurement and the innerloop from it, and finally divide the result by the innerloop times. We set outerloop and innerloop to be 10000 and 50 separately.
+When calculating the time consumed by procedure\_0, we first calculate the arithmetic mean of the duration cycles collected by START\_COUNT and STOP\_COUNT, then subtract the overhead of the time measurement and the innerloop from it, and finally divide the result by the innerloop times. We set outerloop and innerloop to be 10000 and 50 separately.
 
 %When measuring the overhead of a procedure call, we just put our cycles counting code before and after the procedure call; also, we reduced the variance by using the arithmatic mean of the response overhead came from 10000 times measurements.
 
@@ -178,7 +178,7 @@ The estimation and the measurement results are shown in \textbf{Table \ref{measu
   \label{measurement_syscall_table}
 \end{table}
 
-For estimation, system calls in a 64-bit system will first save a bunch of system call parameters into registers, then trap into the kernel by invoke \textbf{int} instruction or \textbf{syscall} instruction, then the kernel will serve the system call, and finally turn back to user mode with similar cost with trap into the memory. As there is a lot of assistance routine when traping into the system, then we believe 1000 cycle shoule be a reasonable estimation.
+For estimation, system calls in a 64-bit system will first save a bunch of system call parameters into registers, then trap into the kernel by invoke \textbf{int} instruction or \textbf{syscall} instruction, then the kernel will serve the system call, and finally turn back to user mode with similar cost with trap into the memory. As there is a lot of assistance routine when traping into the system, then we believe 1000 cycle should be a reasonable estimation.
 
 The results shows that our estimation is quite accurate.
 
@@ -189,7 +189,7 @@ For the questions about comparison between system call and procedure call, syste
 \subsubsection{Methodology}
 \label {creation_methodology}
 
-When measuring Task, or process creation time, we need to ensure serveral things. The first one when the measurement process fork a child process after fork syscall, the os will schedule either the measurement process or the child of the measurement process to be executed. To ensure that, we run our measurement process with the round robin real time schedualer and set the process the highest priority. The cmd is as follows:
+When measuring Task, or process creation time, we need to ensure several things. The first one when the measurement process fork a child process after fork syscall, the os will schedule either the measurement process or the child of the measurement process to be executed. To ensure that, we run our measurement process with the round robin real time scheduler and set the process the highest priority. The cmd is as follows:
 
 \begin{lstlisting}
     sudo chrt -rr 99 ./measurement
@@ -200,7 +200,7 @@ However, even we make our process the highest priority,  we are still not sure w
 In order to get the results we want, we implement the following measurement sequence:
 
 \begin{enumerate}
-    \item We initialize a pipe for child and parent process to comunicate \label{task_creation_pipe}
+    \item We initialize a pipe for child and parent process to communicate \label{task_creation_pipe}
     \item We start counting cycles before we call fork
     \item Both at the parent and the child process start point after fork return, we stop counting cycles
     \item Child process passing the end counting to the parent via the pipe we initialized at \textbf{\ref{task_creation_pipe}}
@@ -216,7 +216,7 @@ For the kernel thread creation, we use a similar method. The measurement sequenc
     \item We calculate both cycles spend for main thread pthread\_create return and pthread\_create start execution, then choose the smaller one (as the smaller one indicates that this thread executes before the other one)
 \end{enumerate}
 
-We repeate each measurement for 10000 times to get the accurate cycles.
+We repeat each measurement for 10000 times to get the accurate cycles.
 
 \subsubsection{Estimation and results}
 
@@ -241,7 +241,7 @@ The estimation and the measurement result will be list in the \textbf{Table \ref
 
 When we make estimation, it is hard for us to do the hard ware and software estimation, as there are a lot of issues hard to estimate. For example, for fork(), the kernel will create a new process control block for the new process, and then set
 up a bunch of member's value inside the pcb; after that, it will at least initialize the child process's address space, by creating a bunch of page tables; all these operations might cost more then 20000 cycles. Compared with process creation,
-thread creation is much more light weight, as thread doesn't need to construt a new address space. Finnally we made a pridiction that, process creation will cost 20000 cycles and thread will cost half of the process cost, 10000 cycles; or in other
+thread creation is much more light weight, as thread doesn't need to construct a new address space. Finally we made a prediction that, process creation will cost 20000 cycles and thread will cost half of the process cost, 10000 cycles; or in other
 word, $7.16 \mu s$ for process and $3.58 \mu s$ for thread.
 
 Our experimental results show that the process creation and thread creation takes 134507 and 20635 cycles correspondingly, which means creating a process takes much longer time than we have estimated and creating a thread is much more lightweight. The standard deviations for our experiments are 3062 and 1546, which are relatively small to the average results.
@@ -255,14 +255,14 @@ For the overhead measurement of the context switch, the basic idea to measure th
 \textbf{section \ref{creation_methodology}}, that the measuring processes (threads) are the only two processes (threads) that to be scheduled. In the real system, this is impossible, but we can estimate this situation by increasing the priority of the process (threads).
 
 For specific how to count the cycles of a context switch, we need to force a context switch to happen in one process (thread) the another (thread) process can stop the counting afterwards. To achieve this goal, we implement the following measure sequence by using blocking
-reading pipe. To be more precisely, at parent process, we first start a pipe for communication, then fork new process; after that, parent process will first start counting cycles, then write to the communiting pipe, then call wait() to wait the child process; at the same time, child process will read from the pipe, then stop counting the cycles, and finally send the stop cycles back to the parent process via the pipe then exit; after that, parent will wake up and get the value and count the tick.
+reading pipe. To be more precisely, at parent process, we first start a pipe for communication, then fork new process; after that, parent process will first start counting cycles, then write to the communicating pipe, then call wait() to wait the child process; at the same time, child process will read from the pipe, then stop counting the cycles, and finally send the stop cycles back to the parent process via the pipe then exit; after that, parent will wake up and get the value and count the tick.
 
 This method uses read and wait to synchronize. Either child or parent process executing first, the final result will be the period start from parent writing to the pipe, then context switch to the child, and finally the the child read from pipe.
 
 The method for thread is similar, the differences are:
 
 \begin{enumerate}
-    \item We use pthread\_join() instread of wait()
+    \item We use pthread\_join() instead of wait()
     \item We use global variable, instead of pipe, to pass the final tick to the main thread;
 \end{enumerate}
 
