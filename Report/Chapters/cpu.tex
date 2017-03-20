@@ -34,7 +34,7 @@ The estimation and the measurement result will be list in the following table:
 \begin{table}[ht]
   \centering
   \caption{\textbf{Measurement Overhead: Estimation and Experiment Results}}
-  \begin{threeparttable}
+  \hspace*{-2em}\begin{threeparttable}
   \begin{tabular}{ccccc}
   \hline
       \textbf{Hardware Overhead} & \textbf{Software Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard} \\
@@ -185,16 +185,16 @@ The estimation and the measurement results are shown in \textbf{Table \ref{measu
   \centering
   \caption{\textbf{System Call Overhead: Estimation and Experiment Results}}
   \hspace*{-2em}\begin{threeparttable}
-  \begin{tabular}{cccccc}
+  \begin{tabular}{ccccc}
   \hline
-     \textbf{system call} & \textbf{H/W Overhead} & \textbf{S/W Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard}\\
-     \textbf{type} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  &     & \textbf{Deviation}\\
+     \textbf{system call} & \textbf{H/W Overhead} & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard}\\
+     \textbf{type} & \textbf{Estimation}              & \textbf{Estimation}  &     & \textbf{Deviation}\\
   \hline
-  getcwd() libc & 1000 cycles & 0 & 1000 cycles (358.001 ns) & 502.9880 cycles (180.0702 ns) & 10.3023 \\
-  getcwd() int  & 1000 cycles & 0 & 1000 cycles (358.001 ns) & 2554.4114 cycles (914.4818 ns) & 142.9443 \\
-  getcwd() syscall  & 1000 cycles & 0 & 1000 cycles (358.001 ns) & 493.6172 cycles (176.7154 ns) & 1.5946 \\
-  getpid() int  & 1000 cycles & 0 & 1000 cycles (358.001 ns) & 550.3574 cycles (197.0285 ns) & 22.3033 \\
-  getpid() syscall  & 1000 cycles & 0 & 1000 cycles (358.001 ns) & 152.9067 cycles (54.7408 ns) & 0.7112 \\
+  getcwd() libc & 1000 cycles & 1000 cycles (358.001 ns) & 502.9880 cycles (180.0702 ns) & 10.3023 \\
+  getcwd() int  & 1000 cycles & 1000 cycles (358.001 ns) & 2554.4114 cycles (914.4818 ns) & 142.9443 \\
+  getcwd() syscall  & 1000 cycles & 1000 cycles (358.001 ns) & 493.6172 cycles (176.7154 ns) & 1.5946 \\
+  getpid() int  & 1000 cycles & 1000 cycles (358.001 ns) & 550.3574 cycles (197.0285 ns) & 22.3033 \\
+  getpid() syscall  & 1000 cycles & 1000 cycles (358.001 ns) & 152.9067 cycles (54.7408 ns) & 0.7112 \\
   \hline
   \end{tabular}
   \end{threeparttable}
@@ -250,8 +250,8 @@ The estimation and the measurement result will be list in the \textbf{Table \ref
 \begin{table}[ht]
   \centering
   \caption{\textbf{Process/Thread Creation Time: Estimation and Experiment Results}}
-  \begin{threeparttable}
-  \hspace*{-3em}\begin{tabular}{cccccc}
+  \hspace*{-2em}\begin{threeparttable}
+  \begin{tabular}{cccccc}
   \hline
       \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr. Results} & \textbf{Standard}\\
       \textbf{Kthread} & \textbf{Estimation}       &  \textbf{Estimation}         & \textbf{Estimation}  & (AVG)   & \textbf{Deviation} \\
@@ -291,7 +291,7 @@ The method for thread is similar, the difference is we use \textbf{pthread\_cond
 \begin{table}[ht]
     \centering
     \caption{\textbf{Process/Thread Context Switch Time: Estimation and Experiment Results}}
-    \begin{threeparttable}
+    \hspace*{-2em}\begin{threeparttable}
         \begin{tabular}{cccccc}
         \hline
         \textbf{Process or} & \textbf{HW Overhead} & \textbf{SW Overhead } & \textbf{Total Overhead} & \textbf{Expr.        Results} & \textbf{Standard} \\
