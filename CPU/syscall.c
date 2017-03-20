@@ -29,7 +29,7 @@ int main (int argc, const char * argv[]) {
     uint32_t high, high1;
     int i;
     pid_t pid;
-    asm volatile pid1;
+    volatile pid_t pid1;
 
     int iterations = atoi((const char *) argv[argc-1]);
     WARMUP(high, low, high1, low1);
