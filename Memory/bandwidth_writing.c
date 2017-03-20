@@ -85,6 +85,7 @@ int main (int argc, const char * argv[]) {
                 for (j = 0; j < flag; j++) {
                     printf("write%d:\t %llu\n", i, records[j]);
                 }
+    }
 
     free(large_read);
     free(large_write);
