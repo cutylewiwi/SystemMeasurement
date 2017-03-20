@@ -35,13 +35,19 @@ int main (int argc, const char * argv[]) {
 
     for (i = 0; i < iterations; i++) {
         START_COUNT(high, low);
-        asm volatile
-        (
-            "syscall"
-            : "=a" (pid)
-            : "0"(__NR_getpid)
-            : "cc", "rcx", "r11", "memory"
+#define INST \
+        asm volatile    \
+        (   \
+            "syscall"   \
+            : "=a" (pid)    \
+            : "0"(__NR_getpid)  \
+            : "cc", "rcx", "r11", "memory"  \
         );
+        INST
+        INST
+        INST
+        INST
+        INST
         STOP_COUNT(high1, low1);
 
         start = ((unsigned long long) high << 32) | low;
