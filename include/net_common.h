@@ -20,6 +20,10 @@
 
 typedef unsigned long long microtime_t;
 
+int min(int x, int y) {
+    return x < y ? x : y;
+}
+
 struct addrinfo* rio_resolve(char* hostname, char* portname) {
     struct addrinfo hints;
     memset(&hints,0,sizeof(hints));

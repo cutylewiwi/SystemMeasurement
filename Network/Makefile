@@ -39,8 +39,8 @@ conn-benchmark: conn close local_server remote_server
 	./close $(SERVER) $(PORT)
 
 peak-benchmark: peak close local_server remote_server
-	./peak 127.0.0.1 $(PORT) 5 1000000000
-	./peak $(SERVER) $(PORT) 5 1000000000
+	./peak 127.0.0.1 $(PORT) 1 5000000
+	./peak $(SERVER) $(PORT) 1 5000000
 	sleep 0.5
 	./close 127.0.0.1 $(PORT)
 	./close $(SERVER) $(PORT)
