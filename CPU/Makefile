@@ -5,7 +5,7 @@ LIB=../lib
 
 all: cpu
 
-cpu: cycles time_ovh loop_ovh procedure syscall thread process proc_switch thread_switch
+cpu: cycles time_ovh loop_ovh procedure syscall_getcwd thread process proc_switch thread_switch syscall_getcwd_int syscall_getcwd_syscall syscall_getpid_int syscall_getpid_syscall
 
 %.o : %.c
 	$(CC) -O0 -c $(CFLAGS) -I$(INCLUDE) $<
@@ -25,8 +25,20 @@ loop: loop.o
 procedure: procedure.o
 	$(CC) -o procedure procedure.o
 
-syscall: syscall.o
-	$(CC) -o syscall syscall.o
+syscall_getcwd: syscall_getcwd.o
+	$(CC) -o syscall_getcwd syscall_getcwd.o
+
+syscall_getcwd_int: syscall_getcwd_int.o
+	$(CC) -o syscall_getcwd_int syscall_getcwd_int.o
+
+syscall_getcwd_syscall: syscall_getcwd_syscall.o
+	$(CC) -o syscall_getcwd_syscall syscall_getcwd_syscall.o
+
+syscall_getpid_int: syscall_getpid_int.o
+	$(CC) -o syscall_getpid_int syscall_getpid_int.o
+
+syscall_getpid_syscall: syscall_getpid_syscall.o
+	$(CC) -o syscall_getpid_syscall syscall_getpid_syscall.o
 
 thread: thread.o
 	$(CC) -pthread -o thread thread.o
@@ -41,4 +53,4 @@ thread_switch: thread_switch.o
 	$(CC) -pthread -o thread_switch thread_switch.o
 
 clean:
-	rm -f *.o cycles time_ovh loop_ovh procedure syscall thread process proc_switch thread_switch
+	rm -f *.o cycles time_ovh loop_ovh procedure syscall_getcwd thread process proc_switch thread_switch syscall_getcwd_int syscall_getcwd_syscall syscall_getpid_int syscall_getpid_syscall

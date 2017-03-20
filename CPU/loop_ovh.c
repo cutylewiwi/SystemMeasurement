@@ -50,7 +50,7 @@ int main (int argc, const char * argv[]) {
             //if (end < start) {
             //    printf("alert! %d at scale %d\n", j, i);
             //} else {
-                printf("%d, %lu\n",  j, end-start);
+                printf("%d, %llu\n",  j, end-start);
             //}
         }
     }

@@ -8,7 +8,7 @@
 
 #define ITERATIONS 10
 
-#define __NR_getpid 20
+#define __NR_getcwd 79
 // pid_t my_getpid()
 // {
 //     pid_t ret;
@@ -28,35 +28,27 @@ int main (int argc, const char * argv[]) {
     uint32_t low, low1;
     uint32_t high, high1;
     int i;
-    pid_t pid, pid1;
-    volatile pid_t pid2;
+    pid_t pid;
+    volatile pid_t pid1;
+    char cwd[1024];
 
     int iterations = atoi((const char *) argv[argc-1]);
     WARMUP(high, low, high1, low1);
 
     for (i = 0; i < iterations; i++) {
         START_COUNT(high, low);
-#define INST \
-        asm volatile    \
-        (   \
-            "int $0x80"   \
-            : "=a" (pid)    \
-            : "0"(__NR_getpid)  \
-            : "cc", "edi", "esi", "memory"  \
-        );
-        // INST
-        // INST
-        // INST
-        // INST
-        INST
-        // pid = getpid();
-        STOP_COUNT(high1, low1);
-        pid1 = getpid();
-        if (pid1 != pid) {
-            printf("1\n");
-        }
 
-        printf("pid: %d\n", pid1);
+        asm volatile
+        (
+            "syscall"
+            : "=a" (pid)
+            : "0"(__NR_getcwd), "D"(cwd), "S"(sizeof(cwd))
+            : "cc", "rcx", "r11", "memory"
+        );
+        STOP_COUNT(high1, low1);
+        pid1 = pid;
+
+        // printf("pid: %d\n", pid1);
 
         start = ((unsigned long long) high << 32) | low;
         end = ((unsigned long long) high1 << 32) | low1;
