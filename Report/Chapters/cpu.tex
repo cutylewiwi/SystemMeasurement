@@ -203,7 +203,9 @@ The estimation and the measurement results are shown in \textbf{Table \ref{measu
 
 For estimation, system calls in a 64-bit system will first save a bunch of system call parameters into registers, then trap into the kernel by invoke \textbf{int} instruction or \textbf{syscall} instruction, then the kernel will serve the system call, and finally turn back to user mode with similar cost with trap into the memory. As there is a lot of assistance routine when traping into the system, then we believe 1000 cycle should be a reasonable estimation.
 
-The results shows that for getcwd(), in a typically 64 bit linux kernel, the overhead should be around 500 cycles or 180 ns, and for getpid(), the overhead should be around 152 cycles or 55 ns. This is much more lower than what we estimate, and the result for it is that: in 64 bit, system call is optimized to running in a pretty fast way, and even for some simple system calls, there are mechanisms that
+The results shows that for getcwd(), in a typically 64 bit linux kernel, the overhead should be around 500 cycles or 180 ns, and for getpid(), the overhead should be around 152 cycles or 55 ns. This is much more lower than what we estimate, and the result for it is that: in 64 bit, system call is optimized to running in a pretty fast way. This can be proved by the comparison between same system call invoked by interrupt gate and syscall instruction: syscall instruction overhead is much lower than interrupt gate.
+
+For getcwd() system call, the overhead for glibc version and invoking by syscall instruction is similar, which proves that in 64 linux glibc, syscalls are invoked by syscall instruction. Furthermore, compared with getcwd(), results show that getpid() is much more light weight.
 
 For the questions about comparison between system call and procedure call, system call is definitely much heavy weight than procedure call, as a procedure call with 7 parameters only cost 11 cycles, but the system call will cost more than 1000 cycles. This is caused by a lot of checking and setting operations when traping into kernel mode and return to user mode.
 
