@@ -33,8 +33,6 @@ int main (int argc, const char * argv[]) {
 
     int iterations = atoi((const char *) argv[argc-1]);
     WARMUP(high, low, high1, low1);
-    getcwd(cwd, sizeof(cwd));
-    printf("%s\n", cwd);
     for (i = 0; i < iterations; i++) {
         START_COUNT(high, low);
 
@@ -46,7 +44,6 @@ int main (int argc, const char * argv[]) {
             : "cc", "edi", "esi", "memory"
         );
         STOP_COUNT(high1, low1);
-        printf("%s\n", cwd);
         // printf("pid: %d\n", pid1);
 
         start = ((unsigned long long) high << 32) | low;
