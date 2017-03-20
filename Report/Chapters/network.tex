@@ -26,7 +26,7 @@ The machine has a 160GB SATA hard drive disk. The disk model is ST3160812AS with
 When running this project, the operating system running on the machine is normal Ubuntu 16.04.1. The kernel is Linux 4.4.0-51-generic x86\_64.
 
 \subsection{Round Trip Time}
-
+\label{Network_rtt}
 \subsubsection{Methodology}
 
 When measuring round trip time, basically we measure the round trip time by calculating time interval between the send time and the ack time for each packet. We first start a TCP server and a TCP client. And then, the client connects the server and sends one byte data to the server every 1 millisecond. We use tcpdump to capture TCP traffics on the client side and calculate the round trip time according to the tcpdump result.  We recognize the send and the ack packet by checking whether two consecutive packets match the flag patterns [P.] and [.] respectively. Below is an example of the send and ack pattern for remote interface:
