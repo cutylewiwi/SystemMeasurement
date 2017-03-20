@@ -46,15 +46,22 @@ int main (int argc, const char * argv[]) {
     l3cache = (unsigned char *) malloc(CACHE);
 
     for (i = 0; i < CHUNKS * CACHE / sizeof(unsigned char); i++) {
+        large_write[i] = (unsigned char) rand() % 255;
+    }
+
+    for (i = 0; i < CHUNKS * CACHE / sizeof(unsigned char); i++) {
         large_read[i] = (unsigned char) rand() % 255;
     }
 
     for (i = 0; i < CHUNKS * CACHE / sizeof(unsigned char); i++) {
-        large_write[i] = (unsigned char) rand() % 255;
+        store = large_write[i];
     }
+
 
     WARMUP(high, low, high1, low1);
     manarray = (unsigned int *) large_read;
+    sum = 0;
+
     for (i = 0; i <  ITERATIONS; i++) {
 
 #define READINST \
@@ -70,8 +77,8 @@ do {    \
            manarray[4480] + manarray[4544] + manarray[4608] + manarray[4672] + manarray[4736] + manarray[4800] + manarray[4864] + manarray[4928] + manarray[4992] + manarray[5056] + \
            manarray[5120] + manarray[5184] + manarray[5248] + manarray[5312] + manarray[5376] + manarray[5440] + manarray[5504] + manarray[5568] + manarray[5632] + manarray[5696] + \
            manarray[5760] + manarray[5824] + manarray[5888] + manarray[5952] + manarray[6016] + manarray[6080] + manarray[6144] + manarray[6208] + manarray[6272] + manarray[6336] ; \
-    manarray = &manarray[6400]; \
     STOP_COUNT(high1, low1);    \
+    manarray = &manarray[6400]; \
     store = sum; \
     start = ((unsigned long long) high << 32) | low;    \
     end = ((unsigned long long) high1 << 32) | low1;    \
