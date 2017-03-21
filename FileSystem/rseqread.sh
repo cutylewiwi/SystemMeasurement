@@ -1,7 +1,7 @@
 #! /bin/bash
 
 RESULT="rseqread.result"
-TESTDIR="/mnt/test"
+TESTDIR="/mnt/test/"
 
 rm $RESULT
 

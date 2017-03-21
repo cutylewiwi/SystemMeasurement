@@ -15,6 +15,7 @@
 #define FILEPREFIX "contenttestfile"
 #define TESTCOUNT 10
 #define MAXPROCESS 10
+#define MAXSAMPLENUM 1000
 
 size_t getBlockSize(int fd){
     struct stat buf;
@@ -63,6 +64,52 @@ void testSeqRead(int fd, int proccount, int printResult){
 
 }
 
+void testRandRead(int fd, unsigned long long proccount, int printResult){
+    long long i, samplenum, offset, blocknum;
+    uint32_t low, low1, high, high1;
+    unsigned long long start, end, totaltime;
+    WARMUP(high, low, high1, low1);
+
+    totaltime = 0;
+    size_t blocksize = getBlockSize(fd);
+    unsigned long long filesize = getFileSize(fd);
+    char *buf = memalign(blocksize, blocksize);
+    if (buf == NULL){
+        perror("Buffer allocate error\n");
+        exit(1);
+    }
+
+    blocknum = filesize/blocksize;
+    samplenum = MAXSAMPLENUM;
+	lseek(fd, 0, SEEK_SET);
+	if (read(fd, buf, blocksize) != blocksize){
+		perror("Read error\n");
+        exit(1);
+	}
+
+	for (i = 0; i < samplenum; ++i){
+		offset = blocksize*(rand()%blocknum);
+		lseek(fd, offset, SEEK_SET);
+
+		START_COUNT(high, low);
+		if (read(fd, buf, blocksize) != blocksize){
+			perror("Read error\n");
+            exit(1);
+		}
+		STOP_COUNT(high1, low1);
+
+		start = ((unsigned long long) high << 32) | low;
+		end = ((unsigned long long) high1 << 32) | low1;
+		totaltime += (end-start);
+	}
+
+	free(buf);
+	if (printResult)
+		printf("%llu:\t%f\n", proccount, (double)totaltime/samplenum);
+
+}
+
+
 int main(int argc, const char* argv[]){
     int fd, i, j, pcount;
     char filepath[256];
@@ -70,6 +117,7 @@ int main(int argc, const char* argv[]){
 
     if (argc != 2){
         perror("Usage: content <test file dir>\n");
+        exit(1);
     }
 
     for (pcount = 1; pcount <= MAXPROCESS; ++pcount){
@@ -87,7 +135,7 @@ int main(int argc, const char* argv[]){
                         perror("File open error\n");
                         exit(1);
                     }
-                    testSeqRead(fd, pcount, 1);
+                    testRandRead(fd, pcount, 1);
                     close(fd);
                 } 
                 exit(0);
