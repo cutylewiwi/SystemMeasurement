@@ -1,0 +1,124 @@
+\subsection{Code Mapping}
+
+We explain in this subsection that each part of this project is measured by which source code part.
+
+\subsubsection{CPU}
+\begin{itemize}
+    \item Measurement Overhead: time\_ovh.c
+    \item Loop Overhead: loop\_ovh.c
+    \item Procedure Call: procedure.c
+    \item System Call: syscall*.c
+    \item Process Creation: process.c
+    \item Thread Creation: thread.c
+    \item Process Context Switch: proc\_switch.c
+    \item Thread COntext Switch: thread\_switch.c
+\end{itemize}
+
+\subsubsection{Memory}
+\begin{itemize}
+    \item Memory Hierarchy Latency: access\_ptr.c
+    \item Memory Bandwidth: bandwidth*.c
+    \item Page Fault Handling: pagefault.c
+    \item Large File Generate: largefile.c
+\end{itemize}
+
+\subsubsection{Networking}
+\begin{itemize}
+    \item Round Trip Time: rtt.c
+    \item Peak Bandwidth: peak.c
+    \item Connection Overhead: conn.c
+    \item Server Side: server.c
+\end{itemize}
+
+\subsubsection{File System}
+\begin{itemize}
+    \item File Cache: filecache.c
+    \item Sequential File Read: seqread.c seqread.sh
+    \item Random File Read: randread.c randread.sh
+    \item Remote Sequential File Read: rseqread.sh
+    \item Remote Random File Read: rrandread.sh
+    \item Contention: contention.c
+\end{itemize}
+
+\subsection{Measurement Results Summary}
+
+Here we summary all the results we have in \textbf{Table \ref{Summary_Table}}
+
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Summary The Results}}
+  \hspace*{-4em}\begin{threeparttable}
+  \begin{tabular}{lccccc}
+  \hline
+     \textbf{Operation}     & \textbf{Base Hardware}    & \textbf{Est. Software} & \textbf{Predicted} & \textbf{Measured} & \textbf{Standard}\\
+     \textbf{Type}          & \textbf{Performance}      &  \textbf{Overhead}          & \textbf{Time}      &     \textbf{Results} & \textbf{Deviation}\\
+  \hline
+  \textbf{Measurement}      & 15.7520 ns & 0 & 15.7520 ns  & 36.5161 ns & 1.36 \\
+  \hline
+  \textbf{Loop}             & 1.79 ns/round & 0 & 1.79 ns/round & 6.3 ns/loop round & N/A \\
+  \hline
+  \textbf{Procedure Call}   & $<$ 22 ns & N/A & $<$ 22 ns & $<$ 4 ns & 0.0607 \\
+  \hline
+  \textbf{System Call}      & 358.001 ns & N/A & 358.001 ns & 54.7408 ns & 0.2546 \\
+  \hline
+  \textbf{Process Creation} & N/A & N/A & $7.16 \mu s$ & $ 48.154 \mu s$ & 1.096 \\
+  \hline
+  \textbf{Thread Creation}  & N/A & N/A & $3.58 \mu s$ & $7.387 \mu s$ & 0.553 \\
+  \hline
+  \textbf{Process Switch}   & N/A & N/A & $7.16 \mu s$ & $28.317 \mu s$ & 0.233 \\
+  \hline
+  \textbf{Thread Switch}    & N/A & N/A & $3.58 \mu s$ & $0.917 \mu s$ & 0.193 \\
+  \hline
+  \textbf{L1 Cache Access}  & 1.79 ns & N/A & 1.79 ns & 3.22 ns & N/A \\
+  \hline
+  \textbf{L2 Cache Access}  & 7.16 ns & N/A & 7.17 ns & 7.17 ns & N/A \\
+  \hline
+  \textbf{L3 Cache Access}  & 21.48 ns & N/A & 21.48 ns & 25.06 ns & N/A \\
+  \hline
+  \textbf{Memory Access}    & 53.70 ns & N/A & 53.70 ns & 68.02 ns & N/A \\
+  \hline
+  \textbf{Mem Read Bandwidth}  & 10600 MB/s & N/A & 10600 MB/s & 7131.1524 MB/s & 394.4901 \\
+  \hline
+  \textbf{Mem Write Bandwidth}  & 10600 MB/s & N/A & 10600 MB/s & 6709.4988 MB/s & 1191.1206 \\
+  \hline
+  \textbf{Page Fault}  & 10.024 ms & 0.004 ms & 10.03 ms & 8.12 ms & 2.6131 \\
+  \hline
+  \textbf{RTT Remote}  & 0.395 ms  & N/A & 0.395 ms & 0.338 ms & 0.099 \\
+  \hline
+  \textbf{RTT Local}  & 0.025 ms & N/A & 0.025 ms & 0.028 ms & 0.095 \\
+  \hline
+  \textbf{Local Peak Bandwidth}  & N/A & N/A & 125 MB/s & 112 MB/s & N/A\\
+  \hline
+  \textbf{Remote Peak Bandwidth} & N/A & N/A & 2.6 GB/s & 2.7 GB/s & N/A \\
+  \hline
+  \textbf{Remote Conn. Setup}  & N/A & N/A & 0.045 ms & 0.353 ms & 0.031 \\
+  \hline
+  \textbf{Local Conn. Setup}  & N/A & N/A & 0.035 ms & 0.028 ms & 0.031 \\
+  \hline
+  \textbf{Remote Conn. Teardown}  & N/A & N/A & 0.415 ms & 0.361 ms & 0.043 \\
+  \hline
+  \textbf{Local Conn. Teardown}  & N/A & N/A & 0.045 ms & 0.042 ms & N/A \\
+  \hline
+  \textbf{File Cache Size} & 7.5GB & N/A & 7.5GB & 7.1GB & N/A \\
+  \hline
+  \textbf{Local File Read (Seq)} & 107 us & N/A & 107 us & 188 us & 10 \\
+  \hline
+  \textbf{Local File Read (Rand)} & 13.3ms & N/A & 13.3ms & 4.0 ms & 2.7\\
+  \hline
+  \textbf{Remote File Read (Seq)} & 481 us & N/A & 481 us & 865 us & 8.9 \\
+  \hline
+  \textbf{Remote File Read (Rand)} & 13.5ms & N/A & 13.5ms & 5.8 ms & 2.0\\
+  \hline
+  \textbf{Network Penalty of NFS} & 374 us & N/A & 374 us & 677 us & 9.9 \\
+  \hline
+  \textbf{Content Read (2 Proc.)} & 376 us & N/A & 376 us & 388 us & 20.4 \\
+  \hline
+  \textbf{Content Read (4 Proc.)} & 752 us & N/A & 752 us & 910 us & 18 \\
+  \hline
+  \textbf{Content Read (8 Proc.)} & 1504 us & N/A & 1504 us & 1899 us & 13.5\\
+
+  \hline
+  \end{tabular}
+  \end{threeparttable}
+  \label{Summary_Table}
+\end{table}
