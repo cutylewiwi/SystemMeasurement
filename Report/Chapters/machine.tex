@@ -7,7 +7,7 @@ The processor on this machine is an Intel(R) Core(TM) i7 CPU 860 @ 2.80GHz with 
 \begin{itemize}
     \item The frequency of this CPU should be 2.80GHz (read from model infomation). After a simple measurement, we found out that the frequency of the clock of this core is 2.793291 GHz, and the clock period of this core should be $$ \frac{1.000000}{2.793291 GHz} = 0.358001 ns $$
     \item This core has 64K on core L1 cache, which 32K of them are data cache, and the rest 32K are instruction cache
-    \item This core has 25k on core unify L2 cache
+    \item This core has 256k on core unify L2 cache
     \item The L3 cache is 8M, and it is shared by all cores. Since we only enable single core when running, we can seem it as a private 8M L3 cache for this core.
     \item For the precision purpose, we turned off multi-threading and turbo boosting feature on this core
 \end{itemize}
