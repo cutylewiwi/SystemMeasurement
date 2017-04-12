@@ -122,3 +122,13 @@ Here we summary all the results we have in \textbf{Table \ref{Summary_Table}}
   \end{threeparttable}
   \label{Summary_Table}
 \end{table}
+
+\subsection{Experience Summaries}
+
+After this project, we have serveral experience for system measuring tool implementation. We will list them below:
+
+\begin{enumerate}
+    \item \textbf{Compiler optimization does hurt} As when measuring performance of a system, the benchmark code usually contains a lot of unused def/assignment, redundency code, dead definition, ..., etc, compiler optimization does hurt as even normal \textbf{-O1} optimization will eliminate a lot of measuring code in this situation.
+    \item \textbf{Inline assembly does help} Another way to solve harmful compiler optimization is using inline assembly. By writing assembly, you can do exactly what you want to do, and turn on compiler optimization to eliminate unecessary software overhead as well.
+    \item \textbf{Be careful about hardware features} Hardware features can bring unexpected impact on your measurement, so that influence the way to implement measurement benchmark. For example, the exist of super-scalar can lead to unexpected low cycles when measured block is fast finished and the whole measuring code has high ILP (instruction level parallelism), as super-scalar mechanism can parallel measured block with other assistant code (like, looping), or even parallel repeated measured code as well. Another example is cache-policy does impact how you arrange the memory bandwidth measurement \textbf{(Section \ref{sec:memorybandwidth})}.
+\end{enumerate}
